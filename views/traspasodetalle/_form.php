@@ -28,6 +28,20 @@ $this->registerCss('
         margin: 10px 0; /* Espacio alrededor de la línea */
     }
 ');
+$this->registerJs("
+    // Capturar el código de barras
+    $(document).on('input', '#codigo_barras', function() {
+        if ($(this).val() !== '') {
+            var codigoBarras = $('#codigo_barras').val();
+          //  $('#codigo_barras').val(''); // Limpiar el campo
+            $('#codigo_barras').focus(); // Colocar el foco en el campo para capturar el siguiente código
+
+            // Simular clic en el botón de registrar
+            $('#btn_registrar').trigger('click');
+
+        }
+    });
+");
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -57,14 +71,14 @@ use kartik\grid\GridView;
         </div>
     </div>
 
-    <?= $form->field($model, 'idItem')->textInput() ?>
+    <?= $form->field($model, 'idItem')->textInput(['id' => 'codigo_barras']) ?>
 
     <!--
     <?= $form->field($model, 'cantidad')->textInput(['disabled' => true]) ?>
     -->
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'id' => 'btn_registrar']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
