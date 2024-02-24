@@ -29,7 +29,7 @@ use yii\helpers\ArrayHelper;
  * @property string $updated_at
  * @property int $updated_by
  *
- * @property Color $idColor0
+ * @property Color $color
  * @property Marca $idMarca0
  * @property Producto $idProducto0
  * @property Talla $idTalla0
@@ -110,11 +110,11 @@ class Item extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[IdColor0]].
+     * Gets query for [[Color]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getIdColor0()
+    public function getColor()
     {
         return $this->hasOne(Color::class, ['id' => 'idColor']);
     }

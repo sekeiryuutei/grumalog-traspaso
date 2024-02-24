@@ -10,7 +10,7 @@ use yii\grid\GridView;
 /** @var app\models\search\TraspasodetalleSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Detalle';
+$this->title = 'TRASPASO DE MERCANCIA';
 $this->params['breadcrumbs'][] = ['label' => 'Traspaso', 'url' => ['/traspaso/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
