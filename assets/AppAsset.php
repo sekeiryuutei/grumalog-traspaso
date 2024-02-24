@@ -12,7 +12,7 @@ use yii\web\AssetBundle;
 /**
  * Main application asset bundle.
  *
- * @author Qiang Xue <qiang.xue@gmail.com>
+ * @author Victor Burbano
  * @since 2.0
  */
 class AppAsset extends AssetBundle
@@ -23,6 +23,7 @@ class AppAsset extends AssetBundle
         'css/site.css',
     ];
     public $js = [
+        'assets/Js/JsBarcode.all.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

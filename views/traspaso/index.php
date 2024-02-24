@@ -80,16 +80,29 @@ $this->params['breadcrumbs'][] = $this->title;
             'numeroCajas',
 
             [
+                'attribute'=> 'idEstado',
+                'filter' => ['0' => 'Cerrado', '1' => 'Abierto'],
+                'value' => function ($model) {
+                    switch ($model->idEstado){
+                        case 1: $nombre = 'Abierto'; break;
+                        case 0: $nombre = 'Cerrado'; break;
+                    };
+
+                    return $nombre;
+                }
+            ],
+
+            [
                 'class' => ActionColumn::className(),
                 'header' => 'Acción',
                 'headerOptions' => ['width' => '15%'],
-                'template' => '{detalle} {update} {delete}',
+                'template' => '{update} {detalle} {delete}',
 
                 'buttons' => [
 
                     'detalle' => function ($url, $model) {
                             return Html::a(
-                                '<i class="fa fa-calendar-times"></i>',
+                                '<i class="fa fa-list"></i>',
                                 ['detalle', 'id' => $model->id],
                                 [
                                     'title' => 'Registrar Items Traspado',
@@ -99,7 +112,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         },
                     'update' => function ($url, $model) {
                             return Html::a(
-                                '<i class="fa fa-calendar"></i>',
+                                '<i class="fa fa-edit"></i>',
                                 ['update', 'id' => $model->id],
                                 [
                                     'title' => 'Actualizar Datos Traspaso',
@@ -124,6 +137,15 @@ $this->params['breadcrumbs'][] = $this->title;
                             );
                         },
 
+                ],
+
+                'visibleButtons' => [
+                    'update' => function ($model, $key, $index) {
+                        return $model->idEstado == 1; // Condición para mostrar el botón
+                    },
+                    'detalle' => function ($model, $key, $index) {
+                        return $model->idEstado == 1; // Condición para mostrar el botón
+                    },
                 ],
 
 

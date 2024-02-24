@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "traspaso".
@@ -29,6 +32,26 @@ class Traspaso extends \yii\db\ActiveRecord
         return 'traspaso';
     }
 
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('GETDATE()'),
+            ],
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+                'value' => function ($event) {
+                    return Yii::$app->user->id;
+                },
+            ],
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -36,7 +59,7 @@ class Traspaso extends \yii\db\ActiveRecord
     {
         return [
             [['idBodegaOrigen', 'idBodegaDestino'], 'required'],
-            [['idBodegaOrigen', 'idBodegaDestino', 'numeroCajas', 'idTipoDocumento'], 'integer'],
+            [['idBodegaOrigen', 'idBodegaDestino', 'numeroCajas', 'idTipoDocumento', 'idEstado'], 'integer'],
             [['consecutivo'], 'number'],
             [['idBodegaDestino'], 'exist', 'skipOnError' => true, 'targetClass' => Bodegas::class, 'targetAttribute' => ['idBodegaDestino' => 'id']],
             [['idBodegaOrigen'], 'exist', 'skipOnError' => true, 'targetClass' => Bodegas::class, 'targetAttribute' => ['idBodegaOrigen' => 'id']],
@@ -55,6 +78,7 @@ class Traspaso extends \yii\db\ActiveRecord
             'numeroCajas' => 'Número Cajas',
             'serie' => 'Serie',
             'consecutivo' => 'Consecutivo',
+            'idEstado' => 'Estado'
         ];
     }
 

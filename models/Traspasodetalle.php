@@ -20,6 +20,7 @@ class Traspasodetalle extends \yii\db\ActiveRecord
     public $bodegaorigen;
     public $bodegadestino;
     public $numerocajas;
+    public $codigoitem;
     
     /**
      * {@inheritdoc}
@@ -35,7 +36,7 @@ class Traspasodetalle extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idTraspaso', 'idItem'], 'required'],
+            [['idTraspaso', 'codigoitem'], 'required', 'message' => '{attribute} Es Un Valor Obligatorio'],
             [['idTraspaso', 'idItem', 'cantidad'], 'integer'],
             [['idTraspaso'], 'exist', 'skipOnError' => true, 'targetClass' => Traspaso::class, 'targetAttribute' => ['idTraspaso' => 'id']],
             [['idItem'], 'exist', 'skipOnError' => true, 'targetClass' => Item::class, 'targetAttribute' => ['idItem' => 'id']],
@@ -52,6 +53,7 @@ class Traspasodetalle extends \yii\db\ActiveRecord
             'idTraspaso' => 'Id Traspaso',
             'idItem' => 'EAN',
             'cantidad' => 'cantidad',
+            'codigoitem' => 'CODE EAN',
         ];
     }
 
@@ -63,6 +65,11 @@ class Traspasodetalle extends \yii\db\ActiveRecord
     public function getItem()
     {
         return $this->hasOne(Item::class, ['id' => 'idItem']);
+    }
+
+    public function getCodigoitem()
+    {
+        return $this->hasOne(Item::class, ['item' => 'codigoitem']);
     }
 
     /**

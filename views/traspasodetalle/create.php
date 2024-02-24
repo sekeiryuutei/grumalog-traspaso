@@ -5,8 +5,8 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var app\models\Traspasodetalle $model */
 
-$this->title = 'Adicionar Items';
-$this->params['breadcrumbs'][] = ['label' => 'Traspaso', 'url' => ['index', 'idtraspaso' => $model->idTraspaso]];
+$this->title = 'TRASPASO DE MERCANCIA';
+$this->params['breadcrumbs'][] = ['label' => 'Traspaso', 'url' => ['/traspaso/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="traspasodetalle-create">

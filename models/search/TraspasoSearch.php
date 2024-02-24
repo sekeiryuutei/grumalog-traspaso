@@ -17,7 +17,7 @@ class TraspasoSearch extends Traspaso
     public function rules()
     {
         return [
-            [['id', 'idBodegaOrigen', 'idBodegaDestino', 'numeroCajas', 'idTipoDocumento'], 'integer'],
+            [['id', 'idBodegaOrigen', 'idBodegaDestino', 'numeroCajas', 'idTipoDocumento', 'idEstado'], 'integer'],
             [['consecutivo'], 'number'],
         ];
     }
@@ -48,6 +48,8 @@ class TraspasoSearch extends Traspaso
             'query' => $query,
         ]);
 
+        $query->orderBy(['created_at' => SORT_DESC]);
+
         $this->load($params);
 
         if (!$this->validate()) {
@@ -64,6 +66,7 @@ class TraspasoSearch extends Traspaso
             'numeroCajas' => $this->numeroCajas,
             'idTipoDocumento' => $this->idTipoDocumento,
             'consecutivo' => $this->consecutivo,
+            'idEstado' => $this->idEstado,
         ]);
 
         return $dataProvider;
