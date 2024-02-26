@@ -34,11 +34,10 @@ $this->registerJs("
     $(document).ready(function() {
         // Capturar el código de barras
         $(document).on('input', '#codigo_barras', function() {
-            if ($(this).val() !== '') {
+            if (e.which == 13 || $(this).val() !== '') {
                 var codigoBarras = $('#codigo_barras').val();
             //  $('#codigo_barras').val(''); // Limpiar el campo
                 $('#codigo_barras').focus(); // Colocar el foco en el campo para capturar el siguiente código
-
                 // Simular clic en el botón de registrar
                 $('#btn_registrar').trigger('click');
             }
