@@ -133,7 +133,7 @@ use common\models;
     <div class="form-group centrar">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'id' => 'btn_registrar', 'hidden' => true]) ?>
 
-        <?= Html::Button('Imprimir JS', ['class' => 'btn btn-info btn-lg btn-create', 'id' => 'btn_Imprimir']) ?>
+        <!-- <?= Html::Button('Imprimir JS', ['class' => 'btn btn-info btn-lg btn-create', 'id' => 'btn_Imprimir']) ?> -->
         <?= Html::a('Imprimir', ['print', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-success btn-lg btn-create', 'target'=>'_blank', ]) ?>
         <?= Html::a('Terminar', ['end', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-success btn-lg btn-create']) ?>
     </div>
