@@ -105,7 +105,7 @@ class TraspasodetalleController extends Controller
                 $modeldetalle->cantidad = $modeldetalle->cantidad + $model->cantidad;
                 $modeldetalle->save();
 
-                var_dump( $modeldetalle->cantidad .' - '. $model->cantidad);die();
+                // var_dump( $modeldetalle->cantidad .' - '. $model->cantidad);die();
 
 
                 return $this->redirect(['create', 'idtraspaso' => $idtraspaso]);
