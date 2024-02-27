@@ -30,7 +30,6 @@ $this->registerCss('
 ');
 
 $this->registerJs("
-
     $(document).ready(function() {
         // Capturar el código de barras
         $(document).on('input', '#codigo_barras', function() {
@@ -42,29 +41,6 @@ $this->registerJs("
                 $('#btn_registrar').trigger('click');
             }
         });
-
-        // Funcion para el boton imprimir
-        $(document).on('click', '#btn_Imprimir', function() {
-            if ($('#idItem').val() !== '') {
-                //capturamos tipodocumento_traspaso desde params (deberia ser desde la bd)
-                let tipodocumento_traspaso = $('#tipodocumento_traspaso').text();
-                let consecutivo = $('#consecutivo').text();
-                generarCodigoBarras(tipodocumento_traspaso);
-                generarCodigoBarras(consecutivo);
-            }
-        });
-        
-        // Generar el código de barras
-
-        function generarCodigoBarras(id) {
-            // Eliminar el código de barras anterior
-            $('#barcode').empty();
-            // Generar el código de barras
-            JsBarcode('#barcode', id, {
-             //   displayValue: false
-            });
-        }
-
     });
 ");
 
@@ -132,8 +108,8 @@ use common\models;
     <div class="form-group centrar">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'id' => 'btn_registrar', 'hidden' => true]) ?>
 
-        <?= Html::Button('Imprimir JS', ['class' => 'btn btn-info btn-lg btn-create', 'id' => 'btn_Imprimir']) ?>
-        <?= Html::a('Imprimir', ['print', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-success btn-lg btn-create', 'target'=>'_blank', ]) ?>
+        <!-- <?= Html::Button('Imprimir JS', ['class' => 'btn btn-info btn-lg btn-create', 'id' => 'btn_Imprimir']) ?> -->
+        <?= Html::a('Imprimir', ['print', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-success btn-lg btn-create', 'target' => '_blank',]) ?>
         <?= Html::a('Terminar', ['end', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-success btn-lg btn-create']) ?>
     </div>
 
@@ -162,46 +138,46 @@ use common\models;
             'idTraspaso',
             //'idItem',
             [
-                'attribute'=> 'idItem',
+                'attribute' => 'idItem',
                 'value' => function ($model) {
-                    if ($model->item){
-                        return $model->item->item ;
+                        if ($model->item) {
+                            return $model->item->item;
+                        }
+                        return '-';
                     }
-                    return '-';
-                }
             ],
 
             [
-                'attribute'=> 'idItem',
+                'attribute' => 'idItem',
                 'label' => 'Referencia',
                 'value' => function ($model) {
-                    if ($model->item){
-                        return $model->item->referencia;
+                        if ($model->item) {
+                            return $model->item->referencia;
+                        }
+                        return '-';
                     }
-                    return '-';
-                }
             ],
 
             [
-                'attribute'=> 'idItem',
+                'attribute' => 'idItem',
                 'label' => 'Unidad',
                 'value' => function ($model) {
-                    if ($model->item){
-                        return $model->item->unidadOrden;
+                        if ($model->item) {
+                            return $model->item->unidadOrden;
+                        }
+                        return '-';
                     }
-                    return '-';
-                }
             ],
 
             [
-                'attribute'=> 'idItem',
+                'attribute' => 'idItem',
                 'label' => 'Color',
                 'value' => function ($model) {
-                    if ($model->item->color){
-                        return $model->item->color->nombre;
+                        if ($model->item->color) {
+                            return $model->item->color->nombre;
+                        }
+                        return '-';
                     }
-                    return '-';
-                }
             ],
 
             'cantidad',

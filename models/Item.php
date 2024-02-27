@@ -24,15 +24,21 @@ use yii\helpers\ArrayHelper;
  * @property int|null $idColor
  * @property string|null $codigoProveedor
  * @property string|null $nombreProveedor
+ * @property string|null $unidadOrden
+ * @property string|null $unidadEmpaque
  * @property string $created_at
  * @property int $created_by
  * @property string $updated_at
  * @property int $updated_by
  *
- * @property Color $color
+ * @property Conteoentregamercancia[] $conteoentregamercancias
+ * @property Categoria $idCategoria0
+ * @property Color $Color
  * @property Marca $idMarca0
  * @property Producto $idProducto0
- * @property Talla $idTalla0
+ * @property Talla $Talla
+ * @property Ordendecompradetalle[] $ordendecompradetalles
+ * @property Traspasodetalle[] $traspasodetalles
  */
 class Item extends \yii\db\ActiveRecord
 {
@@ -76,7 +82,7 @@ class Item extends \yii\db\ActiveRecord
             [['created_at', 'updated_at'], 'safe'],
             [['referencia'], 'string', 'max' => 50],
             [['descripcion', 'nombreProveedor'], 'string', 'max' => 150],
-            [['codigoProveedor'], 'string', 'max' => 10],
+            [['codigoProveedor',  'unidadOrden', 'unidadEmpaque'], 'string', 'max' => 10],
             [['idTalla'], 'exist', 'skipOnError' => true, 'targetClass' => Talla::class, 'targetAttribute' => ['idTalla' => 'id']],
             [['idColor'], 'exist', 'skipOnError' => true, 'targetClass' => Color::class, 'targetAttribute' => ['idColor' => 'id']],
             [['idMarca'], 'exist', 'skipOnError' => true, 'targetClass' => Marca::class, 'targetAttribute' => ['idMarca' => 'id']],
@@ -102,6 +108,8 @@ class Item extends \yii\db\ActiveRecord
             'idColor' => 'Id Color',
             'codigoProveedor' => 'Codigo Proveedor',
             'nombreProveedor' => 'Nombre Proveedor',
+            'unidadOrden' => 'Unidad Orden',
+            'unidadEmpaque' => 'Unidad Empaque',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
@@ -140,12 +148,32 @@ class Item extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[IdTalla0]].
+     * Gets query for [[Talla]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getIdTalla0()
+    public function getTalla()
     {
         return $this->hasOne(Talla::class, ['id' => 'idTalla']);
+    }
+
+        /**
+     * Gets query for [[Ordendecompradetalles]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrdendecompradetalles()
+    {
+        return $this->hasMany(Ordendecompradetalle::class, ['idItem' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Traspasodetalles]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTraspasodetalles()
+    {
+        return $this->hasMany(Traspasodetalle::class, ['idItem' => 'id']);
     }
 }
