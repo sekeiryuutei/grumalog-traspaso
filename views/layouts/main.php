@@ -27,6 +27,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
     <script src="<?= Yii::$app->request->baseUrl ?>/assets/Js/JsBarcode.all.min.js"></script></head>
+    <link href="https://fonts.googleapis.com/css2?family=Curry&display=swap" rel="stylesheet">
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
 
