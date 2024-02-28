@@ -1,4 +1,14 @@
 <?php
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use yii\grid\ActionColumn;
+use kartik\grid\GridView;
+
+use common\models;
+
+/** @var yii\web\View $this */
+/** @var app\models\Traspasodetalle $model */
+/** @var yii\widgets\ActiveForm $form */
 
 $this->registerCss('
     .mi-gridview {
@@ -43,18 +53,6 @@ $this->registerJs("
         });
     });
 ");
-
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use yii\grid\ActionColumn;
-use kartik\grid\GridView;
-
-use common\models;
-
-/** @var yii\web\View $this */
-/** @var app\models\Traspasodetalle $model */
-/** @var yii\widgets\ActiveForm $form */
-
 ?>
 
 <div class="traspasodetalle-form">
@@ -63,7 +61,17 @@ use common\models;
 
     <div class="d-flex flex-row align-items-baseline">
         <h1 id="tipodocumento_traspaso">
-            <?= Yii::$app->params['tipodocumento_traspaso'] ?? '' ?>
+            <?php
+                // var_dump($model->traspaso->idBodegaOrigen);
+            //  $model->bodegaOrigen == 210 ?
+            //     Yii::$app->params['tipodocumento_traspaso'] ?? '' :
+            //     Yii::$app->params['tipodocumento_crossdocking'] ?? ''
+                if($model->traspaso->bodegaOrigen == '210') {
+                    echo Yii::$app->params['tipodocumento_traspaso'] ?? '';
+                } else {
+                    echo Yii::$app->params['tipodocumento_crossdocking'] ?? '';
+                }
+            ?>
         </h1>
         <h1 id="consecutivo">
             <?= $model->traspaso->consecutivo ?>
@@ -140,44 +148,44 @@ use common\models;
             [
                 'attribute' => 'idItem',
                 'value' => function ($model) {
-                        if ($model->item) {
-                            return $model->item->item;
-                        }
-                        return '-';
-                    }
+            if ($model->item) {
+                return $model->item->item;
+            }
+            return '-';
+        }
             ],
 
             [
                 'attribute' => 'idItem',
                 'label' => 'Referencia',
                 'value' => function ($model) {
-                        if ($model->item) {
-                            return $model->item->referencia;
-                        }
-                        return '-';
-                    }
+            if ($model->item) {
+                return $model->item->referencia;
+            }
+            return '-';
+        }
             ],
 
             [
                 'attribute' => 'idItem',
                 'label' => 'Unidad',
                 'value' => function ($model) {
-                        if ($model->item) {
-                            return $model->item->unidadOrden;
-                        }
-                        return '-';
-                    }
+            if ($model->item) {
+                return $model->item->unidadEmpaque;
+            }
+            return '-';
+        }
             ],
 
             [
                 'attribute' => 'idItem',
                 'label' => 'Color',
                 'value' => function ($model) {
-                        if ($model->item->color) {
-                            return $model->item->color->nombre;
-                        }
-                        return '-';
-                    }
+            if ($model->item->color) {
+                return $model->item->color->nombre;
+            }
+            return '-';
+        }
             ],
 
             'cantidad',
