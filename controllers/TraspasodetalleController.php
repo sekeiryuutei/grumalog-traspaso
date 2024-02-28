@@ -166,8 +166,9 @@ class TraspasodetalleController extends Controller
             'model' => $model,
             'modeldetalles' => $modeldetalles,
         ]);
-        die();
-        // $content =  $this->renderPartial('view_recibo', [
+
+
+        // $content = $this->renderPartial('view_recibo', [
         //     'model' => $model,
         //     'modeldetalles' => $modeldetalles
         // ]);
@@ -175,33 +176,33 @@ class TraspasodetalleController extends Controller
         // // setup kartik\mpdf\Pdf component
         // $pdf = new Pdf([
         //     // set to use core fonts only
-        //     'mode' => Pdf::MODE_CORE, 
+        //     'mode' => Pdf::MODE_CORE,
         //     // A4 paper format
-        //     'format' => Pdf::FORMAT_A4, 
+        //     'format' => Pdf::FORMAT_A4,
         //     // portrait orientation
-        //     'orientation' => Pdf::ORIENT_PORTRAIT, 
+        //     'orientation' => Pdf::ORIENT_PORTRAIT,
         //     // stream to browser inline
-        //     'destination' => Pdf::DEST_BROWSER, 
+        //     'destination' => Pdf::DEST_BROWSER,
         //     //'destination' => Pdf::DEST_DOWNLOAD, 
         //     // your html content input
-        //     'content' => $content,  
+        //     'content' => $content,
         //     // format content from your own css file if needed or use the
         //     // enhanced bootstrap css built by Krajee for mPDF formatting 
         //     'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
         //     // any css to be embedded if required
-        //     'cssInline' => '.kv-heading-1{font-size:10px}', 
+        //     'cssInline' => '.kv-heading-1{font-size:10px}',
         //     // set mPDF properties on the fly
         //     'options' => ['title' => 'Traspaso de mercancia'],
         //     // call mPDF methods on the fly
-        //     'methods' => [ 
-        //         'SetHeader'=>['Traspaso de mercancia'], 
-        //         'SetFooter'=>['{PAGENO}'],
+        //     'methods' => [
+        //         'SetHeader' => ['Traspaso de mercancia'],
+        //         'SetFooter' => ['{PAGENO}'],
         //     ],
-        //     'filename' => 'Traspaso-' . $idtraspaso. '.pdf'
+        //     'filename' => 'Traspaso-' . $idtraspaso . '.pdf'
         // ]);
 
         // // return the pdf output as per the destination setting
-        // return $pdf->render(); 
+        // return $pdf->render();
 
         // return $this->redirect(['/traspaso/index']);
     }
