@@ -29,10 +29,11 @@ use yii\helpers\ArrayHelper;
  * @property string $updated_at
  * @property int $updated_by
  *
- * @property Color $idColor0
+ * @property Color $color
  * @property Marca $idMarca0
  * @property Producto $idProducto0
  * @property Talla $idTalla0
+ * @property Unidadempaque $unidadEmpaque
  */
 class Item extends \yii\db\ActiveRecord
 {
@@ -110,15 +111,25 @@ class Item extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[IdColor0]].
+     * Gets query for [[Color]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getIdColor0()
+    public function getColor()
     {
         return $this->hasOne(Color::class, ['id' => 'idColor']);
     }
 
+    // public function getUnidadempaque()
+    // {
+    //     echo 'hola'; die(); 
+
+    //     return $this->hasOne(Unidadempaque::class, ['codigo' => 'unidadEmpaque']);
+    // }
+    public function getUnidadempaques()
+    {
+        return $this->hasOne(Unidadempaque::class, ['codigo' => 'unidadEmpaque']);
+    }
     /**
      * Gets query for [[IdMarca0]].
      *
@@ -144,7 +155,7 @@ class Item extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getIdTalla0()
+    public function getTalla()
     {
         return $this->hasOne(Talla::class, ['id' => 'idTalla']);
     }

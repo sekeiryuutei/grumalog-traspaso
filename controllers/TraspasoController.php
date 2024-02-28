@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 use app\models\Tipodocumento;
+
 /**
  * TraspasoController implements the CRUD actions for Traspaso model.
  */
@@ -46,7 +47,7 @@ class TraspasoController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            
+
         ]);
     }
 
@@ -65,7 +66,14 @@ class TraspasoController extends Controller
 
     public function actionDetalle($id)
     {
-        return $this->redirect(['/traspasodetalle/index', 'idtraspaso' => $id]);
+        $model = $this->findModel($id);
+
+        if ($model->idEstado == 0) {
+            return $this->redirect(['index']);
+        }
+
+        // return $this->redirect(['/traspasodetalle/index', 'idtraspaso' => $id]);
+        return $this->redirect(['/traspasodetalle/create', 'idtraspaso' => $model->id]);
     }
 
     /**
@@ -76,7 +84,15 @@ class TraspasoController extends Controller
     public function actionCreate()
     {
         $model = new Traspaso();
-
+        $model->idEstado = 1;
+        // $model->id = Tipodocumento::find()->where(['"2TB'=> $model->id])->one();
+        $tipoDocumento = Tipodocumento::findOne(['codigo' => '2TB']);
+        if ($tipoDocumento) {
+            var_dump('TipoDocumento: ' . $tipoDocumento->codigo);
+        } else {
+            var_dump('TipoDocumento not found');
+        }
+        die();  
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['/traspasodetalle/create', 'idtraspaso' => $model->id]);
@@ -100,7 +116,11 @@ class TraspasoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        
+
+        if ($model->idEstado == 0) {
+            return $this->redirect(['index']);
+        }
+
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['/traspaso/view', 'id' => $model->id]);
         }

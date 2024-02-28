@@ -2,11 +2,15 @@
 
 namespace app\controllers;
 
+use app\models\Traspaso;
 use app\models\Traspasodetalle;
 use app\models\search\TraspasodetalleSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
+use app\models\Item;
+use kartik\mpdf\Pdf;
 
 /**
  * TraspasodetalleController implements the CRUD actions for Traspasodetalle model.
@@ -81,6 +85,10 @@ class TraspasodetalleController extends Controller
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
 
+                $modelitem = Item::findOne(['item' => $model->codigoitem]);
+
+                $model->idItem = $modelitem->id;
+
                 $modeldetalle = Traspasodetalle::find()->where([
                     'idTraspaso' => $idtraspaso,
                     'idItem' => $model->idItem
@@ -93,8 +101,13 @@ class TraspasodetalleController extends Controller
                     $modeldetalle->cantidad = 0;
                 }
 
+                $modeldetalle->codigoitem = $model->codigoitem;
+
                 $modeldetalle->cantidad = $modeldetalle->cantidad + $model->cantidad;
                 $modeldetalle->save();
+
+                // var_dump( $modeldetalle->cantidad .' - '. $model->cantidad);die();
+
 
                 return $this->redirect(['create', 'idtraspaso' => $idtraspaso]);
             }
@@ -133,6 +146,68 @@ class TraspasodetalleController extends Controller
         ]);
     }
 
+    public function actionEnd($idtraspaso)
+    {
+        $model = Traspaso::findOne(['id' => $idtraspaso]);
+
+        $model->idEstado = 0;
+        $model->save();
+
+        return $this->redirect(['/traspaso/index']);
+    }
+
+    public function actionPrint($idtraspaso)
+    {
+        $model = Traspaso::findOne(['id' => $idtraspaso]);
+
+        $modeldetalles = $model->traspasodetalles;
+
+
+        return $this->render('view_recibo', [
+            'model' => $model,
+            'modeldetalles' => $modeldetalles,
+        ]);
+
+
+        // $content = $this->renderPartial('view_recibo', [
+        //     'model' => $model,
+        //     'modeldetalles' => $modeldetalles
+        // ]);
+
+        // // setup kartik\mpdf\Pdf component
+        // $pdf = new Pdf([
+        //     // set to use core fonts only
+        //     'mode' => Pdf::MODE_CORE,
+        //     // A4 paper format
+        //     'format' => Pdf::FORMAT_A4,
+        //     // portrait orientation
+        //     'orientation' => Pdf::ORIENT_PORTRAIT,
+        //     // stream to browser inline
+        //     'destination' => Pdf::DEST_BROWSER,
+        //     //'destination' => Pdf::DEST_DOWNLOAD, 
+        //     // your html content input
+        //     'content' => $content,
+        //     // format content from your own css file if needed or use the
+        //     // enhanced bootstrap css built by Krajee for mPDF formatting 
+        //     'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
+        //     // any css to be embedded if required
+        //     'cssInline' => '.kv-heading-1{font-size:10px}',
+        //     // set mPDF properties on the fly
+        //     'options' => ['title' => 'Traspaso de mercancia'],
+        //     // call mPDF methods on the fly
+        //     'methods' => [
+        //         'SetHeader' => ['Traspaso de mercancia'],
+        //         'SetFooter' => ['{PAGENO}'],
+        //     ],
+        //     'filename' => 'Traspaso-' . $idtraspaso . '.pdf'
+        // ]);
+
+        // // return the pdf output as per the destination setting
+        // return $pdf->render();
+
+        // return $this->redirect(['/traspaso/index']);
+    }
+
     /**
      * Deletes an existing Traspasodetalle model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -159,6 +234,6 @@ class TraspasodetalleController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('La página solicitada no existe.');
     }
 }

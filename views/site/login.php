@@ -15,7 +15,6 @@ $this->registerCssFile(Yii::$app->request->baseUrl . 'web/css/login.css');
 $this->title = 'Traspasos';
 $this->params['breadcrumbs'][] = $this->title ;
 ?>
-
 <link rel="stylesheet" href="css/login.css">
 <div class="site-login">
 <div class="text-center mb-5">
@@ -23,7 +22,6 @@ $this->params['breadcrumbs'][] = $this->title ;
 </div>
     <h1 class="text-center mb-5"><?= Html::encode($this->title) ?></h1>
           <!--<p>Please fill out the following fields to login:</p>-->
-
     <div class=" row justify-content-center">
         <div class="col-lg-5">
 
@@ -52,23 +50,10 @@ $this->params['breadcrumbs'][] = $this->title ;
             </div>
 
             <?php ActiveForm::end(); ?>
-
           <!-- <div style="color:#999;">
                 You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
                 To modify the username/password, please check out the code <code>app\models\User::$users</code>.
             </div> -->
-
         </div>
      </div>
-
-
-
-
-
-
-
 </div>
-
-
-
-
