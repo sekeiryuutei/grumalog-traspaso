@@ -3,12 +3,13 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\ContactForm;
+use app\models\LoginForm;
+use app\models\Usertraspaso;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\Response;
-use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
 
 class SiteController extends Controller
 {
@@ -61,6 +62,18 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $modelusertraspaso = Usertraspaso::findOne(['idUser' => Yii::$app->user->id]);
+        
+        if (!Yii::$app->user->isGuest) {
+            if (!$modelusertraspaso){
+                Yii::$app->session->setFlash( 'error', 'Usuario No Autorizado Para Traspaso');
+            }else{
+                Yii::$app->session->setFlash( 'success', $modelusertraspaso->empleadoLogistica->empleado->nombreEmpleado);
+
+                return $this->redirect(['/traspaso/index']);
+            }
+        }
+
         return $this->render('index');
     }
 
