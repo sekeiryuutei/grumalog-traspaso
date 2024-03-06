@@ -17,7 +17,7 @@ use yii\db\Expression;
  * @property int|null $idTipoDocumento
  * @property float|null $consecutivo
  *
- * 
+ * @property tipoDocumento $tipoDocumento
  * @property Bodegas $bodegaDestino
  * @property Bodegas $bodegaOrigen
  * @property Traspasodetalle[] $traspasodetalles
@@ -110,5 +110,13 @@ class Traspaso extends \yii\db\ActiveRecord
     public function getTraspasodetalles()
     {
         return $this->hasMany(Traspasodetalle::class, ['idTraspaso' => 'id']);
+    }
+    public function getEstado()
+    {
+        return $this->hasOne(Estadotraspaso::class, ['id' => 'idEstado']);
+    }
+    public function getIdestado()
+    {
+        return $this->hasOne(Estadotraspaso::class, ['id' => 'idEstado']);
     }
 }

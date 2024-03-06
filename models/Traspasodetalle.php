@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "traspasodetalle".
@@ -21,7 +24,7 @@ class Traspasodetalle extends \yii\db\ActiveRecord
     public $bodegadestino;
     public $numerocajas;
     public $codigoitem;
-    
+
     /**
      * {@inheritdoc}
      */
@@ -29,15 +32,34 @@ class Traspasodetalle extends \yii\db\ActiveRecord
     {
         return 'traspasodetalle';
     }
-
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('GETDATE()'),
+            ],
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+                'value' => function ($event) {
+                    return Yii::$app->user->id;
+                },
+            ],
+        ];
+    }
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['idTraspaso', 'codigoitem'], 'required', 'message' => '{attribute} Es Un Valor Obligatorio'],
-            [['idTraspaso', 'idItem', 'cantidad'], 'integer'],
+            [['idTraspaso', 'codigoitem','idItem', ], 'required', 'message' => '{attribute} Es Un Valor Obligatorio'],
+            [['cantidad'], 'integer'],
+            [['idTraspaso', 'idItem'], 'string', 'max' => 50],
             [['idTraspaso'], 'exist', 'skipOnError' => true, 'targetClass' => Traspaso::class, 'targetAttribute' => ['idTraspaso' => 'id']],
             [['idItem'], 'exist', 'skipOnError' => true, 'targetClass' => Item::class, 'targetAttribute' => ['idItem' => 'id']],
         ];
@@ -51,7 +73,7 @@ class Traspasodetalle extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'idTraspaso' => 'Id Traspaso',
-            'idItem' => 'EAN',
+            'idItem' => 'item',
             'cantidad' => 'cantidad',
             'codigoitem' => 'CODE EAN',
         ];

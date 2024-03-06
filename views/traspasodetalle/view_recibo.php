@@ -13,7 +13,11 @@ th{
 table {
     border-collapse: separate;
     // border-spacing: 10px 0px;
-    font-size:13.5px;
+    font-size:10px;
+    width: 100%;
+}
+td {
+    white-space: normal; /* Permite saltos de línea */
 }
 h1{
     font-size:25px;
@@ -28,14 +32,18 @@ hr{
 #tipodocumento_traspaso{
     margin-left:2px;
 }
+
+#w3-collapse {
+    justify-content: flex-end;
+  }
+
 ');
+
 $this->registerJs("
 $(document).ready(function() {
     //capturamos tipodocumento_traspaso desde params (deberia ser desde la bd)
     let tipodocumento = $('#tipodocumento_traspaso').text().trim();
-    // let consecutivo = $('#consecutivo').text().trim();
-    let consecutivo = 021919998;
-    // console.log(tipodocumento , typeof(tipodocumento) , '---' , consecutivo , typeof(consecutivo));
+    let consecutivo = $('#consecutivo').text().trim();
     generarCodigoBarras(tipodocumento,'barcodeTipodocumento');
     generarCodigoBarras(consecutivo,'barcodeConsecutivo');
 
@@ -82,14 +90,16 @@ $(document).ready(function() {
         <h6 class="d-flex flex-row" style="margin-right:50px;">
             Serie:
             <div id="tipodocumento_traspaso">
-                <?= Yii::$app->params['tipodocumento_traspaso'] ?? '' ?>
+                <?=
+                    $model->bodegaOrigen->tipodocumento->tipodocumento->codigo
+                    ?>
             </div>
         </h6>
-        <h6>
+        <h6 class="d-flex flex-row" style="margin-right:5px;">
             NUMERO:
-        </h6>
-        <h6 class="pr-3 ml-5" id="consecutivo">
-            <?= $model->consecutivo ?>
+            <div id="consecutivo">
+                <?= $model->bodegaOrigen->tipodocumento->tipodocumento->consecutivoProximo ?>
+            </div>
         </h6>
         <h6 style="margin-left:50px">&#160Caja: PKM</h6>
     </div>
@@ -116,14 +126,18 @@ $totalGeneral = 0;
 $unidadempaqueNombre = 0;
 $unidadempaqueValor = 0;
 echo '<table border="0">';
-echo '<tr><th>REFER.</th><th>COLOR</th><th>TALLA</th><th>PAQ</th><th>UM</th><th>CANTIDAD</th><th>TOTAL</th></tr>';
+echo '<tr><th>REFER.</th><th>DESCRIP.</th><th>COLOR</th><th>TALLA</th><th>PAQ</th><th>UM</th><th>CANTIDAD</th><th>TOTAL</th></tr>';
 foreach ($modeldetalles as $detalle) {
-    echo '<tr><td>' . $detalle->item->referencia . '</td><td>' . $detalle->item->color->nombre . '</td><td>'
-        . $detalle->item->talla->nombre . '</td><td>' . $detalle->item->unidadempaques->codigo . '</td><td>'
-        . $detalle->item->unidadempaques->equivalencia . '</td><td>' . $detalle->cantidad . '</td><td>' . $detalle->cantidad * $detalle->item->unidadempaques->equivalencia . '</td></tr>';
-    $totalGeneral += $detalle->cantidad * $detalle->item->unidadempaques->equivalencia; // Acumulamos el valor de la columna "TOTAL" en cada iteración
+    echo '<tr><td>' . $detalle->item->referencia . '</td><td>' . $detalle->item->descripcion
+        . '</td><td>' . $detalle->item->color->nombre . '</td><td>' . $detalle->item->talla->nombre
+        . '</td><td>' . ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->equivalencia : 0)
+        . '</td><td>' . ($detalle->item->unidadOrden ? $detalle->item->unidadOrden : 1)
+        . '</td><td>' . $detalle->cantidad . '</td><td>'
+        . $detalle->cantidad * ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->equivalencia : 1)
+        . '</td></tr>';
+    $totalGeneral += $detalle->cantidad * ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->equivalencia : 1); // Acumulamos el valor de la columna "TOTAL" en cada iteración
 }
-echo '<tr><td colspan="6" style="text-align:right">Total General:</td><td>' . $totalGeneral . '</td></tr>';
+echo '<tr><td colspan="7" style="text-align:right">Total General:</td><td>' . $totalGeneral . '</td></tr>';
 echo '</table>';
 ?>
 <svg id="barcodeTipodocumento"></svg>

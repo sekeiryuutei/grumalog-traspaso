@@ -14,6 +14,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property int $id
  * @property float $item
+ * @property string|null $codigoBarras
  * @property string $referencia
  * @property string $descripcion
  * @property int $idCategoria
@@ -24,6 +25,7 @@ use yii\helpers\ArrayHelper;
  * @property int|null $idColor
  * @property string|null $codigoProveedor
  * @property string|null $nombreProveedor
+ * @property string|null $unidadOrden
  * @property string $created_at
  * @property int $created_by
  * @property string $updated_at
@@ -76,8 +78,8 @@ class Item extends \yii\db\ActiveRecord
             [['idCategoria', 'idSubcategoria', 'idProducto', 'idMarca', 'idTalla', 'idColor', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['referencia'], 'string', 'max' => 50],
-            [['descripcion', 'nombreProveedor'], 'string', 'max' => 150],
-            [['codigoProveedor'], 'string', 'max' => 10],
+            [['descripcion', 'nombreProveedor', 'codigoBarras'], 'string', 'max' => 150],
+            [['codigoProveedor', 'unidadOrden', 'unidadEmpaque'], 'string', 'max' => 10],
             [['idTalla'], 'exist', 'skipOnError' => true, 'targetClass' => Talla::class, 'targetAttribute' => ['idTalla' => 'id']],
             [['idColor'], 'exist', 'skipOnError' => true, 'targetClass' => Color::class, 'targetAttribute' => ['idColor' => 'id']],
             [['idMarca'], 'exist', 'skipOnError' => true, 'targetClass' => Marca::class, 'targetAttribute' => ['idMarca' => 'id']],
@@ -93,6 +95,7 @@ class Item extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'item' => 'Item',
+            'codigoBarras' => 'Código Barras',
             'referencia' => 'Referencia',
             'descripcion' => 'Descripcion',
             'idCategoria' => 'Id Categoria',
@@ -103,6 +106,7 @@ class Item extends \yii\db\ActiveRecord
             'idColor' => 'Id Color',
             'codigoProveedor' => 'Codigo Proveedor',
             'nombreProveedor' => 'Nombre Proveedor',
+            'unidadEmpaque' => 'Unidad Empaque',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
@@ -126,7 +130,7 @@ class Item extends \yii\db\ActiveRecord
 
     //     return $this->hasOne(Unidadempaque::class, ['codigo' => 'unidadEmpaque']);
     // }
-    public function getUnidadempaques()
+    public function getUnidadempaque()
     {
         return $this->hasOne(Unidadempaque::class, ['codigo' => 'unidadEmpaque']);
     }
@@ -135,7 +139,7 @@ class Item extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getIdMarca0()
+    public function getMarca()
     {
         return $this->hasOne(Marca::class, ['id' => 'idMarca']);
     }
@@ -159,4 +163,15 @@ class Item extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Talla::class, ['id' => 'idTalla']);
     }
+    
+    public function getSubcategoria()
+    {
+        return $this->hasOne(Subcategoria::class, ['id' => 'idSubcategoria']);
+    }
+
+    public function getCategoria()
+    {
+        return $this->hasOne(Categoria::class, ['id' => 'idCategoria']);
+    }
+
 }

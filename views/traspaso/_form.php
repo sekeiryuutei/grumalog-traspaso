@@ -27,7 +27,7 @@ use app\models\Bodegas;
     <?php $form = ActiveForm::begin(); ?>
 
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-12 col-lg-4">
             <?= $form->field($model, 'idBodegaOrigen')->dropDownList(
                 Bodegas::getListaData(),
                 [
@@ -39,7 +39,7 @@ use app\models\Bodegas;
                 ?>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-12 col-lg-4">
             <?= $form->field($model, 'idBodegaDestino')->dropDownList(
                 Bodegas::getListaData(),
                 [
@@ -51,7 +51,7 @@ use app\models\Bodegas;
                 ?>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-12 col-lg-4">
             <?= $form->field($model, 'numeroCajas')->textInput(['maxlength' => true, 'id' => 'numero-cajas']) ?>
         </div>
     </div>
