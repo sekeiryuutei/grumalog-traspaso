@@ -10,27 +10,25 @@ use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "Bodegas".
+ * This is the model class for table "estadotraspaso".
  *
- * @property int $int
- * @property string $codigo
- * @property string|null $nombre
- * @property int|null $idtipodocumento
+ * @property int $id
+ * @property int $codigo
+ * @property string $nombre
+ * @property string|null $nombresiesa
  * @property string|null $created_at
  * @property int|null $created_by
  * @property string|null $updated_at
  * @property int|null $updated_by
- * 
- * @property Tipodocumento $tipodocumento
  */
-class Bodegas extends \yii\db\ActiveRecord
+class Estadotraspaso extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'bodegas';
+        return 'estadotraspaso';
     }
 
     public function behaviors()
@@ -59,14 +57,10 @@ class Bodegas extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['codigo', 'nombre'], 'required', 'message' => '{attribute} Es Un Valor Obligatorio'],
+            [['codigo', 'nombre'], 'required'],
+            [['codigo', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['created_by', 'updated_by'], 'integer'],
-            [['codigo'], 'string', 'max' => 5],
-            [['nombre'], 'string', 'max' => 50],
-            ['nombre', 'unique', 'message' => 'Nombre Bodega ya está registrado.'],
-            ['codigo', 'unique', 'message' => 'Código Bodega ya está registrado.'],
-            [['idtipodocumento'], 'exist', 'skipOnError' => true, 'targetClass' => Tipodocumento::class, 'targetAttribute' => ['idtipodocumento' => 'id']],
+            [['nombre', 'nombresiesa'], 'string', 'max' => 50],
         ];
     }
 
@@ -77,9 +71,9 @@ class Bodegas extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'codigo' => 'Código',
+            'codigo' => 'Codigo',
             'nombre' => 'Nombre',
-            'idtipodocumento' => 'Idtipodocumento',
+            'nombresiesa' => 'Nombresiesa',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
@@ -87,21 +81,16 @@ class Bodegas extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function getListaData()
+    public function getEstadoTraspaso()
     {
-        $data = Bodegas::find()
-            ->select(['id', 'nombre'])
-            ->orderBy('nombre')->asArray()->all();
-        $listadata = ArrayHelper::map($data, 'id', 'nombre');
-        return $listadata;
+        return $this->hasOne(Estadotraspaso::class, ['id' => 'id']);
     }
-    /**
-     * Gets query for [[idBodega]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTipodocumento()
-    {
-        return $this->hasOne(Bodegatipodocumento::class, ['idBodega' => 'id']);
+    
+    public static  function  getListaData(){
+        $data = Estadotraspaso::find()
+                        ->select(['id', 'nombre'])
+                        ->orderBy('nombre')->asArray()->all();
+    	$listadata = ArrayHelper::map($data, 'id', 'nombre');
+    	return $listadata;
     }
 }

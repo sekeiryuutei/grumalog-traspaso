@@ -1,5 +1,3 @@
-
-
 body {
   background-color: #f8f9fa;
   font-family: Arial, sans-serif;
@@ -23,7 +21,7 @@ body {
   display: block;
   color: #dc3545;
   margin-top: 5px;
-  
+
 }
 
 .border {
@@ -36,4 +34,12 @@ body {
 
 .shadow {
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+#w3-collapse {
+  justify-content: flex-end;
+}
+
+.navbar-nav{
+  justify-content: flex-end;
 }

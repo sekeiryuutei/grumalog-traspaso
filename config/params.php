@@ -6,6 +6,7 @@ return [
     'senderEmail' => 'noreply@example.com',
     'senderName' => 'Example.com mailer',
 
+    'proyectoNombre' => 'Herposoft20 traspaso',
     'tipodocumento_traspaso' => '2TB',
     'tipodocumento_crossdocking' => '2TA',
     'tituloTraspaso' => 'TRASPASO DE MERCANCIA',

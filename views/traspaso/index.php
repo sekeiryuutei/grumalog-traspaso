@@ -1,19 +1,63 @@
 <?php
+use app\models\Estadotraspaso;
 
 $this->registerCss('
     .mi-gridview {
         font-size: 11px; /* Ajusta el tamaño de la fuente según sea necesario */
         /* Otros estilos CSS según sea necesario */
     }
-
+    .btn-create {
+         width: 300px;
+    } 
+    .centrar {
+         text-align: center;
+    }
+             
+    @media (max-width: 650px) {
+        tr:first-of-type {
+            display:none;
+        }
+        th, td {
+            display:block;
+            padding: 5px;
+        }
+        td::before {
+            content: attr(data-cellvalue) ": ";
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+        td:first-of-type::before {
+            content: "#";
+        }
+        #w0-filters td:first-of-type::before {
+            display: none;
+        }
+        #w0-filters td:nth-of-type(2)::before {
+            content: "id";
+        }
+        #w0-filters td:nth-of-type(3)::before {
+            content: "Bodega origen";
+        }
+        #w0-filters td:nth-of-type(4)::before {
+            content: "Bodega destino";
+        }
+        #w0-filters td:nth-of-type(5)::before {
+            content: "Numero de cajas";
+        }
+        #w0-filters td:nth-of-type(6)::before {
+            content: "Estado";
+        }
+        #w0-filters td:nth-of-type(7)::before {
+            display:none;
+        }
+    }
+    
     .btn-create {
         width: 300px;
     }
-    
     .centrar {
         text-align: center;
     }
-
 ');
 
 use app\models\Traspaso;
@@ -41,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Traspaso', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]);                    ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -49,47 +93,41 @@ $this->params['breadcrumbs'][] = $this->title;
         'summary' => 'Mostrando {begin} - {end} de {totalCount} resultados',
         'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => '-'],
         'options' => [
-            'class' => 'mi-gridview', // Agrega una clase CSS a la tabla generada por el GridView
+            'class' => 'mi-gridview gridview-responsive',
         ],
-
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-
+            ['class' => 'yii\grid\SerialColumn',],
             [
-                'attribute' => 'idBodegaOrigen', // Nombre del atributo en el modelo
-                //'hAlign' => 'center', // Alineación horizontal al centro
-                //'vAlign' => 'middle', // Alineación vertical al centro
+                'attribute' => 'id',
+                'contentOptions' => ['data-cellvalue' => 'id'],
+            ],
+            [
+                'attribute' => 'idBodegaOrigen',
                 'value' => function ($model) {
                         return $model->bodegaOrigen->nombre;
                     },
-                'filter' => Bodegas::getListaData()
+                'filter' => Bodegas::getListaData(),
+                'contentOptions' => ['data-cellvalue' => 'idBodegaOrigen'],
             ],
-
             [
-                'attribute' => 'idBodegaDestino', // Nombre del atributo en el modelo
-                //'hAlign' => 'center', // Alineación horizontal al centro
-                //'vAlign' => 'middle', // Alineación vertical al centro
+                'attribute' => 'idBodegaDestino',
                 'value' => function ($model) {
                         return $model->bodegaDestino->nombre;
                     },
-                'filter' => Bodegas::getListaData()
+                'filter' => Bodegas::getListaData(),
+                'contentOptions' => ['data-cellvalue' => 'idBodegaDestino'],
             ],
-
-            'numeroCajas',
-
             [
-                'attribute'=> 'idEstado',
-                'filter' => ['0' => 'Cerrado', '1' => 'Abierto'],
+                'attribute' => 'numeroCajas',
+                'contentOptions' => ['data-cellvalue' => 'numeroCajas',],
+            ],
+            [
+                'attribute' => 'idEstado',
+                'filter' => Estadotraspaso::getListaData(),
                 'value' => function ($model) {
-                    switch ($model->idEstado){
-                        case 1: $nombre = 'Abierto'; break;
-                        case 0: $nombre = 'Cerrado'; break;
-                    };
-
-                    return $nombre;
-                }
+                        return $model->estado->nombre;
+                    },
+                'contentOptions' => ['data-cellvalue' => 'idEstado',],
             ],
 
             [
@@ -97,7 +135,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => 'Acción',
                 'headerOptions' => ['width' => '15%'],
                 'template' => '{update} {detalle} {delete}',
-
+                'contentOptions' => ['data-cellvalue' => 'Acciones',],
                 'buttons' => [
 
                     'detalle' => function ($url, $model) {
@@ -141,11 +179,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 'visibleButtons' => [
                     'update' => function ($model, $key, $index) {
-                        return $model->idEstado == 1; // Condición para mostrar el botón
-                    },
+                            return $model->idEstado != 5 && $model->idEstado != 6; // Condición para mostrar el botón
+                        },
                     'detalle' => function ($model, $key, $index) {
-                        return $model->idEstado == 1; // Condición para mostrar el botón
-                    },
+                            return $model->idEstado != 5 && $model->idEstado != 6; // Condición para mostrar el botón
+                        },
+                    'delete' => function ($model, $key, $index) {
+                            return $model->idEstado != 5 && $model->idEstado != 6; // Condición para mostrar el botón
+                        },
                 ],
 
 
@@ -153,6 +194,5 @@ $this->params['breadcrumbs'][] = $this->title;
 
         ],
     ]); ?>
-
 
 </div>

@@ -76,6 +76,7 @@ class TraspasodetalleController extends Controller
         $model->idTraspaso = $idtraspaso;
         $model->cantidad = 1;
 
+        // die($model->traspaso->bodegaOrigen->nombre);
         $model->bodegaorigen = $model->traspaso->bodegaOrigen->nombre;
         $model->bodegadestino = $model->traspaso->bodegaDestino->nombre;
 
@@ -84,11 +85,9 @@ class TraspasodetalleController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-
-                $modelitem = Item::findOne(['item' => $model->codigoitem]);
-
+                $modelitem = Item::findOne(['codigoBarras' => $model->codigoitem]);
                 $model->idItem = $modelitem->id;
-
+                // die($idtraspaso . "<<<<" . $model->idItem  . "<<");
                 $modeldetalle = Traspasodetalle::find()->where([
                     'idTraspaso' => $idtraspaso,
                     'idItem' => $model->idItem
@@ -101,8 +100,8 @@ class TraspasodetalleController extends Controller
                     $modeldetalle->cantidad = 0;
                 }
 
-                $modeldetalle->codigoitem = $model->codigoitem;
-
+                $modeldetalle->codigoitem = $model->idItem;
+                // die($modeldetalle->codigoitem);
                 $modeldetalle->cantidad = $modeldetalle->cantidad + $model->cantidad;
                 $modeldetalle->save();
 

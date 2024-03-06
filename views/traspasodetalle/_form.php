@@ -37,6 +37,49 @@ $this->registerCss('
         border-top: 1px solid #ccc; /* Color y grosor de la línea */
         margin: 10px 0; /* Espacio alrededor de la línea */
     }
+    #tipodocumento_traspaso{
+        margin-right: 5px;
+    }
+
+    @media (max-width: 650px) {
+        tr:first-of-type {
+            display:none;
+        }
+        th, td {
+            display:block;
+            padding: 5px;
+        }
+        td::before {
+            content: attr(data-cellvalue) ": ";
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+        td:first-of-type::before {
+            content: "#";
+        }
+        #w0-filters td:first-of-type::before {
+            display: none;
+        }
+        #w0-filters td:nth-of-type(2)::before {
+            content: "id";
+        }
+        #w0-filters td:nth-of-type(3)::before {
+            content: "Bodega origen";
+        }
+        #w0-filters td:nth-of-type(4)::before {
+            content: "Bodega destino";
+        }
+        #w0-filters td:nth-of-type(5)::before {
+            content: "Numero de cajas";
+        }
+        #w0-filters td:nth-of-type(6)::before {
+            content: "Estado";
+        }
+        #w0-filters td:nth-of-type(7)::before {
+            display:none;
+        }
+    }
+
 ');
 
 $this->registerJs("
@@ -60,18 +103,13 @@ $this->registerJs("
     <?php $form = ActiveForm::begin(); ?>
 
     <div class="d-flex flex-row align-items-baseline">
-        <h1 id="tipodocumento_traspaso">
-            <?php
-                // var_dump($model->traspaso->idBodegaOrigen);
-            //  $model->bodegaOrigen == 210 ?
-            //     Yii::$app->params['tipodocumento_traspaso'] ?? '' :
-            //     Yii::$app->params['tipodocumento_crossdocking'] ?? ''
-                if($model->traspaso->bodegaOrigen == '210') {
-                    echo Yii::$app->params['tipodocumento_traspaso'] ?? '';
-                } else {
-                    echo Yii::$app->params['tipodocumento_crossdocking'] ?? '';
-                }
-            ?>
+        <?php if ($model->traspaso && $model->traspaso->bodegaOrigen && $model->traspaso->bodegaOrigen->tipodocumento): ?>
+            <h1 id="tipodocumento_traspaso">
+                <?=
+                    $model->traspaso->bodegaOrigen->tipodocumento->tipodocumento->codigo
+                    ?>
+            </h1>
+        <?php endif; ?>
         </h1>
         <h1 id="consecutivo">
             <?= $model->traspaso->consecutivo ?>
@@ -115,10 +153,8 @@ $this->registerJs("
 
     <div class="form-group centrar">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'id' => 'btn_registrar', 'hidden' => true]) ?>
-
-        <!-- <?= Html::Button('Imprimir JS', ['class' => 'btn btn-info btn-lg btn-create', 'id' => 'btn_Imprimir']) ?> -->
         <?= Html::a('Imprimir', ['print', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-success btn-lg btn-create', 'target' => '_blank',]) ?>
-        <?= Html::a('Terminar', ['end', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-success btn-lg btn-create']) ?>
+        <?= Html::a('Terminar', ['end', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-danger btn-lg btn-create mt-1']) ?>
     </div>
 
 
@@ -142,53 +178,83 @@ $this->registerJs("
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'idTraspaso',
+            [
+                'attribute' => 'id',
+                'contentOptions' => ['data-cellvalue' => 'id'],
+
+            ],
+            [
+                'attribute' => 'codigoBarras',
+                'contentOptions' => ['data-cellvalue' => 'codigoBarras'],
+                'value' => function ($model) {
+        if ($model->item) {
+            return $model->item->codigoBarras;
+        }
+        return '-';
+    }
+
+            ],
             //'idItem',
             [
                 'attribute' => 'idItem',
+                'contentOptions' => ['data-cellvalue' => 'idItem'],
                 'value' => function ($model) {
-            if ($model->item) {
-                return $model->item->item;
-            }
-            return '-';
+        if ($model->item) {
+            return $model->item->item;
         }
+        return '-';
+    }
             ],
 
             [
                 'attribute' => 'idItem',
+                'contentOptions' => ['data-cellvalue' => 'Referencia'],
                 'label' => 'Referencia',
                 'value' => function ($model) {
-            if ($model->item) {
-                return $model->item->referencia;
-            }
-            return '-';
+        if ($model->item) {
+            return $model->item->referencia;
         }
+        return '-';
+    }
             ],
-
             [
                 'attribute' => 'idItem',
+                'contentOptions' => ['data-cellvalue' => 'Unidad Orden'],
                 'label' => 'Unidad',
                 'value' => function ($model) {
-            if ($model->item) {
-                return $model->item->unidadEmpaque;
-            }
-            return '-';
+        if ($model->item) {
+            return $model->item->unidadOrden;
         }
+        return '-';
+    }
             ],
-
             [
                 'attribute' => 'idItem',
+                'contentOptions' => ['data-cellvalue' => 'Unidad Empaque'],
+                'label' => 'Emapque',
+                'value' => function ($model) {
+        if ($model->item) {
+            return $model->item->unidadEmpaque;
+        }
+        return '-';
+    }
+            ],
+            [
+                'attribute' => 'idItem',
+                'contentOptions' => ['data-cellvalue' => 'Color'],
                 'label' => 'Color',
                 'value' => function ($model) {
-            if ($model->item->color) {
-                return $model->item->color->nombre;
-            }
-            return '-';
+        if ($model->item->color) {
+            return $model->item->color->nombre;
         }
+        return '-';
+    }
             ],
+            [
+                'attribute' => 'cantidad',
+                'contentOptions' => ['data-cellvalue' => 'Cantidad'],
 
-            'cantidad',
+            ],
             /*[
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Traspasodetalle $model, $key, $index, $column) {

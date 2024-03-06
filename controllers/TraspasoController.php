@@ -87,12 +87,12 @@ class TraspasoController extends Controller
         $model->idEstado = 1;
         // $model->id = Tipodocumento::find()->where(['"2TB'=> $model->id])->one();
         $tipoDocumento = Tipodocumento::findOne(['codigo' => '2TB']);
-        if ($tipoDocumento) {
-            var_dump('TipoDocumento: ' . $tipoDocumento->codigo);
-        } else {
-            var_dump('TipoDocumento not found');
-        }
-        die();  
+        // var_dump($model->idBodegaOrigen);
+        // if ($tipoDocumento) {
+        //     var_dump('TipoDocumento: ' . $tipoDocumento->codigo);
+        // } else {
+        //     var_dump('TipoDocumento not found');
+        // }  
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['/traspasodetalle/create', 'idtraspaso' => $model->id]);

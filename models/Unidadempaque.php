@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "unidadempaque".
@@ -21,7 +24,25 @@ class Unidadempaque extends \yii\db\ActiveRecord
     {
         return 'unidadempaque';
     }
-
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('GETDATE()'),
+            ],
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+                'value' => function ($event) {
+                    return Yii::$app->user->id;
+                },
+            ],
+        ];
+    }
     /**
      * {@inheritdoc}
      */

@@ -13,6 +13,11 @@ use yii\bootstrap5\NavBar;
 AppAsset::register($this);
 use kartik\icons\Icon;
 
+$this->registerCss('#w3-collapse {
+    justify-content: flex-end;
+  }
+  ');
+  
 Icon::map($this);
 $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
@@ -58,7 +63,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
                 . Html::beginForm(['/site/logout'])
                 . Html::submitButton(
                     'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'nav-link btn btn-link logout']
+                    ['class' => 'nav-link btn btn-link logout d-flex justify-content-end']
                 )
                 . Html::endForm()
                 . '</li>'
@@ -81,11 +86,12 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <footer id="footer" class="mt-auto py-3 bg-light">
         <div class="container">
             <div class="row text-muted">
-                <div class="col-md-6 text-center text-md-start">&copy;herposoft20 traspaso
+                <div class="col-md-6 text-center text-md-start">&copy;
+                    <?= Yii::$app->params['proyectoNombre'] ?? 'Herposoft20' ?>
                     <?= date('Y') ?>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
-                    <?= Yii::powered() ?>
+                    <!-- <?= Yii::powered() ?> -->
                 </div>
             </div>
         </div>
