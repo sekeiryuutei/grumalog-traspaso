@@ -132,7 +132,14 @@ class TraspasoController extends Controller
         ]);
     }
 
-
+    public function actionFactura($id)
+    {
+        $model = $this->findModel($id);
+        if ($model->idEstado !== 3) {
+            return $this->redirect(['index']);
+        }
+        return $this->redirect(['/traspasodetalle/print', 'idtraspaso' => $model->id]);
+    }
     /**
      * Deletes an existing Traspaso model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -142,7 +149,12 @@ class TraspasoController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if ($model->idEstado == 3 || $model->idEstado == 4) {
+            return $this->redirect(['index']);
+        }
+        $model->delete();
 
         return $this->redirect(['index']);
     }

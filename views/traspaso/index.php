@@ -85,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Traspaso', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]);                     ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]);                       ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -136,7 +136,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => ActionColumn::className(),
                 'header' => 'Acción',
                 'headerOptions' => ['width' => '15%'],
-                'template' => '{update} {detalle} {delete} {VerImpresion}',
+                'template' => '{update} {detalle} {factura} {delete} ',
                 'contentOptions' => ['data-cellvalue' => 'Acciones',],
                 'buttons' => [
 
@@ -160,7 +160,16 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ]
                             );
                         },
- 
+                    'factura' => function ($url, $model) {
+                            return Html::a(
+                                '<i class="fa fa-print"></i>',
+                                ['factura', 'id' => $model->id],
+                                [
+                                    'title' => 'Ver factura generada',
+                                    'class' => 'btn btn-default',
+                                ]
+                            );
+                        },
                     'delete' => function ($url, $model) {
                             return Html::a(
                                 '<i class="fa fa-trash"></i>',
@@ -179,7 +188,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         },
 
                 ],
-
                 'visibleButtons' => [
                     'update' => function ($model, $key, $index) {
                             return $model->idEstado != 3 && $model->idEstado != 4; // Condición para mostrar el botón
@@ -190,10 +198,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'delete' => function ($model, $key, $index) {
                             return $model->idEstado != 3 && $model->idEstado != 4; // Condición para mostrar el botón
                         },
-
+                    'factura' => function ($model, $key, $index) {
+                            return $model->idEstado == 3; // Condición para mostrar el botón
+                        },
                 ],
-
-
             ],
 
         ],
