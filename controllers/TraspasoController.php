@@ -68,7 +68,7 @@ class TraspasoController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->idEstado == 0) {
+        if ($model->idEstado == 3 || $model->idEstado == 4) {
             return $this->redirect(['index']);
         }
 
@@ -85,15 +85,13 @@ class TraspasoController extends Controller
     {
         $model = new Traspaso();
         $model->idEstado = 1;
-        // $model->id = Tipodocumento::find()->where(['"2TB'=> $model->id])->one();
-        $tipoDocumento = Tipodocumento::findOne(['codigo' => '2TB']);
-        // var_dump($model->idBodegaOrigen);
-        // if ($tipoDocumento) {
-        //     var_dump('TipoDocumento: ' . $tipoDocumento->codigo);
-        // } else {
-        //     var_dump('TipoDocumento not found');
-        // }  
         if ($this->request->isPost) {
+            if ($model->load($this->request->post())) {
+                $tipoDocumento = Tipodocumento::findOne(['id' => $model->bodegaOrigen->tipodocumento->idTipoDocumento]);
+                $model->idTipoDocumento = $tipoDocumento->id;
+                $model->consecutivo = $tipoDocumento->consecutivoProximo;
+            }
+            // die($model->id ."-" .  $model->idTipoDocumento);
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['/traspasodetalle/create', 'idtraspaso' => $model->id]);
             }
@@ -117,7 +115,7 @@ class TraspasoController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->idEstado == 0) {
+        if ($model->idEstado == 3 || $model->idEstado == 4) {
             return $this->redirect(['index']);
         }
 

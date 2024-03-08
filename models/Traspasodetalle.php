@@ -56,10 +56,18 @@ class Traspasodetalle extends \yii\db\ActiveRecord
      */
     public function rules()
     {
+        // return [
+        //     [['idTraspaso', 'codigoitem','idItem', ], 'required', 'message' => '{attribute} Es Un Valor Obligatorio'],
+        //     [['cantidad'], 'integer'],
+        //     [['idTraspaso', 'idItem'], 'string', 'max' => 50],
+        //     [['idTraspaso'], 'exist', 'skipOnError' => true, 'targetClass' => Traspaso::class, 'targetAttribute' => ['idTraspaso' => 'id']],
+        //     [['idItem'], 'exist', 'skipOnError' => true, 'targetClass' => Item::class, 'targetAttribute' => ['idItem' => 'id']],
+        // ];
         return [
-            [['idTraspaso', 'codigoitem','idItem', ], 'required', 'message' => '{attribute} Es Un Valor Obligatorio'],
-            [['cantidad'], 'integer'],
-            [['idTraspaso', 'idItem'], 'string', 'max' => 50],
+            [['idTraspaso', 'idItem', 'codigoitem'], 'required', 'message' => '{attribute} Es Un Valor Obligatorio'],
+            [['idTraspaso', 'cantidad', 'created_by', 'updated_by'], 'integer'],
+            [['created_at', 'updated_at'], 'safe'],
+            [['idItem'], 'string', 'max' => 50],
             [['idTraspaso'], 'exist', 'skipOnError' => true, 'targetClass' => Traspaso::class, 'targetAttribute' => ['idTraspaso' => 'id']],
             [['idItem'], 'exist', 'skipOnError' => true, 'targetClass' => Item::class, 'targetAttribute' => ['idItem' => 'id']],
         ];
@@ -76,6 +84,7 @@ class Traspasodetalle extends \yii\db\ActiveRecord
             'idItem' => 'item',
             'cantidad' => 'cantidad',
             'codigoitem' => 'CODE EAN',
+            'total' => 'Cantidad total'
         ];
     }
 

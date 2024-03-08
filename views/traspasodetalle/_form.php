@@ -3,6 +3,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\grid\ActionColumn;
 use kartik\grid\GridView;
+use app\widgets\Alert;
 
 use common\models;
 
@@ -97,6 +98,7 @@ $this->registerJs("
     });
 ");
 ?>
+<?= Alert::widget() ?>
 
 <div class="traspasodetalle-form">
 
@@ -107,14 +109,15 @@ $this->registerJs("
             <h1 id="tipodocumento_traspaso">
                 <?=
                     $model->traspaso->bodegaOrigen->tipodocumento->tipodocumento->codigo
-                    ?>
+                    ?>-
             </h1>
         <?php endif; ?>
         </h1>
         <h1 id="consecutivo">
             <?= $model->traspaso->consecutivo ?>
         </h1>
-        <h2>
+        <h2 style="margin-left:5px;">
+            <!-- <?= $model->traspaso->bodegaOrigen->tipodocumento->tipodocumento->consecutivoProximo ?> -->
             <?= Yii::$app->user->isGuest ? ' ' : Yii::$app->user->identity->username ?>
         </h2>
     </div>
@@ -167,13 +170,11 @@ $this->registerJs("
 <div class="traspasodetalle-index">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-
         'summary' => 'Mostrando {begin} - {end} de {totalCount} resultados',
         'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => '-'],
         'options' => [
             'class' => 'mi-gridview', // Agrega una clase CSS a la tabla generada por el GridView
         ],
-
         // 'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
@@ -184,7 +185,8 @@ $this->registerJs("
 
             ],
             [
-                'attribute' => 'codigoBarras',
+                'attribute' => 'codigoitem',
+                // 'label' => 'Code ean',
                 'contentOptions' => ['data-cellvalue' => 'codigoBarras'],
                 'value' => function ($model) {
         if ($model->item) {
@@ -194,47 +196,12 @@ $this->registerJs("
     }
 
             ],
-            //'idItem',
             [
                 'attribute' => 'idItem',
                 'contentOptions' => ['data-cellvalue' => 'idItem'],
                 'value' => function ($model) {
         if ($model->item) {
             return $model->item->item;
-        }
-        return '-';
-    }
-            ],
-
-            [
-                'attribute' => 'idItem',
-                'contentOptions' => ['data-cellvalue' => 'Referencia'],
-                'label' => 'Referencia',
-                'value' => function ($model) {
-        if ($model->item) {
-            return $model->item->referencia;
-        }
-        return '-';
-    }
-            ],
-            [
-                'attribute' => 'idItem',
-                'contentOptions' => ['data-cellvalue' => 'Unidad Orden'],
-                'label' => 'Unidad',
-                'value' => function ($model) {
-        if ($model->item) {
-            return $model->item->unidadOrden;
-        }
-        return '-';
-    }
-            ],
-            [
-                'attribute' => 'idItem',
-                'contentOptions' => ['data-cellvalue' => 'Unidad Empaque'],
-                'label' => 'Emapque',
-                'value' => function ($model) {
-        if ($model->item) {
-            return $model->item->unidadEmpaque;
         }
         return '-';
     }
@@ -251,9 +218,52 @@ $this->registerJs("
     }
             ],
             [
+                'attribute' => 'idItem',
+                'contentOptions' => ['data-cellvalue' => 'Talla'],
+                'label' => 'Talla',
+                'value' => function ($model) {
+        if ($model->item) {
+            return $model->item->talla->nombre;
+        }
+        return '-';
+    }
+            ],
+            [
+                'attribute' => 'idItem',
+                'contentOptions' => ['data-cellvalue' => 'Unidad Orden'],
+                'label' => 'Unidad',
+                'value' => function ($model) {
+        if ($model->item) {
+            return $model->item->unidadOrden;
+        }
+        return '-';
+    }
+            ],
+            [
                 'attribute' => 'cantidad',
                 'contentOptions' => ['data-cellvalue' => 'Cantidad'],
 
+            ],
+            [
+                'attribute' => 'idItem',
+                'contentOptions' => ['data-cellvalue' => 'Unidad Empaque'],
+                'label' => 'Emapaque',
+                'value' => function ($model) {
+        if ($model->item->unidadEmpaque) {
+            return $model->item->unidadEmpaque;
+        }
+        return 'UND';
+    }
+            ],
+            [
+                'attribute' => 'total',
+                'contentOptions' => ['data-cellvalue' => 'Cantidad Total'],
+                'value' => function ($model) {
+        if ($model->item->unidadEmpaque) {
+            return $model->cantidad * $model->item->idunidadempaque->equivalencia;
+        }
+        return $model->cantidad;
+    }
             ],
             /*[
                 'class' => ActionColumn::className(),
