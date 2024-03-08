@@ -90,8 +90,12 @@ class TraspasoController extends Controller
                 $tipoDocumento = Tipodocumento::findOne(['id' => $model->bodegaOrigen->tipodocumento->idTipoDocumento]);
                 $model->idTipoDocumento = $tipoDocumento->id;
                 $model->consecutivo = $tipoDocumento->consecutivoProximo;
+
+                // Incrementar el próximo consecutivo en Tipodocumento
+                $tipoDocumento->consecutivoProximo += 1;
+                $tipoDocumento->save();
+
             }
-            // die($model->id ."-" .  $model->idTipoDocumento);
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['/traspasodetalle/create', 'idtraspaso' => $model->id]);
             }
@@ -127,6 +131,7 @@ class TraspasoController extends Controller
             'model' => $model,
         ]);
     }
+
 
     /**
      * Deletes an existing Traspaso model.

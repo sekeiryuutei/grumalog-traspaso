@@ -136,7 +136,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => ActionColumn::className(),
                 'header' => 'Acción',
                 'headerOptions' => ['width' => '15%'],
-                'template' => '{update} {detalle} {delete}',
+                'template' => '{update} {detalle} {delete} {VerImpresion}',
                 'contentOptions' => ['data-cellvalue' => 'Acciones',],
                 'buttons' => [
 
@@ -160,6 +160,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ]
                             );
                         },
+ 
                     'delete' => function ($url, $model) {
                             return Html::a(
                                 '<i class="fa fa-trash"></i>',
@@ -189,6 +190,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'delete' => function ($model, $key, $index) {
                             return $model->idEstado != 3 && $model->idEstado != 4; // Condición para mostrar el botón
                         },
+
                 ],
 
 

@@ -98,7 +98,7 @@ $(document).ready(function() {
         <h6 class="d-flex flex-row" style="margin-right:5px;">
             NUMERO:
             <div id="consecutivo">
-                <?= $model->bodegaOrigen->tipodocumento->tipodocumento->consecutivoProximo ?>
+                <?= $model->consecutivo ?>
             </div>
         </h6>
         <h6 style="margin-left:50px">&#160Caja: PKM</h6>
