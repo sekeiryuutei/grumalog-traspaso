@@ -134,6 +134,10 @@ class Item extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Unidadempaque::class, ['codigo' => 'unidadEmpaque']);
     }
+    public function getIdunidadempaque()
+    {
+        return $this->hasOne(Unidadempaque::class, ['id' => 'unidadEmpaque']);
+    }
     /**
      * Gets query for [[IdMarca0]].
      *

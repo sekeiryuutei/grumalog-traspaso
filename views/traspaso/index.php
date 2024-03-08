@@ -85,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Traspaso', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]);                    ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]);                     ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -125,6 +125,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'idEstado',
                 'filter' => Estadotraspaso::getListaData(),
                 'value' => function ($model) {
+                        // var_dump($model);
+                        // die ();
                         return $model->estado->nombre;
                     },
                 'contentOptions' => ['data-cellvalue' => 'idEstado',],
@@ -166,9 +168,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'class' => 'btn btn-default',
                                     'title' => 'Eliminar Registro',
                                     'data' => [
-                                        'confirm' => 'Esta Seguro de Eliminar Este Registro? ( OC:' . $model->bodegaOrigen->nombre . '-' .
-                                            $model->bodegaDestino->nombre . '-' .
-                                            $model->numeroCajas . ' )',
+                                        'confirm' => 'Esta seguro de eliminar este registro? ( Origen:' . $model->bodegaOrigen->nombre . ' Destino: ' .
+                                            $model->bodegaDestino->nombre . ' numero de cajas: ' .
+                                            $model->numeroCajas . ', al elimarlo se perdera la lista interna de items )',
                                         'method' => 'post',
                                     ]
                                 ]
@@ -179,13 +181,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 'visibleButtons' => [
                     'update' => function ($model, $key, $index) {
-                            return $model->idEstado != 5 && $model->idEstado != 6; // Condición para mostrar el botón
+                            return $model->idEstado != 3 && $model->idEstado != 4; // Condición para mostrar el botón
                         },
                     'detalle' => function ($model, $key, $index) {
-                            return $model->idEstado != 5 && $model->idEstado != 6; // Condición para mostrar el botón
+                            return $model->idEstado != 3 && $model->idEstado != 4; // Condición para mostrar el botón
                         },
                     'delete' => function ($model, $key, $index) {
-                            return $model->idEstado != 5 && $model->idEstado != 6; // Condición para mostrar el botón
+                            return $model->idEstado != 3 && $model->idEstado != 4; // Condición para mostrar el botón
                         },
                 ],
 

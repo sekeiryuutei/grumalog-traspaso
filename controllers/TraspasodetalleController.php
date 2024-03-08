@@ -8,7 +8,7 @@ use app\models\search\TraspasodetalleSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use Yii;
 use app\models\Item;
 use kartik\mpdf\Pdf;
 
@@ -76,7 +76,6 @@ class TraspasodetalleController extends Controller
         $model->idTraspaso = $idtraspaso;
         $model->cantidad = 1;
 
-        // die($model->traspaso->bodegaOrigen->nombre);
         $model->bodegaorigen = $model->traspaso->bodegaOrigen->nombre;
         $model->bodegadestino = $model->traspaso->bodegaDestino->nombre;
 
@@ -86,28 +85,33 @@ class TraspasodetalleController extends Controller
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
                 $modelitem = Item::findOne(['codigoBarras' => $model->codigoitem]);
-                $model->idItem = $modelitem->id;
-                // die($idtraspaso . "<<<<" . $model->idItem  . "<<");
-                $modeldetalle = Traspasodetalle::find()->where([
-                    'idTraspaso' => $idtraspaso,
-                    'idItem' => $model->idItem
-                ])->one();
-
-                if ($modeldetalle == null) {
-                    $modeldetalle = new Traspasodetalle();
-                    $modeldetalle->idTraspaso = $model->idTraspaso;
-                    $modeldetalle->idItem = $model->idItem;
-                    $modeldetalle->cantidad = 0;
+                if ($modelitem == null) {
+                    Yii::$app->session->setFlash('error', 'No existe codigo de barras: ' . $model->codigoitem);
+                } else {
+                    $model->idItem = $modelitem->id;
+                    $modeldetalle = Traspasodetalle::find()->where([
+                        'idTraspaso' => $idtraspaso,
+                        'idItem' => $model->idItem
+                    ])->one();
+                    if ($modeldetalle == null) {
+                        $modeldetalle = new Traspasodetalle();
+                        $modeldetalle->idTraspaso = $model->idTraspaso;
+                        $modeldetalle->idItem = $model->idItem;
+                        $modeldetalle->cantidad = 0;
+                    }
+                    $modeldetalle->codigoitem = $model->idItem;
+                    $modeldetalle->cantidad = $modeldetalle->cantidad + $model->cantidad;
+                    Yii::debug('Guardando el modelo detalle', __METHOD__);
+                    if ($modeldetalle->validate()) {
+                        Yii::debug('Modelo válido, guardando', __METHOD__);
+                        $modeldetalle->save();
+                        Yii::debug('Modelo guardado correctamente', __METHOD__);
+                    } else {
+                        Yii::debug('El modelo no es válido. Verifica los datos.', __METHOD__);
+                        Yii::$app->session->setFlash('error', 'El modelo no es válido, verifica los datos.' . __METHOD__);
+                    }
+                    return $this->redirect(['create', 'idtraspaso' => $idtraspaso]);
                 }
-
-                $modeldetalle->codigoitem = $model->idItem;
-                // die($modeldetalle->codigoitem);
-                $modeldetalle->cantidad = $modeldetalle->cantidad + $model->cantidad;
-                $modeldetalle->save();
-
-                // var_dump( $modeldetalle->cantidad .' - '. $model->cantidad);die();
-
-
                 return $this->redirect(['create', 'idtraspaso' => $idtraspaso]);
             }
         } else {
@@ -149,7 +153,7 @@ class TraspasodetalleController extends Controller
     {
         $model = Traspaso::findOne(['id' => $idtraspaso]);
 
-        $model->idEstado = 0;
+        $model->idEstado = 3;
         $model->save();
 
         return $this->redirect(['/traspaso/index']);
@@ -235,4 +239,5 @@ class TraspasodetalleController extends Controller
 
         throw new NotFoundHttpException('La página solicitada no existe.');
     }
+
 }
