@@ -14,6 +14,7 @@ $this->registerCss('
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\widgets\Alert;
 
 use app\models\Bodegas;
 
@@ -26,10 +27,12 @@ use app\models\Bodegas;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= Alert::widget() ?>
+
     <div class="row">
         <div class="col-12 col-lg-4">
             <?= $form->field($model, 'idBodegaOrigen')->dropDownList(
-                Bodegas::getListaData(),
+                Bodegas::getListaDataId(['207','210']),
                 [
                     'prompt' => ' Bodega Origen ... ',
                     'id' => 'id-bodega-origen',

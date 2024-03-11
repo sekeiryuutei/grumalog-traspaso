@@ -85,8 +85,18 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Traspaso', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]);                       ?>
+    <?php
+    // Obtén el modelo del estado eliminado
+    $modelEstadoEliminado = Estadotraspaso::findOne(['id' => 3]);
 
+    // Configura el DataProvider para excluir registros con idEstado = 3
+    $dataProvider = new \yii\data\ActiveDataProvider([
+        'query' => Traspaso::find()->where(['!=', 'idEstado', 3]),
+        'pagination' => [
+            'pageSize' => 20,
+        ],
+    ]);
+    ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -104,16 +114,16 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'idBodegaOrigen',
                 'value' => function ($model) {
-                        return $model->bodegaOrigen->nombre;
-                    },
+                    return $model->bodegaOrigen->nombre;
+                },
                 'filter' => Bodegas::getListaData(),
                 'contentOptions' => ['data-cellvalue' => 'idBodegaOrigen'],
             ],
             [
                 'attribute' => 'idBodegaDestino',
                 'value' => function ($model) {
-                        return $model->bodegaDestino->nombre;
-                    },
+                    return $model->bodegaDestino->nombre;
+                },
                 'filter' => Bodegas::getListaData(),
                 'contentOptions' => ['data-cellvalue' => 'idBodegaDestino'],
             ],
@@ -123,12 +133,12 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'idEstado',
-                'filter' => Estadotraspaso::getListaData(),
+                'filter' => Estadotraspaso::getListaDataMenosEliminado(),
                 'value' => function ($model) {
-                        // var_dump($model);
-                        // die ();
-                        return $model->estado->nombre;
-                    },
+                    // var_dump($model->estado->nombre);
+                    // die ();
+                    return $model->estado ? $model->estado->nombre : null;
+                },
                 'contentOptions' => ['data-cellvalue' => 'idEstado',],
             ],
 
@@ -136,71 +146,90 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => ActionColumn::className(),
                 'header' => 'Acción',
                 'headerOptions' => ['width' => '15%'],
-                'template' => '{update} {detalle} {factura} {delete} ',
+                'template' => '{update} {detalle} {factura} {delete} {anular} ',
                 'contentOptions' => ['data-cellvalue' => 'Acciones',],
                 'buttons' => [
 
                     'detalle' => function ($url, $model) {
-                            return Html::a(
-                                '<i class="fa fa-list"></i>',
-                                ['detalle', 'id' => $model->id],
-                                [
-                                    'title' => 'Registrar Items Traspado',
-                                    'class' => 'btn btn-default btn_detalle',
-                                ]
-                            );
-                        },
+                        return Html::a(
+                            '<i class="fa fa-list"></i>',
+                            ['detalle', 'id' => $model->id],
+                            [
+                                'title' => 'Registrar Items Traspado',
+                                'class' => 'btn btn-default btn_detalle',
+                            ]
+                        );
+                    },
                     'update' => function ($url, $model) {
-                            return Html::a(
-                                '<i class="fa fa-edit"></i>',
-                                ['update', 'id' => $model->id],
-                                [
-                                    'title' => 'Actualizar Datos Traspaso',
-                                    'class' => 'btn btn-default btn_update',
-                                ]
-                            );
-                        },
+                        return Html::a(
+                            '<i class="fa fa-edit"></i>',
+                            ['update', 'id' => $model->id],
+                            [
+                                'title' => 'Actualizar Datos Traspaso',
+                                'class' => 'btn btn-default btn_update',
+                            ]
+                        );
+                    },
                     'factura' => function ($url, $model) {
-                            return Html::a(
-                                '<i class="fa fa-print"></i>',
-                                ['factura', 'id' => $model->id],
-                                [
-                                    'title' => 'Ver factura generada',
-                                    'class' => 'btn btn-default',
-                                ]
-                            );
-                        },
+                        return Html::a(
+                            '<i class="fa fa-print"></i>',
+                            ['factura', 'id' => $model->id],
+                            [
+                                'title' => 'Ver factura generada',
+                                'class' => 'btn btn-default',
+                            ]
+                        );
+                    },
                     'delete' => function ($url, $model) {
-                            return Html::a(
-                                '<i class="fa fa-trash"></i>',
-                                ['delete', 'id' => $model->id],
-                                [
-                                    'class' => 'btn btn-default',
-                                    'title' => 'Eliminar Registro',
-                                    'data' => [
-                                        'confirm' => 'Esta seguro de eliminar este registro? ( Origen:' . $model->bodegaOrigen->nombre . ' Destino: ' .
-                                            $model->bodegaDestino->nombre . ' numero de cajas: ' .
-                                            $model->numeroCajas . ', al elimarlo se perdera la lista interna de items )',
-                                        'method' => 'post',
-                                    ]
+                        return Html::a(
+                            '<i class="fa fa-trash"></i>',
+                            ['delete', 'id' => $model->id],
+                            [
+                                'class' => 'btn btn-default',
+                                'title' => 'Eliminar Registro',
+                                'data' => [
+                                    'confirm' => 'Esta seguro de eliminar este registro? ( Origen:' . $model->bodegaOrigen->nombre . ' Destino: ' .
+                                        $model->bodegaDestino->nombre . ' numero de cajas: ' .
+                                        $model->numeroCajas . ', al elimarlo se perdera la lista interna de items )',
+                                    'method' => 'post',
                                 ]
-                            );
-                        },
+                            ]
+                        );
+                    },
+                    'anular' => function ($url, $model) {
+                        return Html::a(
+                            '<i class="fa fa-ban"></i>',
+                            ['anular', 'id' => $model->id],
+                            [
+                                'class' => 'btn btn-default',
+                                'title' => 'Anular Registro',
+                                'data' => [
+                                    'confirm' => 'Esta seguro de anular este registro? ( Origen: ' . $model->bodegaOrigen->nombre . ', Destino: ' .
+                                        $model->bodegaDestino->nombre . ', Numero de cajas: ' .
+                                        $model->numeroCajas . ', al elimarlo se perdera la lista interna de items )',
+                                    'method' => 'post',
+                                ]
+                            ]
+                        );
+                    },
 
                 ],
                 'visibleButtons' => [
                     'update' => function ($model, $key, $index) {
-                            return $model->idEstado != 3 && $model->idEstado != 4; // Condición para mostrar el botón
-                        },
+                        return $model->idEstado == 0; // Condición para mostrar el botón
+                    },
                     'detalle' => function ($model, $key, $index) {
-                            return $model->idEstado != 3 && $model->idEstado != 4; // Condición para mostrar el botón
-                        },
+                        return $model->idEstado == 0; // Condición para mostrar el botón
+                    },
                     'delete' => function ($model, $key, $index) {
-                            return $model->idEstado != 3 && $model->idEstado != 4; // Condición para mostrar el botón
-                        },
+                        return $model->idEstado == 0; // Condición para mostrar el botón
+                    },
                     'factura' => function ($model, $key, $index) {
-                            return $model->idEstado == 3; // Condición para mostrar el botón
-                        },
+                        return $model->idEstado == 1; // Condición para mostrar el botón
+                    },
+                    'anular' => function ($model, $key, $index) {
+                        return $model->idEstado == 1; // Condición para mostrar el botón
+                    },
                 ],
             ],
 

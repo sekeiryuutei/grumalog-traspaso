@@ -2,15 +2,15 @@
 
 namespace app\controllers;
 
+use app\models\Item;
+use app\models\search\TraspasodetalleSearch;
 use app\models\Traspaso;
 use app\models\Traspasodetalle;
-use app\models\search\TraspasodetalleSearch;
+use kartik\mpdf\Pdf;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use Yii;
-use app\models\Item;
-use kartik\mpdf\Pdf;
 
 /**
  * TraspasodetalleController implements the CRUD actions for Traspasodetalle model.
@@ -105,6 +105,7 @@ class TraspasodetalleController extends Controller
                     if ($modeldetalle->validate()) {
                         Yii::debug('Modelo válido, guardando', __METHOD__);
                         $modeldetalle->save();
+                        Yii::$app->session->setFlash('success', 'Guardado exitosamente!');
                         Yii::debug('Modelo guardado correctamente', __METHOD__);
                     } else {
                         Yii::debug('El modelo no es válido. Verifica los datos.', __METHOD__);
@@ -153,7 +154,7 @@ class TraspasodetalleController extends Controller
     {
         $model = Traspaso::findOne(['id' => $idtraspaso]);
 
-        $model->idEstado = 3;
+        $model->idEstado = 1;
         $model->save();
 
         return $this->redirect(['/traspaso/index']);

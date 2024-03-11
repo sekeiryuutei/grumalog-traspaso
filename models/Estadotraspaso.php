@@ -85,12 +85,26 @@ class Estadotraspaso extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Estadotraspaso::class, ['id' => 'id']);
     }
-    
-    public static  function  getListaData(){
+
+    public static function getListaData()
+    {
         $data = Estadotraspaso::find()
-                        ->select(['id', 'nombre'])
-                        ->orderBy('nombre')->asArray()->all();
-    	$listadata = ArrayHelper::map($data, 'id', 'nombre');
-    	return $listadata;
+            ->select(['id', 'nombre'])
+            ->orderBy('nombre')->asArray()->all();
+        $listadata = ArrayHelper::map($data, 'id', 'nombre');
+        return $listadata;
     }
+    public static function getListaDataMenosEliminado()
+    {
+        $data = Estadotraspaso::find()
+            ->select(['id', 'nombre'])
+            ->where(['!=', 'id', 3]) // Excluir registros con idEstado igual a 3
+            ->orderBy('nombre')
+            ->asArray()
+            ->all();
+
+        $listadata = ArrayHelper::map($data, 'id', 'nombre');
+        return $listadata;
+    }
+
 }

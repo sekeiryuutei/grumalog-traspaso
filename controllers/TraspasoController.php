@@ -2,14 +2,13 @@
 
 namespace app\controllers;
 
-use yii;
-use app\models\Traspaso;
 use app\models\search\TraspasoSearch;
+use app\models\Tipodocumento;
+use app\models\Traspaso;
+use yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-
-use app\models\Tipodocumento;
 
 /**
  * TraspasoController implements the CRUD actions for Traspaso model.
@@ -68,7 +67,7 @@ class TraspasoController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->idEstado == 3 || $model->idEstado == 4) {
+        if ($model->idEstado != 0) {
             return $this->redirect(['index']);
         }
 
@@ -84,7 +83,7 @@ class TraspasoController extends Controller
     public function actionCreate()
     {
         $model = new Traspaso();
-        $model->idEstado = 1;
+        $model->idEstado = 0;
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
                 $tipoDocumento = Tipodocumento::findOne(['id' => $model->bodegaOrigen->tipodocumento->idTipoDocumento]);
@@ -119,7 +118,7 @@ class TraspasoController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->idEstado == 3 || $model->idEstado == 4) {
+        if ($model->idEstado != 0) {
             return $this->redirect(['index']);
         }
 
@@ -135,10 +134,28 @@ class TraspasoController extends Controller
     public function actionFactura($id)
     {
         $model = $this->findModel($id);
-        if ($model->idEstado !== 3) {
+        if ($model->idEstado !== 1) {
             return $this->redirect(['index']);
         }
         return $this->redirect(['/traspasodetalle/print', 'idtraspaso' => $model->id]);
+    }
+
+    public function actionAnular($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->idEstado !== 1) {
+            return $this->redirect(['index']);
+        }
+
+        if ($this->request->isPost) {
+            $model->idEstado = 2;
+            if ($model->save()) {
+                return $this->redirect(['index']);
+            } else {
+                Yii::$app->session->setFlash('error', 'Ups!, ocurrio un problema con : ' . $model);
+            }
+        }
     }
     /**
      * Deletes an existing Traspaso model.
@@ -151,10 +168,19 @@ class TraspasoController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->idEstado == 3 || $model->idEstado == 4) {
+        if ($model->idEstado != 0) {
             return $this->redirect(['index']);
         }
-        $model->delete();
+        if ($this->request->isPost) {
+            $model->idEstado = 3;
+            if ($model->save()) {
+                return $this->redirect(['index']);
+            } else {
+                Yii::$app->session->setFlash('error', 'Ups!, ocurrio un problema con : ' . $model);
+            }
+        }
+        // $model->delete();
+
 
         return $this->redirect(['index']);
     }
