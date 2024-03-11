@@ -95,6 +95,19 @@ class Bodegas extends \yii\db\ActiveRecord
         $listadata = ArrayHelper::map($data, 'id', 'nombre');
         return $listadata;
     }
+    public static function getListaDataId($allowedCodes = [])
+    {
+        $query = Bodegas::find()->select(['id', 'nombre'])->orderBy('nombre');
+
+        if (!empty($allowedCodes)) {
+            $query->andWhere(['IN', 'codigo', $allowedCodes]);
+        }
+
+        $data = $query->asArray()->all();
+        $listadata = ArrayHelper::map($data, 'id', 'nombre');
+
+        return $listadata;
+    }
     /**
      * Gets query for [[idBodega]].
      *
