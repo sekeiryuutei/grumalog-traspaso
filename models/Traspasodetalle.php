@@ -65,9 +65,8 @@ class Traspasodetalle extends \yii\db\ActiveRecord
         // ];
         return [
             [['idTraspaso', 'idItem', 'codigoitem'], 'required', 'message' => '{attribute} Es Un Valor Obligatorio'],
-            [['idTraspaso', 'cantidad', 'created_by', 'updated_by'], 'integer'],
+            [['idTraspaso', 'cantidad', 'created_by', 'updated_by', 'idItem'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['idItem'], 'string', 'max' => 50],
             [['idTraspaso'], 'exist', 'skipOnError' => true, 'targetClass' => Traspaso::class, 'targetAttribute' => ['idTraspaso' => 'id']],
             [['idItem'], 'exist', 'skipOnError' => true, 'targetClass' => Item::class, 'targetAttribute' => ['idItem' => 'id']],
         ];
@@ -84,7 +83,10 @@ class Traspasodetalle extends \yii\db\ActiveRecord
             'idItem' => 'item',
             'cantidad' => 'cantidad',
             'codigoitem' => 'CODE EAN',
-            'total' => 'Cantidad total'
+            'total' => 'Cantidad total',
+            'bodegaorigen' => 'Bodega origen',
+            'bodegadestino' => 'Bodega destino'
+
         ];
     }
 

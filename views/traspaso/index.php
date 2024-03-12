@@ -91,7 +91,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     // Configura el DataProvider para excluir registros con idEstado = 3
     $dataProvider = new \yii\data\ActiveDataProvider([
-        'query' => Traspaso::find()->where(['!=', 'idEstado', 3]),
+        'query' => Traspaso::find()->where(['!=', 'idEstado', 3])->orderBy(['created_at' => SORT_DESC]),
         'pagination' => [
             'pageSize' => 20,
         ],

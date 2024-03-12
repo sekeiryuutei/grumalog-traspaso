@@ -14,8 +14,13 @@ AppAsset::register($this);
 use kartik\icons\Icon;
 
 $this->registerCss('#w3-collapse {
-    justify-content: flex-end;
+    justify-content: flex-end !important;
   }
+  .navbar-expand-md .navbar-collapse {
+    display: flex !important;
+    flex-basis: auto;
+    justify-content: flex-end !important;
+}
   ');
   
 Icon::map($this);

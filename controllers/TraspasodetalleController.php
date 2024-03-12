@@ -108,7 +108,10 @@ class TraspasodetalleController extends Controller
                         Yii::$app->session->setFlash('success', 'Guardado exitosamente!');
                         Yii::debug('Modelo guardado correctamente', __METHOD__);
                     } else {
+                        var_dump($modeldetalle->getErrors());
+                        die('<-- error');
                         Yii::debug('El modelo no es válido. Verifica los datos.', __METHOD__);
+                       
                         Yii::$app->session->setFlash('error', 'El modelo no es válido, verifica los datos.' . __METHOD__);
                     }
                     return $this->redirect(['create', 'idtraspaso' => $idtraspaso]);

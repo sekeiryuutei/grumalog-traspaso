@@ -95,3 +95,10 @@ a.desc:after {
 #w3-collapse {
     justify-content: flex-end;
   }
+
+
+.navbar-expand-md .navbar-collapse {
+    display: flex !important;
+    flex-basis: auto;
+    justify-content: flex-end !important;
+}
