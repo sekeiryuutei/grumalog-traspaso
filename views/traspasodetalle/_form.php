@@ -260,7 +260,9 @@ $this->registerJs("
                 'contentOptions' => ['data-cellvalue' => 'Cantidad Total'],
                 'value' => function ($model) {
         if ($model->item->unidadEmpaque) {
-            return $model->cantidad * $model->item->idunidadempaque->equivalencia;
+            // var_dump($model->item->unidadempaque->equivalencia);
+            // die();
+            return $model->cantidad * $model->item->unidadempaque->equivalencia;
         }
         return $model->cantidad;
     }
