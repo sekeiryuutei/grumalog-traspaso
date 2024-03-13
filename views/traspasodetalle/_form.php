@@ -12,12 +12,6 @@ use common\models;
 /** @var yii\widgets\ActiveForm $form */
 
 $this->registerCss('
-    .basuraIcon{
-        padding: 0 !important;
-        margin:0;
-        border: solid 2px red;
-    }
-
     .mi-gridview {
         font-size: 11px; /* Ajusta el tamaño de la fuente según sea necesario */
         /* Otros estilos CSS según sea necesario */
@@ -49,12 +43,21 @@ $this->registerCss('
     }
 
     @media (max-width: 650px) {
-        tr:first-of-type {
+        
+        .basuraIcon{
+            display:contents !important;
+        }
+
+        thead tr:first-of-type {
             display:none;
         }
+        .w23{
+            padding:0;
+        }
+        tr{}
         th, td {
             display:block;
-            padding: 5px;
+            padding: 2px !important;
         }
         td::before {
             content: attr(data-cellvalue) ": ";
@@ -177,14 +180,15 @@ $this->registerJs("
         'summary' => 'Mostrando {begin} - {end} de {totalCount} resultados',
         'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => '-'],
         'options' => [
-            'class' => 'mi-gridview', 
+            'class' => 'mi-gridview',
         ],
         // 'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
                 'class' => ActionColumn::className(),
-                'header' => 'Eliminar', 
+                'contentOptions' => ['data-cellvalue' => 'Accion'],
+                'header' => 'Eliminar',
                 'template' => '{delete}', // Define qué acciones se mostrarán como botones
                 'buttons' => [
                     'delete' => function ($url, $model) {
@@ -192,7 +196,7 @@ $this->registerJs("
                                 '<i class="fa fa-trash fa-xs" ></i>',
                                 ['delete', 'id' => $model->id, 'idtraspaso' => $model->idTraspaso],
                                 [
-                                    'class' => 'btn btn-default p-0 d-flex justify-content-center',
+                                    'class' => 'btn btn-default p-0 d-flex justify-content-center basuraIcon',
                                     'title' => 'Eliminar Registro',
                                     'data' => [
                                         'confirm' => 'Esta seguro de eliminar este registro con codigo de barras: '
@@ -207,6 +211,7 @@ $this->registerJs("
             ],
             [
                 'attribute' => 'codigoitem',
+                'label' => 'codigoitem',
                 'contentOptions' => ['data-cellvalue' => 'codigoBarras'],
                 'value' => function ($model) {
                         if ($model->item) {
@@ -267,7 +272,7 @@ $this->registerJs("
             [
                 'attribute' => 'idItem',
                 'contentOptions' => ['data-cellvalue' => 'Unidad Empaque'],
-                'label' => 'Emapaque',
+                'label' => 'Empaque',
                 'value' => function ($model) {
                         if ($model->item->unidadEmpaque) {
                             return $model->item->unidadEmpaque;
@@ -276,7 +281,8 @@ $this->registerJs("
                     }
             ],
             [
-                'attribute' => 'total',
+                'attribute' => 'idItem',
+                'label' => 'total',
                 'contentOptions' => ['data-cellvalue' => 'Cantidad Total'],
                 'value' => function ($model) {
                         if ($model->item->unidadEmpaque) {
