@@ -10,11 +10,19 @@ $this->registerCss('
 th{
     padding-right: 10px;
 }
+@media (max-width: 650px) {
+    table {
+        border-collapse: separate;
+        // border-spacing: 10px 0px;
+        font-size:10px;
+        width: 100%;
+    }
+}
 table {
     border-collapse: separate;
     // border-spacing: 10px 0px;
     font-size:10px;
-    width: 100%;
+    width: 60%;
 }
 td {
     white-space: normal; /* Permite saltos de línea */

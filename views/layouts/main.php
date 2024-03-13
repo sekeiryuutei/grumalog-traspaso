@@ -22,7 +22,7 @@ $this->registerCss('#w3-collapse {
     justify-content: flex-end !important;
 }
   ');
-  
+
 Icon::map($this);
 $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
@@ -63,11 +63,11 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
                 // ['label' => 'Contact', 'url' => ['/site/contact']],
                 // ['label' => 'Traspaso', 'url' => ['/traspaso/index']],
                 Yii::$app->user->isGuest
-                ? ['label' => 'Login', 'url' => ['/site/login']]
+                ? ['label' => 'Iniciar Sesion', 'url' => ['/site/login']]
                 : '<li class="nav-item">'
                 . Html::beginForm(['/site/logout'])
                 . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
+                    'Salir (' . Yii::$app->user->identity->username . ')',
                     ['class' => 'nav-link btn btn-link logout d-flex justify-content-end']
                 )
                 . Html::endForm()
@@ -81,7 +81,16 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <main id="main" class="flex-shrink-0" role="main">
         <div class="container">
             <?php if (!empty($this->params['breadcrumbs'])): ?>
-                <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
+                <?=
+                    //  Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]);
+                    Breadcrumbs::widget([
+                        'homeLink' => [
+                            'label' => 'Hogar',
+                            'url' => 'index',
+                        ],
+                        'links' => $this->params['breadcrumbs'],
+                    ]);
+                ?>
             <?php endif ?>
             <?= Alert::widget() ?>
             <?= $content ?>

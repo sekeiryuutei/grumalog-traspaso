@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /** @var app\models\Traspaso $model */
 
 $this->title = 'Registrar Traspaso';
-$this->params['breadcrumbs'][] = ['label' => 'Traspasos', 'url' => ['index']];
+// $this->params['breadcrumbs'][] = ['label' => 'Traspasos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="traspaso-create">

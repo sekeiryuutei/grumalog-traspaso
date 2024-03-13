@@ -71,8 +71,7 @@ use app\models\Bodegas;
 /** @var yii\web\View $this */
 /** @var app\models\search\TraspasoSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
-
-$this->title = 'Traspasos';
+$this->title = 'Lista de traspasos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="traspaso-index">
@@ -82,7 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </h1>
 
     <p>
-        <?= Html::a('Create Traspaso', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Traspaso', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php

@@ -111,7 +111,7 @@ class TraspasodetalleController extends Controller
                         var_dump($modeldetalle->getErrors());
                         die('<-- error');
                         Yii::debug('El modelo no es válido. Verifica los datos.', __METHOD__);
-                       
+
                         Yii::$app->session->setFlash('error', 'El modelo no es válido, verifica los datos.' . __METHOD__);
                     }
                     return $this->redirect(['create', 'idtraspaso' => $idtraspaso]);
@@ -224,8 +224,9 @@ class TraspasodetalleController extends Controller
      */
     public function actionDelete($id, $idtraspaso)
     {
-        $this->findModel($id, $idtraspaso)->delete();
-        return $this->redirect(['traspasodetalle/index', 'idtraspaso' => $idtraspaso]);
+        $model = $this->findModel($id, $idtraspaso);
+        $model->delete();
+        return $this->redirect(['/traspasodetalle/create', 'idtraspaso' => $idtraspaso]);
     }
 
     /**
