@@ -73,6 +73,13 @@ use app\models\Bodegas;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 $this->title = 'Lista de traspasos';
 $this->params['breadcrumbs'][] = $this->title;
+
+if (Yii::$app->user->isGuest) {
+    // Si el usuario no está autenticado, redirigir al login
+    $redirectUrl = Yii::$app->urlManager->createUrl(['site/login']);
+}else{
+    $redirectUrl = null;
+}
 ?>
 <div class="traspaso-index">
 
@@ -236,3 +243,13 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
 </div>
+
+<script>
+    // Redireccionar después de que se cargue la página
+    window.onload = function () {
+        var redirectUrl = '<?= $redirectUrl ?>';
+        if (redirectUrl) {
+            window.location.href = redirectUrl;
+        }
+    };
+</script>
