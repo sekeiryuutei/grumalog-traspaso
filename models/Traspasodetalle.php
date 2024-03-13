@@ -78,14 +78,15 @@ class Traspasodetalle extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'idTraspaso' => 'Id Traspaso',
-            'idItem' => 'item',
-            'cantidad' => 'cantidad',
-            'codigoitem' => 'CODE EAN',
+            'id' => 'Id',
+            'idTraspaso' => 'Id traspaso',
+            'idItem' => 'Item',
+            'cantidad' => 'Cantidad',
+            'codigoitem' => 'Codigo EAN',
             'total' => 'Cantidad total',
             'bodegaorigen' => 'Bodega origen',
-            'bodegadestino' => 'Bodega destino'
+            'bodegadestino' => 'Bodega destino',
+            'total' => 'Cantidad total'
 
         ];
     }

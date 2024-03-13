@@ -7,7 +7,6 @@ use yii\widgets\DetailView;
 /** @var app\models\Traspaso $model */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Traspasos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>

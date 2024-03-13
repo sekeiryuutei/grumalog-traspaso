@@ -12,6 +12,12 @@ use common\models;
 /** @var yii\widgets\ActiveForm $form */
 
 $this->registerCss('
+    .basuraIcon{
+        padding: 0 !important;
+        margin:0;
+        border: solid 2px red;
+    }
+
     .mi-gridview {
         font-size: 11px; /* Ajusta el tamaño de la fuente según sea necesario */
         /* Otros estilos CSS según sea necesario */
@@ -104,20 +110,18 @@ $this->registerJs("
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <div class="d-flex flex-row align-items-baseline">
-        <?php if ($model->traspaso && $model->traspaso->bodegaOrigen && $model->traspaso->bodegaOrigen->tipodocumento): ?>
-            <h1 id="tipodocumento_traspaso">
-                <?=
-                    $model->traspaso->bodegaOrigen->tipodocumento->tipodocumento->codigo
-                    ?>-
+    <div class="d-flex flex-column align-items-baseline">
+        <div class="d-flex flex-row align-items-baseline">
+            <?php if ($model->traspaso && $model->traspaso->bodegaOrigen && $model->traspaso->bodegaOrigen->tipodocumento): ?>
+                <h1 id="tipodocumento_traspaso">
+                    <?= $model->traspaso->bodegaOrigen->tipodocumento->tipodocumento->codigo ?>-
+                </h1>
+            <?php endif; ?>
+            <h1 id="consecutivo">
+                <?= $model->traspaso->consecutivo ?>
             </h1>
-        <?php endif; ?>
-        </h1>
-        <h1 id="consecutivo">
-            <?= $model->traspaso->consecutivo ?>
-        </h1>
+        </div>
         <h2 style="margin-left:5px;">
-            <!-- <?= $model->traspaso->bodegaOrigen->tipodocumento->tipodocumento->consecutivoProximo ?> -->
             <?= Yii::$app->user->isGuest ? ' ' : Yii::$app->user->identity->username ?>
         </h2>
     </div>
@@ -155,8 +159,8 @@ $this->registerJs("
         -->
 
     <div class="form-group centrar">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'id' => 'btn_registrar', 'style'=>'display: none']) ?>
-        <?= Html::a('Imprimir', ['print', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-success btn-lg btn-create', 'target' => '_blank',]) ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'id' => 'btn_registrar', 'style' => 'display: none']) ?>
+        <?= Html::a('Imprimir', ['print', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-primary btn-lg btn-create', 'target' => '_blank',]) ?>
         <?= Html::a('Terminar', ['end', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-danger btn-lg btn-create mt-1']) ?>
     </div>
 
@@ -173,71 +177,87 @@ $this->registerJs("
         'summary' => 'Mostrando {begin} - {end} de {totalCount} resultados',
         'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => '-'],
         'options' => [
-            'class' => 'mi-gridview', // Agrega una clase CSS a la tabla generada por el GridView
+            'class' => 'mi-gridview', 
         ],
         // 'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             [
-                'attribute' => 'id',
-                'contentOptions' => ['data-cellvalue' => 'id'],
-
+                'class' => ActionColumn::className(),
+                'header' => 'Eliminar', 
+                'template' => '{delete}', // Define qué acciones se mostrarán como botones
+                'buttons' => [
+                    'delete' => function ($url, $model) {
+                            return Html::a(
+                                '<i class="fa fa-trash fa-xs" ></i>',
+                                ['delete', 'id' => $model->id, 'idtraspaso' => $model->idTraspaso],
+                                [
+                                    'class' => 'btn btn-default p-0 d-flex justify-content-center',
+                                    'title' => 'Eliminar Registro',
+                                    'data' => [
+                                        'confirm' => 'Esta seguro de eliminar este registro con codigo de barras: '
+                                            . $model->item->codigoBarras . ' talla: ' . $model->item->talla->nombre
+                                            . ' y cantidad ' . $model->cantidad,
+                                        'method' => 'post',
+                                    ]
+                                ]
+                            );
+                        }
+                ],
             ],
             [
                 'attribute' => 'codigoitem',
-                // 'label' => 'Code ean',
                 'contentOptions' => ['data-cellvalue' => 'codigoBarras'],
                 'value' => function ($model) {
-        if ($model->item) {
-            return $model->item->codigoBarras;
-        }
-        return '-';
-    }
+                        if ($model->item) {
+                            return $model->item->codigoBarras;
+                        }
+                        return '-';
+                    }
 
             ],
             [
                 'attribute' => 'idItem',
                 'contentOptions' => ['data-cellvalue' => 'idItem'],
                 'value' => function ($model) {
-        if ($model->item) {
-            return $model->item->item;
-        }
-        return '-';
-    }
+                        if ($model->item) {
+                            return $model->item->item;
+                        }
+                        return '-';
+                    }
             ],
             [
                 'attribute' => 'idItem',
                 'contentOptions' => ['data-cellvalue' => 'Color'],
                 'label' => 'Color',
                 'value' => function ($model) {
-        if ($model->item->color) {
-            return $model->item->color->nombre;
-        }
-        return '-';
-    }
+                        if ($model->item->color) {
+                            return $model->item->color->nombre;
+                        }
+                        return '-';
+                    }
             ],
             [
                 'attribute' => 'idItem',
                 'contentOptions' => ['data-cellvalue' => 'Talla'],
                 'label' => 'Talla',
                 'value' => function ($model) {
-        if ($model->item) {
-            return $model->item->talla->nombre;
-        }
-        return '-';
-    }
+                        if ($model->item) {
+                            return $model->item->talla->nombre;
+                        }
+                        return '-';
+                    }
             ],
             [
                 'attribute' => 'idItem',
                 'contentOptions' => ['data-cellvalue' => 'Unidad Orden'],
                 'label' => 'Unidad',
                 'value' => function ($model) {
-        if ($model->item) {
-            return $model->item->unidadOrden;
-        }
-        return '-';
-    }
+                        if ($model->item) {
+                            return $model->item->unidadOrden;
+                        }
+                        return '-';
+                    }
             ],
             [
                 'attribute' => 'cantidad',
@@ -249,23 +269,21 @@ $this->registerJs("
                 'contentOptions' => ['data-cellvalue' => 'Unidad Empaque'],
                 'label' => 'Emapaque',
                 'value' => function ($model) {
-        if ($model->item->unidadEmpaque) {
-            return $model->item->unidadEmpaque;
-        }
-        return 'UND';
-    }
+                        if ($model->item->unidadEmpaque) {
+                            return $model->item->unidadEmpaque;
+                        }
+                        return 'UND';
+                    }
             ],
             [
                 'attribute' => 'total',
                 'contentOptions' => ['data-cellvalue' => 'Cantidad Total'],
                 'value' => function ($model) {
-        if ($model->item->unidadEmpaque) {
-            // var_dump($model->item->unidadempaque->equivalencia);
-            // die();
-            return $model->cantidad * $model->item->unidadempaque->equivalencia;
-        }
-        return $model->cantidad;
-    }
+                        if ($model->item->unidadEmpaque) {
+                            return $model->cantidad * $model->item->unidadempaque->equivalencia;
+                        }
+                        return $model->cantidad;
+                    }
             ],
             /*[
                 'class' => ActionColumn::className(),
