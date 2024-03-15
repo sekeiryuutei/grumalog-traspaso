@@ -13,7 +13,8 @@ use yii\bootstrap5\NavBar;
 AppAsset::register($this);
 use kartik\icons\Icon;
 
-$this->registerCss('#w3-collapse {
+$this->registerCss('
+#w3-collapse {
     justify-content: flex-end !important;
   }
   .navbar-expand-md .navbar-collapse {

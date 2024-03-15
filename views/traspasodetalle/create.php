@@ -11,12 +11,13 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="traspasodetalle-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= $this->render('_form', [
         'model' => $model,
         'searchModel' => $searchModel,
         'dataProvider' => $dataProvider,
+        'count' => $count,
+        'ultimo_codigo'=> $ultimo_codigo,
+        'cantidad_paquetes' => $cantidad_paquetes,
     ]) ?>
 
 </div>

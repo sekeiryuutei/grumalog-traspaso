@@ -18,7 +18,9 @@ class TraspasoSearch extends Traspaso
     {
         return [
             [['id', 'idBodegaOrigen', 'idBodegaDestino', 'numeroCajas', 'idTipoDocumento', 'idEstado'], 'integer'],
+            [['updated_at'], 'safe'],
             [['consecutivo'], 'number'],
+
         ];
     }
 
@@ -68,6 +70,8 @@ class TraspasoSearch extends Traspaso
             'consecutivo' => $this->consecutivo,
             'idEstado' => $this->idEstado,
         ]);
+
+        $query->andFilterWhere(['like', 'updated_at', $this->updated_at]);
 
         return $dataProvider;
     }

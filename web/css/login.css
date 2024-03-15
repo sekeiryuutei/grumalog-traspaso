@@ -36,9 +36,9 @@ body {
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
-#w3-collapse {
+/* #w3-collapse {
   justify-content: flex-end;
-}
+} */
 
 .navbar-nav{
   justify-content: flex-end;

@@ -34,7 +34,6 @@ class TraspasodetalleController extends Controller
             ]
         );
     }
-
     /**
      * Lists all Traspasodetalle models.
      *
@@ -72,9 +71,27 @@ class TraspasodetalleController extends Controller
      */
     public function actionCreate($idtraspaso)
     {
+
+        $modeltraspaso = Traspaso::findOne(['id' => $idtraspaso]);
+        $ultimo_codigo = null;
+        if ($modeltraspaso->idUltimoItem != null) {
+            $modelitem = Item::findOne(['id' => $modeltraspaso->idUltimoItem]);
+            $ultimo_codigo = $modelitem->codigoBarras;
+        }
+
+        $cantidad_paquetes = Traspasodetalle::find()
+            ->alias('td')
+            ->join('INNER JOIN', 'item as it', 'td.idItem = it.id')
+            ->where(['idTraspaso' => $idtraspaso])
+            ->andWhere('unidadEmpaque IS NOT NULL')
+            ->sum('cantidad');
+
+
         $model = new Traspasodetalle();
         $model->idTraspaso = $idtraspaso;
         $model->cantidad = 1;
+        // Obtener la cantidad de elementos asociados al traspaso
+        $count = Traspasodetalle::find()->where(['idTraspaso' => $idtraspaso])->count();
 
         $model->bodegaorigen = $model->traspaso->bodegaOrigen->nombre;
         $model->bodegadestino = $model->traspaso->bodegaDestino->nombre;
@@ -105,6 +122,10 @@ class TraspasodetalleController extends Controller
                     if ($modeldetalle->validate()) {
                         Yii::debug('Modelo válido, guardando', __METHOD__);
                         $modeldetalle->save();
+
+                        $modeltraspaso->idUltimoItem = $modeldetalle->idItem;
+                        $modeltraspaso->save();
+
                         Yii::$app->session->setFlash('success', 'Guardado exitosamente!');
                         Yii::debug('Modelo guardado correctamente', __METHOD__);
                     } else {
@@ -126,8 +147,13 @@ class TraspasodetalleController extends Controller
             'model' => $model,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'count' => $count,
+            'ultimo_codigo' => $ultimo_codigo,
+            'cantidad_paquetes' => $cantidad_paquetes,
         ]);
     }
+
+
 
     /**
      * Updates an existing Traspasodetalle model.
@@ -159,8 +185,13 @@ class TraspasodetalleController extends Controller
 
         $model->idEstado = 1;
         $model->save();
+        // return $this->redirect(['/traspaso/index']);
+        $modeldetalles = $model->traspasodetalles;
 
-        return $this->redirect(['/traspaso/index']);
+        return $this->render('view_recibo', [
+            'model' => $model,
+            'modeldetalles' => $modeldetalles,
+        ]);
     }
 
     public function actionPrint($idtraspaso)
@@ -225,7 +256,15 @@ class TraspasodetalleController extends Controller
     public function actionDelete($id, $idtraspaso)
     {
         $model = $this->findModel($id, $idtraspaso);
-        $model->delete();
+        $model->codigoitem = $model->item->codigoBarras;
+
+        if ($model->cantidad > 1) {
+            $model->cantidad--;
+            $model->save();
+        } else {
+            $model->delete();
+        }
+
         return $this->redirect(['/traspasodetalle/create', 'idtraspaso' => $idtraspaso]);
     }
 

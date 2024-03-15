@@ -134,7 +134,7 @@ class TraspasoController extends Controller
     public function actionFactura($id)
     {
         $model = $this->findModel($id);
-        if ($model->idEstado !== 1) {
+        if ($model->idEstado !== 1 && $model->idEstado !== 2) {
             return $this->redirect(['index']);
         }
         return $this->redirect(['/traspasodetalle/print', 'idtraspaso' => $model->id]);

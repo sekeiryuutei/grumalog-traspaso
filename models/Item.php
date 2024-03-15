@@ -167,7 +167,7 @@ class Item extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Talla::class, ['id' => 'idTalla']);
     }
-    
+
     public function getSubcategoria()
     {
         return $this->hasOne(Subcategoria::class, ['id' => 'idSubcategoria']);
@@ -176,6 +176,23 @@ class Item extends \yii\db\ActiveRecord
     public function getCategoria()
     {
         return $this->hasOne(Categoria::class, ['id' => 'idCategoria']);
+    }
+    public function getLastbarcode()
+    {
+        $lastItem = Item::find()
+            ->leftJoin('traspasodetalle', 'item.id = traspasodetalle.idItem')
+            ->orderBy(['traspasodetalle.id' => SORT_DESC])
+            ->one();
+
+        return $lastItem ? $lastItem->codigoBarras : null;
+    }
+    public function getTotalpaquetes()
+    {
+        $numeroDePaquetes = Item::find()
+            ->leftJoin('traspasodetalle', 'item.id = traspasodetalle.idItem')
+            ->where(['item.unidadOrden' => NULL])
+            ->count();
+        return $numeroDePaquetes ? $numeroDePaquetes : null;
     }
 
 }
