@@ -6,58 +6,31 @@ $this->registerCss('
         font-size: 11px; /* Ajusta el tamaño de la fuente según sea necesario */
         /* Otros estilos CSS según sea necesario */
     }
+
     .btn-create {
          width: 300px;
     } 
+
     .centrar {
          text-align: center;
     }
-             
-    @media (max-width: 650px) {
-        tr:first-of-type {
-            display:none;
-        }
-        th, td {
-            display:block;
-            padding: 5px;
-        }
-        td::before {
-            content: attr(data-cellvalue) ": ";
-            font-weight: 700;
-            text-transform: capitalize;
-        }
-        td:first-of-type::before {
-            content: "#";
-        }
-        #w0-filters td:first-of-type::before {
-            display: none;
-        }
-        #w0-filters td:nth-of-type(2)::before {
-            content: "id";
-        }
-        #w0-filters td:nth-of-type(3)::before {
-            content: "Bodega origen";
-        }
-        #w0-filters td:nth-of-type(4)::before {
-            content: "Bodega destino";
-        }
-        #w0-filters td:nth-of-type(5)::before {
-            content: "Numero de cajas";
-        }
-        #w0-filters td:nth-of-type(6)::before {
-            content: "Estado";
-        }
-        #w0-filters td:nth-of-type(7)::before {
-            display:none;
-        }
+
+    .izquierda {
+        text-align: left;
     }
-    
+ 
+    .derecha {
+        text-align: right;
+    }    
+
     .btn-create {
         width: 300px;
     }
+
     .centrar {
         text-align: center;
     }
+
 ');
 
 use app\models\Traspaso;
@@ -65,44 +38,110 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use kartik\grid\GridView;
-
+use kartik\export\ExportMenu;
 use app\models\Bodegas;
 
 /** @var yii\web\View $this */
 /** @var app\models\search\TraspasoSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
+
 $this->title = 'Lista de traspasos';
 $this->params['breadcrumbs'][] = $this->title;
 
 if (Yii::$app->user->isGuest) {
     // Si el usuario no está autenticado, redirigir al login
     $redirectUrl = Yii::$app->urlManager->createUrl(['site/login']);
-}else{
+} else {
     $redirectUrl = null;
 }
+
+$fecha_actual = date("Y-m-d");
+$filename = "Relacion_Traspaso_" . $fecha_actual;
+
+$gridColumns = [
+    [
+        'attribute' => 'consecutivo',
+        'value' => function ($model) {
+            return $model->consecutivo;
+        },
+    ],
+    [
+        'attribute' => 'idBodegaOrigen',
+        'value' => function ($model) {
+            return $model->bodegaOrigen->nombre;
+        },
+    ],
+    [
+        'attribute' => 'idBodegaDestino',
+        'value' => function ($model) {
+            return $model->bodegaDestino->nombre;
+        },
+    ],
+    'numeroCajas',
+    [
+        'attribute' => 'idEstado',
+        'value' => function ($model) {
+            return $model->estado ? $model->estado->nombre : null;
+        },
+    ],
+    [
+        'attribute' => 'updated_at',
+        'label' => 'Fecha',
+        'value' => function ($model) {
+            return $model->updated_at;
+        },
+    ],
+    [
+        'attribute' => 'created_by',
+        'label' => 'Usuario',
+        'value' => function ($model) {
+            return $model->usuario ? $model->usuario->username : ' ';
+        },
+    ],
+];
+
 ?>
 <div class="traspaso-index">
+    <div class="row">
+        <div class="col-lg-6 derecha">
+            <?= Html::a('Crear Traspaso', ['create'], ['class' => 'btn btn-success btn-lg btn-create']) ?>
+        </div>
+        <div class="col-lg-6 izquierda">
+            <?php echo ExportMenu::widget(
+                [
+                    'dataProvider' => $dataProvider,
+                    'columns' => $gridColumns,
+                    'fontAwesome' => true,
+                    'filename' => $filename,
+                    'dropdownOptions' => [
+                        'label' => 'Exportar',
+                        'class' => 'btn btn-success btn-lg btn-create',
+                    ],
+                    'exportConfig' => [
+                        ExportMenu::FORMAT_TEXT => false,
+                        ExportMenu::FORMAT_HTML => false,
+                        ExportMenu::FORMAT_EXCEL => false,
+                        ExportMenu::FORMAT_PDF => false,
+                        ExportMenu::FORMAT_CSV => false,
+                        ExportMenu::FORMAT_EXCEL_X => [
+                            'label' => 'Excel 2007+',
+                            'icon' => 'file-excel-o',
+                            'iconOptions' => ['class' => 'text-success'],
+                            'linkOptions' => [],
+                            'options' => ['title' => 'Microsoft Excel 2007+ (xlsx)'],
+                            'alertMsg' => 'Se va a generar un archivo en formato EXCEL 2007+ (xlsx).',
+                            'mime' => 'application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'extension' => 'xlsx',
+                            'writer' => ExportMenu::FORMAT_EXCEL_X
+                        ],
 
-    <h1>
-        <?= Html::encode($this->title) ?>
-    </h1>
+                    ]
+                ]
+            );
+            ?>
+        </div>
+    </div>
 
-    <p>
-        <?= Html::a('Crear Traspaso', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php
-    // Obtén el modelo del estado eliminado
-    $modelEstadoEliminado = Estadotraspaso::findOne(['id' => 3]);
-
-    // Configura el DataProvider para excluir registros con idEstado = 3
-    $dataProvider = new \yii\data\ActiveDataProvider([
-        'query' => Traspaso::find()->where(['!=', 'idEstado', 3])->orderBy(['created_at' => SORT_DESC]),
-        'pagination' => [
-            'pageSize' => 20,
-        ],
-    ]);
-    ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -114,8 +153,18 @@ if (Yii::$app->user->isGuest) {
         'columns' => [
             ['class' => 'yii\grid\SerialColumn',],
             [
-                'attribute' => 'id',
-                'contentOptions' => ['data-cellvalue' => 'id'],
+                'attribute' => 'serie',
+                'contentOptions' => ['data-cellvalue' => 'serie'],
+                'value' => function ($model) {
+                    return $model->tipodocumento ? $model->tipodocumento->codigo : null;
+                },
+            ],
+            [
+                'attribute' => 'consecutivo',
+                'contentOptions' => ['data-cellvalue' => 'consecutivo'],
+                'value' => function ($model) {
+                    return $model->consecutivo;
+                },
             ],
             [
                 'attribute' => 'idBodegaOrigen',
@@ -141,18 +190,29 @@ if (Yii::$app->user->isGuest) {
                 'attribute' => 'idEstado',
                 'filter' => Estadotraspaso::getListaDataMenosEliminado(),
                 'value' => function ($model) {
-                    // var_dump($model->estado->nombre);
-                    // die ();
                     return $model->estado ? $model->estado->nombre : null;
                 },
                 'contentOptions' => ['data-cellvalue' => 'idEstado',],
             ],
-
+            [
+                'attribute' => 'updated_at',
+                'label' => 'Fecha',
+                'contentOptions' => ['data-cellvalue' => 'updated_at',],
+            ],
+            [
+                'attribute' => 'created_by',
+                'label' => 'Usuario',
+                // 'filter' => Estadotraspaso::getListaDataMenosEliminado(),
+                'value' => function ($model) {
+                    return $model->usuario ? $model->usuario->username : ' ';
+                },
+                'contentOptions' => ['data-cellvalue' => 'Usuario',],
+            ],
             [
                 'class' => ActionColumn::className(),
                 'header' => 'Acción',
                 'headerOptions' => ['width' => '15%'],
-                'template' => '{update} {detalle} {factura} {delete} {anular} ',
+                'template' => '{update} {detalle} {factura} {anular} ',
                 'contentOptions' => ['data-cellvalue' => 'Acciones',],
                 'buttons' => [
 
@@ -186,22 +246,6 @@ if (Yii::$app->user->isGuest) {
                             ]
                         );
                     },
-                    'delete' => function ($url, $model) {
-                        return Html::a(
-                            '<i class="fa fa-trash"></i>',
-                            ['delete', 'id' => $model->id],
-                            [
-                                'class' => 'btn btn-default',
-                                'title' => 'Eliminar Registro',
-                                'data' => [
-                                    'confirm' => 'Esta seguro de eliminar este registro? ( Origen:' . $model->bodegaOrigen->nombre . ' Destino: ' .
-                                        $model->bodegaDestino->nombre . ' numero de cajas: ' .
-                                        $model->numeroCajas . ', al elimarlo se perdera la lista interna de items )',
-                                    'method' => 'post',
-                                ]
-                            ]
-                        );
-                    },
                     'anular' => function ($url, $model) {
                         return Html::a(
                             '<i class="fa fa-ban"></i>',
@@ -227,11 +271,8 @@ if (Yii::$app->user->isGuest) {
                     'detalle' => function ($model, $key, $index) {
                         return $model->idEstado == 0; // Condición para mostrar el botón
                     },
-                    'delete' => function ($model, $key, $index) {
-                        return $model->idEstado == 0; // Condición para mostrar el botón
-                    },
                     'factura' => function ($model, $key, $index) {
-                        return $model->idEstado == 1; // Condición para mostrar el botón
+                        return $model->idEstado != null; // Condición para mostrar el botón
                     },
                     'anular' => function ($model, $key, $index) {
                         return $model->idEstado == 1; // Condición para mostrar el botón

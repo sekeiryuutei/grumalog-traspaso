@@ -112,6 +112,10 @@ $(document).ready(function() {
         <h6 style="margin-left:50px">&#160Caja: PKM</h6>
     </div>
     <h6>
+        Fecha:
+        <?= Yii::$app->formatter->asDatetime($model->updated_at, 'php:d-m-Y H:i:s') ?>
+    </h6>
+    <h6>
         Origen:
         <?= $model->bodegaOrigen->nombre; ?>
     </h6>
@@ -131,6 +135,7 @@ echo '<h1>ITEMS</h1>';
 $items = [];
 $nroregistro = 1;
 $totalGeneral = 0;
+$totalPaquetes = 0;
 $unidadempaqueNombre = 0;
 $unidadempaqueValor = 0;
 echo '<table border="0">';
@@ -143,9 +148,14 @@ foreach ($modeldetalles as $detalle) {
         . '</td><td>' . $detalle->cantidad . '</td><td>'
         . $detalle->cantidad * ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->equivalencia : 1)
         . '</td></tr>';
+    if ($detalle->item->unidadempaque == null) {
+        $totalPaquetes += $detalle->cantidad * ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->equivalencia : 1); // Acumulamos el valor de la columna "TOTAL" en cada iteración
+    }
+
     $totalGeneral += $detalle->cantidad * ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->equivalencia : 1); // Acumulamos el valor de la columna "TOTAL" en cada iteración
 }
-echo '<tr><td colspan="7" style="text-align:right">Total General:</td><td>' . $totalGeneral . '</td></tr>';
+echo '<tr><td colspan="4" style="text-align:right">Total Paquetes:</td><td colspan="2">' . $totalPaquetes . '</td>';
+echo '<td style="text-align:right;">Total General:</td><td colspan="3" >' . $totalGeneral . '</td></tr>';
 echo '</table>';
 ?>
 <svg id="barcodeTipodocumento"></svg>
@@ -162,3 +172,38 @@ echo '</table>';
     <?= Yii::$app->user->isGuest ? ' ' : Yii::$app->user->identity->username ?>
 </h6>
 <svg id="barcodeConsecutivo"></svg>
+
+<div class="d-flex justify-content-start">
+    <button class="btn btn-lg btn-primary imprimir-solo" onclick="imprimir()">Confirmar!</button>
+</div>
+
+<style>
+    @media (max-width: 768px) {
+        .imprimir-solo {
+            display: block !important;
+            margin-left: 10px;
+            /* Ajusta el margen izquierdo según sea necesario */
+        }
+
+        .d-flex.justify-content-start {
+            justify-content: center !important;
+        }
+    }
+
+    @media print {
+        .imprimir-solo {
+            display: none !important;
+        }
+    }
+</style>
+
+<script>
+    function imprimir() {
+        // Ocultar el botón de imprimir antes de imprimir
+        var botonImprimir = document.querySelector('.imprimir-solo');
+        botonImprimir.style.display = 'none';
+
+        // Mandar a imprimir
+        window.print();
+    }
+</script>

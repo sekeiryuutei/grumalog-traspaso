@@ -59,8 +59,9 @@ class Traspaso extends \yii\db\ActiveRecord
     {
         return [
             [['idBodegaOrigen', 'idBodegaDestino'], 'required'],
-            [['idBodegaOrigen', 'idBodegaDestino', 'numeroCajas', 'idTipoDocumento', 'idEstado'], 'integer'],
+            [['idBodegaOrigen', 'idBodegaDestino', 'numeroCajas', 'idTipoDocumento', 'idEstado','idUltimoItem'], 'integer'],
             [['consecutivo'], 'number'],
+            [['updated_at'], 'safe'],
             [['idBodegaDestino'], 'exist', 'skipOnError' => true, 'targetClass' => Bodegas::class, 'targetAttribute' => ['idBodegaDestino' => 'id']],
             [['idBodegaOrigen'], 'exist', 'skipOnError' => true, 'targetClass' => Bodegas::class, 'targetAttribute' => ['idBodegaOrigen' => 'id']],
             [['idTipoDocumento'], 'exist', 'skipOnError' => true, 'targetClass' => Tipodocumento::class, 'targetAttribute' => ['idTipoDocumento' => 'id']],
@@ -118,5 +119,13 @@ class Traspaso extends \yii\db\ActiveRecord
     public function getIdestado()
     {
         return $this->hasOne(Estadotraspaso::class, ['id' => 'idEstado']);
+    }
+    public function getUsuario()
+    {
+        return $this->hasOne(User::className(), ['id' => 'created_by']);
+    }
+    public function getTipodocumento()
+    {
+        return $this->hasOne(Tipodocumento::className(), ['id' => 'idTipoDocumento']);
     }
 }

@@ -16,14 +16,11 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="traspasodetalle-index">
 
-    <h1>
-        <?= Html::encode($this->title) ?>
-    </h1>
     <p>
         <?= Html::a('Adicionar items al traspaso', ['create', 'idtraspaso' => Yii::$app->request->get('idtraspaso')], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]);   ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]);    ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

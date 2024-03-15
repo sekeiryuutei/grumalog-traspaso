@@ -13,8 +13,7 @@ use common\models;
 
 $this->registerCss('
     .mi-gridview {
-        font-size: 11px; /* Ajusta el tamaño de la fuente según sea necesario */
-        /* Otros estilos CSS según sea necesario */
+        font-size: 11px; 
     }
 
     .btn-create {
@@ -42,54 +41,6 @@ $this->registerCss('
         margin-right: 5px;
     }
 
-    @media (max-width: 650px) {
-        
-        .basuraIcon{
-            display:contents !important;
-        }
-
-        thead tr:first-of-type {
-            display:none;
-        }
-        .w23{
-            padding:0;
-        }
-        tr{}
-        th, td {
-            display:block;
-            padding: 2px !important;
-        }
-        td::before {
-            content: attr(data-cellvalue) ": ";
-            font-weight: 700;
-            text-transform: capitalize;
-        }
-        td:first-of-type::before {
-            content: "#";
-        }
-        #w0-filters td:first-of-type::before {
-            display: none;
-        }
-        #w0-filters td:nth-of-type(2)::before {
-            content: "id";
-        }
-        #w0-filters td:nth-of-type(3)::before {
-            content: "Bodega origen";
-        }
-        #w0-filters td:nth-of-type(4)::before {
-            content: "Bodega destino";
-        }
-        #w0-filters td:nth-of-type(5)::before {
-            content: "Numero de cajas";
-        }
-        #w0-filters td:nth-of-type(6)::before {
-            content: "Estado";
-        }
-        #w0-filters td:nth-of-type(7)::before {
-            display:none;
-        }
-    }
-
 ');
 
 $this->registerJs("
@@ -104,7 +55,7 @@ $this->registerJs("
                 $('#btn_registrar').trigger('click');
             }
         });
-    });
+
 ");
 ?>
 <?= Alert::widget() ?>
@@ -129,21 +80,31 @@ $this->registerJs("
         </h2>
     </div>
 
-    <!-- <h1><?= $model->traspaso->idTipoDocumento ?></h1> -->
-
-
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-4 col-sm-6 col-6">
             <?= $form->field($model, 'idTraspaso')->textInput(['disabled' => true]) ?>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-4 col-sm-6 col-6">
             <?= $form->field($model, 'bodegaorigen')->textInput(['disabled' => true]) ?>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-4 col-sm-6 col-6">
             <?= $form->field($model, 'bodegadestino')->textInput(['disabled' => true]) ?>
         </div>
+
+        <div class="col-lg-4 col-sm-6 col-6">
+            <?= $form->field($model, 'count')->textInput(['disabled' => true, 'value' => $count]) ?>
+        </div>
+
+        <div class="col-lg-4 col-sm-6 col-6">
+            <?= $form->field($model, 'ultimo_codigo')->textInput(['disabled' => true, 'value' => $ultimo_codigo]) ?>
+        </div>
+
+        <div class="col-lg-4 col-sm-6 col-6">
+            <?= $form->field($model, 'cantidad_paquetes')->textInput(['disabled' => true, 'value' => $cantidad_paquetes]) ?>
+        </div>
+
     </div>
 
     <div class="row">
@@ -163,7 +124,7 @@ $this->registerJs("
 
     <div class="form-group centrar">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'id' => 'btn_registrar', 'style' => 'display: none']) ?>
-        <?= Html::a('Imprimir', ['print', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-primary btn-lg btn-create', 'target' => '_blank',]) ?>
+        <?= Html::a('Imprimir', ['print', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-primary btn-lg btn-create', 'target' => '_blank', 'style' => 'display: none']) ?>
         <?= Html::a('Terminar', ['end', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-danger btn-lg btn-create mt-1']) ?>
     </div>
 
@@ -174,14 +135,17 @@ $this->registerJs("
 
 <?= Html::tag('hr', '', ['class' => 'horizontal-line']) ?>
 
-<div class="traspasodetalle-index">
+<div class="table-responsive">
     <?= GridView::widget([
+        'responsiveWrap' => false,
         'dataProvider' => $dataProvider,
         'summary' => 'Mostrando {begin} - {end} de {totalCount} resultados',
         'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => '-'],
         'options' => [
-            'class' => 'mi-gridview',
+            'class' => 'mi-gridview gridview-responsive',
         ],
+        'tableOptions' => ['class' => 'table table-bordered table-striped'], // Aquí eliminamos la clase kv-table-wrap
+    
         // 'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
@@ -201,7 +165,7 @@ $this->registerJs("
                                     'data' => [
                                         'confirm' => 'Esta seguro de eliminar este registro con codigo de barras: '
                                             . $model->item->codigoBarras . ' talla: ' . $model->item->talla->nombre
-                                            . ' y cantidad ' . $model->cantidad,
+                                            . ', y cantidad ' . $model->cantidad,
                                         'method' => 'post',
                                     ]
                                 ]
@@ -239,7 +203,7 @@ $this->registerJs("
                         if ($model->item->color) {
                             return $model->item->color->nombre;
                         }
-                        return '-';
+                        return 'No tiene color';
                     }
             ],
             [
@@ -250,7 +214,7 @@ $this->registerJs("
                         if ($model->item) {
                             return $model->item->talla->nombre;
                         }
-                        return '-';
+                        return 'No tiene talla';
                     }
             ],
             [
@@ -258,10 +222,10 @@ $this->registerJs("
                 'contentOptions' => ['data-cellvalue' => 'Unidad Orden'],
                 'label' => 'Unidad',
                 'value' => function ($model) {
-                        if ($model->item) {
+                        if ($model->item->unidadOrden!=null) {
                             return $model->item->unidadOrden;
                         }
-                        return '-';
+                        return $model->item->unidadEmpaque;
                     }
             ],
             [

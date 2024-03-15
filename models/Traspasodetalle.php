@@ -6,6 +6,7 @@ use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "traspasodetalle".
@@ -24,7 +25,9 @@ class Traspasodetalle extends \yii\db\ActiveRecord
     public $bodegadestino;
     public $numerocajas;
     public $codigoitem;
-
+    public $count;
+    public $ultimo_codigo;
+    public $cantidad_paquetes;
     /**
      * {@inheritdoc}
      */
@@ -86,8 +89,11 @@ class Traspasodetalle extends \yii\db\ActiveRecord
             'total' => 'Cantidad total',
             'bodegaorigen' => 'Bodega origen',
             'bodegadestino' => 'Bodega destino',
-            'total' => 'Cantidad total'
-
+            'total' => 'Cantidad total',
+            'count' => 'Total EAN',
+            'updated_at' => 'Fecha',
+            'ultimo_codigo' => 'ultimo codigo',
+            'cantidad_paquetes' => 'paquetes',
         ];
     }
 
@@ -100,12 +106,32 @@ class Traspasodetalle extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Item::class, ['id' => 'idItem']);
     }
+    public function getItems()
+    {
+        return $this->hasMany(Item::class, ['id' => 'idItem']);
+    }
 
     public function getCodigoitem()
     {
         return $this->hasOne(Item::class, ['item' => 'codigoitem']);
     }
 
+    public function getTraspasodetalle()
+    {
+        return $this->hasOne(Traspasodetalle::class, ['idTraspaso' => 'idTraspaso']);
+    }
+    public function getTraspasodetalles()
+    {
+        return $this->hasMany(Traspasodetalle::class, ['idTraspaso' => 'idTraspaso']);
+    }
+    public function getFindCount($idTraspaso)
+    {
+        return $this->find()->where(['idTraspaso' => $idTraspaso])->count();
+    }
+    public function getCantidadPaquetes()
+    {
+        return $this->getItems()->where(['unidadOrden' => null])->count();
+    }
     /**
      * Gets query for [[Traspaso]].
      *
@@ -115,4 +141,5 @@ class Traspasodetalle extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Traspaso::class, ['id' => 'idTraspaso']);
     }
+
 }
