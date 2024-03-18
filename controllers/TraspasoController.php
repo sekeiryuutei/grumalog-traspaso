@@ -84,12 +84,15 @@ class TraspasoController extends Controller
     {
         $model = new Traspaso();
         $model->idEstado = 0;
+        if ($model->idEstado != 0) {
+            return $this->redirect(['index']);
+        }
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
                 $tipoDocumento = Tipodocumento::findOne(['id' => $model->bodegaOrigen->tipodocumento->idTipoDocumento]);
                 $model->idTipoDocumento = $tipoDocumento->id;
                 $model->consecutivo = $tipoDocumento->consecutivoProximo;
-
+                $model->serie = $tipoDocumento->codigo;
                 // Incrementar el próximo consecutivo en Tipodocumento
                 $tipoDocumento->consecutivoProximo += 1;
                 $tipoDocumento->save();
@@ -134,9 +137,9 @@ class TraspasoController extends Controller
     public function actionFactura($id)
     {
         $model = $this->findModel($id);
-        if ($model->idEstado !== 1 && $model->idEstado !== 2) {
-            return $this->redirect(['index']);
-        }
+if ($model->idEstado !== 1 && $model->idEstado !== 2) {
+    return $this->redirect(['index']);
+}
         return $this->redirect(['/traspasodetalle/print', 'idtraspaso' => $model->id]);
     }
 

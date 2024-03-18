@@ -6,6 +6,7 @@ use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "traspaso".
@@ -16,7 +17,10 @@ use yii\db\Expression;
  * @property int $numeroCajas
  * @property int|null $idTipoDocumento
  * @property float|null $consecutivo
- *
+ * @property string|null $serie
+ * @property int|null $und_traspaso
+ * @property int|null $und_empaque
+
  * @property tipoDocumento $tipoDocumento
  * @property Bodegas $bodegaDestino
  * @property Bodegas $bodegaOrigen
@@ -24,6 +28,9 @@ use yii\db\Expression;
  */
 class Traspaso extends \yii\db\ActiveRecord
 {
+    public $serie;
+    public $und_empaque;
+    public $und_traspaso;
     /**
      * {@inheritdoc}
      */
@@ -31,7 +38,6 @@ class Traspaso extends \yii\db\ActiveRecord
     {
         return 'traspaso';
     }
-
     public function behaviors()
     {
         return [
@@ -59,9 +65,10 @@ class Traspaso extends \yii\db\ActiveRecord
     {
         return [
             [['idBodegaOrigen', 'idBodegaDestino'], 'required'],
-            [['idBodegaOrigen', 'idBodegaDestino', 'numeroCajas', 'idTipoDocumento', 'idEstado','idUltimoItem'], 'integer'],
-            [['consecutivo'], 'number'],
-            [['updated_at'], 'safe'],
+            [['idBodegaOrigen', 'idBodegaDestino', 'numeroCajas', 'idTipoDocumento', 'idEstado', 'idUltimoItem', 'created_by','updated_by'], 'integer'],
+            [['consecutivo','und_traspaso','und_empaque'], 'number'],
+            [['serie',], 'string', 'max' => 5],
+            [['updated_at', 'created_at'], 'safe'],
             [['idBodegaDestino'], 'exist', 'skipOnError' => true, 'targetClass' => Bodegas::class, 'targetAttribute' => ['idBodegaDestino' => 'id']],
             [['idBodegaOrigen'], 'exist', 'skipOnError' => true, 'targetClass' => Bodegas::class, 'targetAttribute' => ['idBodegaOrigen' => 'id']],
             [['idTipoDocumento'], 'exist', 'skipOnError' => true, 'targetClass' => Tipodocumento::class, 'targetAttribute' => ['idTipoDocumento' => 'id']],
@@ -76,10 +83,22 @@ class Traspaso extends \yii\db\ActiveRecord
             'id' => 'ID',
             'idBodegaOrigen' => 'Bodega Origen',
             'idBodegaDestino' => 'Bodega Destino',
-            'numeroCajas' => 'Número Cajas',
-            'serie' => 'Serie',
+            'numeroCajas' => 'Cajas',
+            'serie' => 'serie',
             'consecutivo' => 'Consecutivo',
-            'idEstado' => 'Estado'
+            'idEstado' => 'Estado',
+            'created_by' => 'usuario',
+            'updated_by' => 'updated_by',
+            'updated_at' => 'Fecha',
+            'und_traspaso' => 'Und.Traspaso',
+            'und_empaque' => 'Und.Empaque',
+            'codeBodegaDestino' => 'codigo bodega destino',
+            'codeBodegaOrigen' => 'codigo bodega origen',
+            'caja' => 'Caja',
+            'horaInicio' => 'hora inicio',
+            'fechaUltimoRegistro' => 'Fecha ultimo registro',
+            'horaUltimoRegistro' => 'Hora ultimo registro',
+
         ];
     }
 
@@ -112,6 +131,10 @@ class Traspaso extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Traspasodetalle::class, ['idTraspaso' => 'id']);
     }
+    public function getTraspasodetalle()
+    {
+        return $this->hasOne(Traspasodetalle::class, ['idTraspaso' => 'id']);
+    }
     public function getEstado()
     {
         return $this->hasOne(Estadotraspaso::class, ['id' => 'idEstado']);
@@ -128,4 +151,5 @@ class Traspaso extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Tipodocumento::className(), ['id' => 'idTipoDocumento']);
     }
+
 }

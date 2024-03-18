@@ -30,7 +30,8 @@ use yii\helpers\ArrayHelper;
  * @property int $created_by
  * @property string $updated_at
  * @property int $updated_by
- *
+ * @property string $idEstado
+ * 
  * @property Color $color
  * @property Marca $idMarca0
  * @property Producto $idProducto0
@@ -78,6 +79,7 @@ class Item extends \yii\db\ActiveRecord
             [['idCategoria', 'idSubcategoria', 'idProducto', 'idMarca', 'idTalla', 'idColor', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['referencia'], 'string', 'max' => 50],
+            [['idEstado',], 'string', 'max' => 20],
             [['descripcion', 'nombreProveedor', 'codigoBarras'], 'string', 'max' => 150],
             [['codigoProveedor', 'unidadOrden', 'unidadEmpaque'], 'string', 'max' => 10],
             [['idTalla'], 'exist', 'skipOnError' => true, 'targetClass' => Talla::class, 'targetAttribute' => ['idTalla' => 'id']],
@@ -180,6 +182,7 @@ class Item extends \yii\db\ActiveRecord
     public function getLastbarcode()
     {
         $lastItem = Item::find()
+            ->where(['idEstado' => 'ACTIVO'])
             ->leftJoin('traspasodetalle', 'item.id = traspasodetalle.idItem')
             ->orderBy(['traspasodetalle.id' => SORT_DESC])
             ->one();
@@ -191,6 +194,7 @@ class Item extends \yii\db\ActiveRecord
         $numeroDePaquetes = Item::find()
             ->leftJoin('traspasodetalle', 'item.id = traspasodetalle.idItem')
             ->where(['item.unidadOrden' => NULL])
+            ->andWhere(['idEstado' => 'ACTIVO'])
             ->count();
         return $numeroDePaquetes ? $numeroDePaquetes : null;
     }

@@ -37,6 +37,7 @@ $this->registerCss('
         border-top: 1px solid #ccc; /* Color y grosor de la línea */
         margin: 10px 0; /* Espacio alrededor de la línea */
     }
+
     #tipodocumento_traspaso{
         margin-right: 5px;
     }

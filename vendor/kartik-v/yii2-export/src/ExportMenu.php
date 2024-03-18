@@ -1945,13 +1945,13 @@ class ExportMenu extends GridView
         $this->messages += [
             'allowPopups' => Yii::t(
                 'kvexport',
-                'Disable any popup blockers in your browser to ensure proper download.'
+                'Desactive cualquier bloqueador de ventanas emergentes en su navegador para garantizar una descarga adecuada.'
             ),
-            'confirmDownload' => Yii::t('kvexport', 'Ok to proceed?'),
-            'downloadProgress' => Yii::t('kvexport', 'Generating the export file. Please wait...'),
+            'confirmDownload' => Yii::t('kvexport', '¿Está bien continuar?'),
+            'downloadProgress' => Yii::t('kvexport', 'Generando el archivo de exportación. Espere por favor...'),
             'downloadComplete' => Yii::t(
                 'kvexport',
-                'Request submitted! You may safely close this dialog after saving your downloaded file.'
+                '¡Solicitud enviada! Puede cerrar este cuadro de diálogo de forma segura después de guardar el archivo descargado.'
             ),
         ];
         $options = [
