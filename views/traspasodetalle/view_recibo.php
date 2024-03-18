@@ -143,13 +143,13 @@ echo '<tr><th>REFER.</th><th>DESCRIP.</th><th>COLOR</th><th>TALLA</th><th>PAQ</t
 foreach ($modeldetalles as $detalle) {
     echo '<tr><td>' . $detalle->item->referencia . '</td><td>' . $detalle->item->descripcion
         . '</td><td>' . $detalle->item->color->nombre . '</td><td>' . $detalle->item->talla->nombre
-        . '</td><td>' . ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->equivalencia : 0)
+        . '</td><td>' . ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->codigo : 0)
         . '</td><td>' . ($detalle->item->unidadOrden ? $detalle->item->unidadOrden : 1)
         . '</td><td>' . $detalle->cantidad . '</td><td>'
         . $detalle->cantidad * ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->equivalencia : 1)
         . '</td></tr>';
-    if ($detalle->item->unidadempaque == null) {
-        $totalPaquetes += $detalle->cantidad * ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->equivalencia : 1); // Acumulamos el valor de la columna "TOTAL" en cada iteración
+    if ($detalle->item->unidadempaque != null) {
+        $totalPaquetes += $detalle->cantidad * $detalle->item->unidadempaque->equivalencia; // Acumulamos el valor de la columna "TOTAL" en cada iteración
     }
 
     $totalGeneral += $detalle->cantidad * ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->equivalencia : 1); // Acumulamos el valor de la columna "TOTAL" en cada iteración

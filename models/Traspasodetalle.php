@@ -59,21 +59,31 @@ class Traspasodetalle extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        // return [
-        //     [['idTraspaso', 'codigoitem','idItem', ], 'required', 'message' => '{attribute} Es Un Valor Obligatorio'],
-        //     [['cantidad'], 'integer'],
-        //     [['idTraspaso', 'idItem'], 'string', 'max' => 50],
-        //     [['idTraspaso'], 'exist', 'skipOnError' => true, 'targetClass' => Traspaso::class, 'targetAttribute' => ['idTraspaso' => 'id']],
-        //     [['idItem'], 'exist', 'skipOnError' => true, 'targetClass' => Item::class, 'targetAttribute' => ['idItem' => 'id']],
-        // ];
         return [
             [['idTraspaso', 'idItem', 'codigoitem'], 'required', 'message' => '{attribute} Es Un Valor Obligatorio'],
             [['idTraspaso', 'cantidad', 'created_by', 'updated_by', 'idItem'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['idTraspaso'], 'exist', 'skipOnError' => true, 'targetClass' => Traspaso::class, 'targetAttribute' => ['idTraspaso' => 'id']],
-            [['idItem'], 'exist', 'skipOnError' => true, 'targetClass' => Item::class, 'targetAttribute' => ['idItem' => 'id']],
+            [
+                ['idItem'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Item::class,
+                'targetAttribute' => ['idItem' => 'id'],
+                'when' => function ($model, $attribute) {
+                    // Obtener el valor del campo idItem
+                    $idItem = $model->$attribute;
+
+                    // Verificar si el Item asociado está activo
+                    $item = Item::findOne(['id' => $idItem, 'idEstado' => 'ACTIVO']);
+
+                    return $item !== null;
+                },
+                'message' => 'El Item seleccionado no está activo.',
+            ],
         ];
     }
+
 
     /**
      * {@inheritdoc}
@@ -90,7 +100,7 @@ class Traspasodetalle extends \yii\db\ActiveRecord
             'bodegaorigen' => 'Bodega origen',
             'bodegadestino' => 'Bodega destino',
             'total' => 'Cantidad total',
-            'count' => 'Total EAN',
+            'count' => 'Total',
             'updated_at' => 'Fecha',
             'ultimo_codigo' => 'ultimo codigo',
             'cantidad_paquetes' => 'paquetes',
@@ -104,16 +114,19 @@ class Traspasodetalle extends \yii\db\ActiveRecord
      */
     public function getItem()
     {
-        return $this->hasOne(Item::class, ['id' => 'idItem']);
+        return $this->hasOne(Item::class, ['id' => 'idItem'])
+            ->where(['idEstado' => 'ACTIVO']);
     }
     public function getItems()
     {
-        return $this->hasMany(Item::class, ['id' => 'idItem']);
+        return $this->hasMany(Item::class, ['id' => 'idItem'])
+            ->where(['idEstado' => 'ACTIVO']);
     }
 
     public function getCodigoitem()
     {
-        return $this->hasOne(Item::class, ['item' => 'codigoitem']);
+        return $this->hasOne(Item::class, ['item' => 'codigoitem'])
+        ->where(['idEstado' => 'ACTIVO']);
     }
 
     public function getTraspasodetalle()

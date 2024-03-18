@@ -26,6 +26,31 @@ $this->registerCss('
     .btn-create {
         width: 300px;
     }
+    @media (max-width: 450px) {
+        .btn-create {
+            font-size: 13px;
+            width: 118px !important;
+        }
+        #w0-filters th:first-of-type {
+            display: none;
+        }
+
+        /* Ocultar el encabezado de las columnas */
+        th[data-col-seq="3"],
+        th[data-col-seq="4"],
+        th[data-col-seq="7"],
+        th[data-col-seq="10"] {
+            display: none;
+        }
+        
+        /* Ocultar todas las celdas de las columnas */
+        td[data-col-seq="3"],
+        td[data-col-seq="4"],
+        td[data-col-seq="7"] ,
+        td[data-col-seq="10"]{
+            display: none;
+        }
+    }
 
     .centrar {
         text-align: center;
@@ -40,6 +65,7 @@ use yii\grid\ActionColumn;
 use kartik\grid\GridView;
 use kartik\export\ExportMenu;
 use app\models\Bodegas;
+
 
 /** @var yii\web\View $this */
 /** @var app\models\search\TraspasoSearch $searchModel */
@@ -60,15 +86,37 @@ $filename = "Relacion_Traspaso_" . $fecha_actual;
 
 $gridColumns = [
     [
+        'attribute' => 'serie',
+        'contentOptions' => ['data-cellvalue' => 'serie'],
+        'value' => function ($model) {
+            return $model->tipodocumento ? $model->tipodocumento->codigo : null;
+        },
+    ],
+    [
         'attribute' => 'consecutivo',
+        'contentOptions' => ['data-cellvalue' => 'consecutivo'],
         'value' => function ($model) {
             return $model->consecutivo;
+        },
+    ],
+    [
+        'attribute' => 'codeBodegaOrigen',
+        'value' => function ($model) {
+            return $model->bodegaOrigen->codigo;
         },
     ],
     [
         'attribute' => 'idBodegaOrigen',
         'value' => function ($model) {
             return $model->bodegaOrigen->nombre;
+        },
+        'filter' => Bodegas::getListaDataId(['207', '210']),
+        'contentOptions' => ['data-cellvalue' => 'idBodegaOrigen'],
+    ],
+    [
+        'attribute' => 'codeBodegaDestino',
+        'value' => function ($model) {
+            return $model->bodegaDestino->codigo;
         },
     ],
     [
@@ -77,36 +125,122 @@ $gridColumns = [
             return $model->bodegaDestino->nombre;
         },
     ],
-    'numeroCajas',
+    [
+        'attribute' => 'numeroCajas',
+        'contentOptions' => ['data-cellvalue' => 'numeroCajas',],
+    ],
+    [
+        'attribute' => 'caja',
+        'value' => function ($model) {
+            return 'PKM';
+        },
+    ],
     [
         'attribute' => 'idEstado',
+        'filter' => Estadotraspaso::getListaDataMenosEliminado(),
         'value' => function ($model) {
             return $model->estado ? $model->estado->nombre : null;
         },
+        'contentOptions' => ['data-cellvalue' => 'idEstado',],
     ],
     [
         'attribute' => 'updated_at',
-        'label' => 'Fecha',
         'value' => function ($model) {
-            return $model->updated_at;
+            $dateTimeParts = explode(' ', $model->created_at);
+            return $dateTimeParts[0];
         },
     ],
+    [
+        'attribute' => 'horaInicio',
+        'value' => function ($model) {
+            $dateTimeParts = explode(' ', $model->created_at);
+            return $dateTimeParts[1];
+        },
+    ],
+    [
+        'attribute' => 'fechaUltimoRegistro',
+        'value' => function ($model) {
+            if ($model->traspasodetalle !== null) {
+                $dateTimeParts = explode(' ', $model->traspasodetalle->updated_at);
+                return $dateTimeParts[0];
+            } else {
+                return 'No tiene items asignados';
+            }
+        },
+    ],
+    [
+        'attribute' => 'horaUltimoRegistro',
+        'value' => function ($model) {
+            if ($model->traspasodetalle !== null) {
+                $dateTimeParts = explode(' ', $model->traspasodetalle->updated_at);
+                return $dateTimeParts[1];
+            } else {
+                return 'No tiene items asignados';
+            }
+        },
+    ],
+    [
+        'attribute' => 'fechaFin',
+        'value' => function ($model) {
+            $dateTimeParts = explode(' ', $model->updated_at);
+            return $dateTimeParts[0];
+        },
+    ],
+    [
+        'attribute' => 'horaFin',
+        'value' => function ($model) {
+            $dateTimeParts = explode(' ', $model->updated_at);
+            return $dateTimeParts[1];
+        },
+    ],
+    [
+        'attribute' => 'Und.Empaque',
+        'contentOptions' => ['data-cellvalue' => 'Und.Empaque',],
+        'value' => function ($model) {
+            $totalCantidadPaquetes = 0;
+            foreach ($model->traspasodetalles as $detalle) {
+                if ($detalle->item->unidadEmpaque != null) {
+                    $totalCantidadPaquetes += $detalle->cantidad;
+                }
+            }
+            return $totalCantidadPaquetes;
+        },
+    ],
+    [
+        'attribute' => 'Und.Traspaso',
+        'contentOptions' => ['data-cellvalue' => 'Und.Traspaso',],
+        'value' => function ($model) {
+            $totalCantidadPaquetes = 0;
+            foreach ($model->traspasodetalles as $detalle) {
+                if ($detalle->item->unidadempaque != null) {
+                    $totalCantidadPaquetes += $detalle->cantidad * $detalle->item->unidadempaque->equivalencia;
+                } else {
+                    $totalCantidadPaquetes += $detalle->cantidad;
+                }
+            }
+            return $totalCantidadPaquetes;
+        },
+
+    ],
+
     [
         'attribute' => 'created_by',
         'label' => 'Usuario',
         'value' => function ($model) {
             return $model->usuario ? $model->usuario->username : ' ';
         },
+        'contentOptions' => ['data-cellvalue' => 'Usuario',],
     ],
 ];
 
 ?>
 <div class="traspaso-index">
+
     <div class="row">
-        <div class="col-lg-6 derecha">
+        <div class="col-lg-6 col-6 derecha">
             <?= Html::a('Crear Traspaso', ['create'], ['class' => 'btn btn-success btn-lg btn-create']) ?>
         </div>
-        <div class="col-lg-6 izquierda">
+        <div class="col-lg-6 col-6 izquierda">
             <?php echo ExportMenu::widget(
                 [
                     'dataProvider' => $dataProvider,
@@ -126,7 +260,7 @@ $gridColumns = [
                         ExportMenu::FORMAT_EXCEL_X => [
                             'label' => 'Excel 2007+',
                             'icon' => 'file-excel-o',
-                            'iconOptions' => ['class' => 'text-success'],
+                            'iconOptions' => ['class' => 'text-success btn-create'],
                             'linkOptions' => [],
                             'options' => ['title' => 'Microsoft Excel 2007+ (xlsx)'],
                             'alertMsg' => 'Se va a generar un archivo en formato EXCEL 2007+ (xlsx).',
@@ -143,6 +277,7 @@ $gridColumns = [
     </div>
 
     <?= GridView::widget([
+        'responsiveWrap' => false,
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'summary' => 'Mostrando {begin} - {end} de {totalCount} resultados',
@@ -150,37 +285,38 @@ $gridColumns = [
         'options' => [
             'class' => 'mi-gridview gridview-responsive',
         ],
+        'tableOptions' => ['class' => 'table table-bordered table-striped'],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn',],
             [
                 'attribute' => 'serie',
                 'contentOptions' => ['data-cellvalue' => 'serie'],
                 'value' => function ($model) {
-                    return $model->tipodocumento ? $model->tipodocumento->codigo : null;
-                },
+            return $model->tipodocumento ? $model->tipodocumento->codigo : null;
+        },
             ],
             [
                 'attribute' => 'consecutivo',
                 'contentOptions' => ['data-cellvalue' => 'consecutivo'],
                 'value' => function ($model) {
-                    return $model->consecutivo;
-                },
+            return $model->consecutivo;
+        },
             ],
             [
                 'attribute' => 'idBodegaOrigen',
                 'value' => function ($model) {
-                    return $model->bodegaOrigen->nombre;
-                },
-                'filter' => Bodegas::getListaData(),
-                'contentOptions' => ['data-cellvalue' => 'idBodegaOrigen'],
+            return $model->bodegaOrigen->nombre;
+        },
+                'filter' => Bodegas::getListaDataId(['207', '210']),
+                'contentOptions' => ['data-cellvalue' => 'idBodegaOrigen', 'class' => 'hidden-xs'],
             ],
             [
                 'attribute' => 'idBodegaDestino',
                 'value' => function ($model) {
-                    return $model->bodegaDestino->nombre;
-                },
+            return $model->bodegaDestino->nombre;
+        },
                 'filter' => Bodegas::getListaData(),
-                'contentOptions' => ['data-cellvalue' => 'idBodegaDestino'],
+                'contentOptions' => ['data-cellvalue' => 'idBodegaDestino', 'class' => 'hidden-xs'],
             ],
             [
                 'attribute' => 'numeroCajas',
@@ -190,93 +326,122 @@ $gridColumns = [
                 'attribute' => 'idEstado',
                 'filter' => Estadotraspaso::getListaDataMenosEliminado(),
                 'value' => function ($model) {
-                    return $model->estado ? $model->estado->nombre : null;
-                },
+            return $model->estado ? $model->estado->nombre : null;
+        },
                 'contentOptions' => ['data-cellvalue' => 'idEstado',],
             ],
             [
                 'attribute' => 'updated_at',
-                'label' => 'Fecha',
                 'contentOptions' => ['data-cellvalue' => 'updated_at',],
             ],
+
+            [
+                'attribute' => 'und_empaque',
+                'contentOptions' => ['data-cellvalue' => 'und_empaque',],
+                'value' => function ($model) {
+            $totalCantidadPaquetes = 0;
+            foreach ($model->traspasodetalles as $detalle) {
+                if ($detalle->item->unidadEmpaque != null) {
+                    $totalCantidadPaquetes += $detalle->cantidad;
+                }
+            }
+            return $totalCantidadPaquetes;
+        },
+            ],
+            [
+                'attribute' => 'und_traspaso',
+                'contentOptions' => ['data-cellvalue' => 'und_traspaso',],
+                'value' => function ($model) {
+            $totalCantidadPaquetes = 0;
+            foreach ($model->traspasodetalles as $detalle) {
+                if ($detalle->item->unidadempaque != null) {
+                    $totalCantidadPaquetes += $detalle->cantidad * $detalle->item->unidadempaque->equivalencia;
+                } else {
+                    $totalCantidadPaquetes += $detalle->cantidad;
+                }
+            }
+            return $totalCantidadPaquetes;
+        },
+
+            ],
+
             [
                 'attribute' => 'created_by',
                 'label' => 'Usuario',
-                // 'filter' => Estadotraspaso::getListaDataMenosEliminado(),
                 'value' => function ($model) {
-                    return $model->usuario ? $model->usuario->username : ' ';
-                },
+            return $model->usuario ? $model->usuario->username : ' ';
+        },
                 'contentOptions' => ['data-cellvalue' => 'Usuario',],
             ],
             [
                 'class' => ActionColumn::className(),
                 'header' => 'Acción',
                 'headerOptions' => ['width' => '15%'],
-                'template' => '{update} {detalle} {factura} {anular} ',
+                'template' => '{detalle} {update} {factura} {anular} ',
                 'contentOptions' => ['data-cellvalue' => 'Acciones',],
                 'buttons' => [
 
                     'detalle' => function ($url, $model) {
-                        return Html::a(
-                            '<i class="fa fa-list"></i>',
-                            ['detalle', 'id' => $model->id],
-                            [
-                                'title' => 'Registrar Items Traspado',
-                                'class' => 'btn btn-default btn_detalle',
-                            ]
-                        );
-                    },
+                return Html::a(
+                    '<i class="fa fa-list"></i>',
+                    ['detalle', 'id' => $model->id],
+                    [
+                        'title' => 'Registrar Items Traspado',
+                        'class' => 'btn btn-default btn_detalle',
+                    ]
+                );
+            },
                     'update' => function ($url, $model) {
-                        return Html::a(
-                            '<i class="fa fa-edit"></i>',
-                            ['update', 'id' => $model->id],
-                            [
-                                'title' => 'Actualizar Datos Traspaso',
-                                'class' => 'btn btn-default btn_update',
-                            ]
-                        );
-                    },
+                return Html::a(
+                    '<i class="fa fa-edit"></i>',
+                    ['update', 'id' => $model->id],
+                    [
+                        'title' => 'Actualizar Datos Traspaso',
+                        'class' => 'btn btn-default btn_update',
+                    ]
+                );
+            },
                     'factura' => function ($url, $model) {
-                        return Html::a(
-                            '<i class="fa fa-print"></i>',
-                            ['factura', 'id' => $model->id],
-                            [
-                                'title' => 'Ver factura generada',
-                                'class' => 'btn btn-default',
-                            ]
-                        );
-                    },
+                return Html::a(
+                    '<i class="fa fa-print"></i>',
+                    ['factura', 'id' => $model->id],
+                    [
+                        'title' => 'Ver factura generada',
+                        'class' => 'btn btn-default',
+                    ]
+                );
+            },
                     'anular' => function ($url, $model) {
-                        return Html::a(
-                            '<i class="fa fa-ban"></i>',
-                            ['anular', 'id' => $model->id],
-                            [
-                                'class' => 'btn btn-default',
-                                'title' => 'Anular Registro',
-                                'data' => [
-                                    'confirm' => 'Esta seguro de anular este registro? ( Origen: ' . $model->bodegaOrigen->nombre . ', Destino: ' .
-                                        $model->bodegaDestino->nombre . ', Numero de cajas: ' .
-                                        $model->numeroCajas . ', al elimarlo se perdera la lista interna de items )',
-                                    'method' => 'post',
-                                ]
-                            ]
-                        );
-                    },
+                return Html::a(
+                    '<i class="fa fa-ban"></i>',
+                    ['anular', 'id' => $model->id],
+                    [
+                        'class' => 'btn btn-default',
+                        'title' => 'Anular Registro',
+                        'data' => [
+                            'confirm' => 'Esta seguro de anular este registro? ( Origen: ' . $model->bodegaOrigen->nombre . ', Destino: ' .
+                                $model->bodegaDestino->nombre . ', Numero de cajas: ' .
+                                $model->numeroCajas . ', al elimarlo se perdera la lista interna de items )',
+                            'method' => 'post',
+                        ]
+                    ]
+                );
+            },
 
                 ],
                 'visibleButtons' => [
                     'update' => function ($model, $key, $index) {
-                        return $model->idEstado == 0; // Condición para mostrar el botón
-                    },
+                return $model->idEstado == 0; // Condición para mostrar el botón
+            },
                     'detalle' => function ($model, $key, $index) {
-                        return $model->idEstado == 0; // Condición para mostrar el botón
-                    },
+                return $model->idEstado == 0; // Condición para mostrar el botón
+            },
                     'factura' => function ($model, $key, $index) {
-                        return $model->idEstado != null; // Condición para mostrar el botón
-                    },
+                return $model->idEstado != null; // Condición para mostrar el botón
+            },
                     'anular' => function ($model, $key, $index) {
-                        return $model->idEstado == 1; // Condición para mostrar el botón
-                    },
+                return $model->idEstado == 1; // Condición para mostrar el botón
+            },
                 ],
             ],
 

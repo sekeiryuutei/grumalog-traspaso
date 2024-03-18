@@ -72,10 +72,22 @@ class TraspasodetalleController extends Controller
     public function actionCreate($idtraspaso)
     {
 
+
+
         $modeltraspaso = Traspaso::findOne(['id' => $idtraspaso]);
+
+        if ($modeltraspaso->idEstado != 0) {
+            return $this->redirect(['/traspaso/index']);
+        }
+
         $ultimo_codigo = null;
+
         if ($modeltraspaso->idUltimoItem != null) {
-            $modelitem = Item::findOne(['id' => $modeltraspaso->idUltimoItem]);
+            // $modelitem = Item::findOne(['id' => $modeltraspaso->idUltimoItem]);
+            $modelitem = Item::find()
+                ->where(['id' => $modeltraspaso->idUltimoItem])
+                ->andWhere(['idEstado' => 'ACTIVO'])
+                ->one();
             $ultimo_codigo = $modelitem->codigoBarras;
         }
 
@@ -91,7 +103,23 @@ class TraspasodetalleController extends Controller
         $model->idTraspaso = $idtraspaso;
         $model->cantidad = 1;
         // Obtener la cantidad de elementos asociados al traspaso
-        $count = Traspasodetalle::find()->where(['idTraspaso' => $idtraspaso])->count();
+        // $count = Traspasodetalle::find()->where(['idTraspaso' => $idtraspaso])->count();
+
+        $count = Traspasodetalle::find()
+            ->alias('td')
+            ->select([
+                'total' => new \yii\db\Expression('SUM(
+                CASE
+                    WHEN ue.equivalencia IS NOT NULL THEN td.cantidad * ue.equivalencia
+                    ELSE td.cantidad
+                END
+            )')
+            ])
+            ->innerJoin('item as it', 'td.idItem = it.id')
+            ->leftJoin('unidadEmpaque as ue', 'ue.codigo = it.unidadEmpaque')
+            ->where(['idTraspaso' => $idtraspaso])
+            ->scalar();
+
 
         $model->bodegaorigen = $model->traspaso->bodegaOrigen->nombre;
         $model->bodegadestino = $model->traspaso->bodegaDestino->nombre;
@@ -101,7 +129,11 @@ class TraspasodetalleController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-                $modelitem = Item::findOne(['codigoBarras' => $model->codigoitem]);
+                // $modelitem = Item::findOne(['codigoBarras' => $model->codigoitem]);
+                $modelitem = Item::find()
+                    ->where(['codigoBarras' => $model->codigoitem])
+                    ->andWhere(['idEstado' => 'ACTIVO'])
+                    ->one();
                 if ($modelitem == null) {
                     Yii::$app->session->setFlash('error', 'No existe codigo de barras: ' . $model->codigoitem);
                 } else {
@@ -185,8 +217,12 @@ class TraspasodetalleController extends Controller
 
         $model->idEstado = 1;
         $model->save();
+
         // return $this->redirect(['/traspaso/index']);
         $modeldetalles = $model->traspasodetalles;
+
+        //$model = Traspaso::find()->where(['id' => $idtraspaso])->one();
+        $model = Traspaso::findOne(['id' => $idtraspaso]);
 
         return $this->render('view_recibo', [
             'model' => $model,
