@@ -27,15 +27,15 @@ if (Yii::$app->user->isGuest) {
 
     <div class="row">
         <div class="col-12 col-lg-6">
-            <?= $form->field($model, 'serie')->textInput(['id' => 'serie']) ?>
+            <?= $form->field($model, 'serie')->textInput(['id' => 'serie','required' => true]) ?>
         </div>
 
         <div class="col-12 col-lg-6">
-            <?= $form->field($model, 'consecutivo')->textInput(['id' => 'consecutivo']) ?>
+            <?= $form->field($model, 'consecutivo')->textInput(['id' => 'consecutivo','required' => true]) ?>
         </div>
     </div>
     <div class="form-group centrar">
-        <?= Html::submitButton('Cambiar', ['class' => 'btn btn-success btn-lg btn-create', 'id' => 'btn_registrar']) ?>
+        <?= Html::submitButton('Cambiar', ['class' => 'btn btn-success btn-lg btn-create d-none', 'id' => 'btn_registrar']) ?>
     </div>
     <?php ActiveForm::end(); ?>
 </div>
