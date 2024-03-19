@@ -17,6 +17,10 @@ class TraspasoSearch extends Traspaso
     public $serie;
     public $und_empaque;
     public $und_traspaso;
+
+    // Definir un nuevo escenario para filtrar por estado igual a 1
+    const SCENARIO_ESTADO_UNO = 'estadoUno';
+
     /**
      * {@inheritdoc}
      */
@@ -25,7 +29,7 @@ class TraspasoSearch extends Traspaso
         return [
             [['id', 'idBodegaOrigen', 'idBodegaDestino', 'numeroCajas', 'idTipoDocumento', 'idEstado'], 'integer'],
             [['updated_at', 'created_by', 'updated_by'], 'safe'],
-            [['consecutivo', ], 'number'],
+            [['consecutivo',], 'number'],
             // [['und_traspaso', 'und_empaque' ], 'number'],
             [['serie'], 'string', 'max' => 5],
         ];
@@ -37,7 +41,12 @@ class TraspasoSearch extends Traspaso
     public function scenarios()
     {
         // bypass scenarios() implementation in the parent class
-        return Model::scenarios();
+        // return Model::scenarios();
+
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_ESTADO_UNO] = []; // Define the attributes for this scenario if needed
+        return $scenarios;
+
     }
 
     /**
@@ -50,6 +59,11 @@ class TraspasoSearch extends Traspaso
     public function search($params)
     {
         $query = Traspaso::find();
+
+        // Aplicar el escenario solo si se proporciona en los parámetros
+        if (!empty ($params['scenario']) && $params['scenario'] === self::SCENARIO_ESTADO_UNO) {
+            $this->scenario = self::SCENARIO_ESTADO_UNO;
+        }
 
         // add conditions that should always apply here
 
@@ -91,7 +105,7 @@ class TraspasoSearch extends Traspaso
                 ->all();
 
             // Verificar si se encontraron usuarios
-            if (!empty($usuarios)) {
+            if (!empty ($usuarios)) {
                 $userIds = array_map(function ($usuario) {
                     return $usuario->id;
                 }, $usuarios);
@@ -114,6 +128,12 @@ class TraspasoSearch extends Traspaso
                 // Si el tipo de documento no se encuentra, no se filtrará por tipo de documento
                 $query->andFilterWhere(['idTipoDocumento' => null]);
             }
+        }
+
+
+        // Agregar filtro por estado igual a 1 si se está utilizando el nuevo escenario
+        if ($this->scenario === self::SCENARIO_ESTADO_UNO) {
+            $query->andFilterWhere(['idEstado' => 1]);
         }
 
         return $dataProvider;

@@ -29,7 +29,7 @@ $this->registerCss('
     @media (max-width: 450px) {
         .btn-create {
             font-size: 13px;
-            width: 118px !important;
+            width: 120px !important;
         }
         #w0-filters th:first-of-type {
             display: none;
@@ -137,7 +137,7 @@ $gridColumns = [
     ],
     [
         'attribute' => 'idEstado',
-        'filter' => Estadotraspaso::getListaDataMenosEliminado(),
+        'filter' => Estadotraspaso::getListaData(),
         'value' => function ($model) {
             return $model->estado ? $model->estado->nombre : null;
         },
@@ -324,7 +324,7 @@ $gridColumns = [
             ],
             [
                 'attribute' => 'idEstado',
-                'filter' => Estadotraspaso::getListaDataMenosEliminado(),
+                'filter' => Estadotraspaso::getListaData(),
                 'value' => function ($model) {
             return $model->estado ? $model->estado->nombre : null;
         },
@@ -421,7 +421,7 @@ $gridColumns = [
                         'data' => [
                             'confirm' => 'Esta seguro de anular este registro? ( Origen: ' . $model->bodegaOrigen->nombre . ', Destino: ' .
                                 $model->bodegaDestino->nombre . ', Numero de cajas: ' .
-                                $model->numeroCajas . ', al elimarlo se perdera la lista interna de items )',
+                                $model->numeroCajas . ' )',
                             'method' => 'post',
                         ]
                     ]

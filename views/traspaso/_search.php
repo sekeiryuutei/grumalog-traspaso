@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 <div class="traspaso-search">
 
     <?php $form = ActiveForm::begin([
-        'action' => ['index'],
+        'action' => ['index' , 'site/muelle'],
         'method' => 'get',
     ]); ?>
 

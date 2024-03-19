@@ -10,6 +10,9 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\Response;
+use app\models\search\TraspasoSearch;
+use app\models\Traspaso;
+use yii\web\NotFoundHttpException;
 
 class SiteController extends Controller
 {
@@ -63,12 +66,12 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $modelusertraspaso = Usertraspaso::findOne(['idUser' => Yii::$app->user->id]);
-        
+
         if (!Yii::$app->user->isGuest) {
-            if (!$modelusertraspaso){
-                Yii::$app->session->setFlash( 'error', 'Usuario No Autorizado Para Traspaso');
-            }else{
-                Yii::$app->session->setFlash( 'success', $modelusertraspaso->empleadoLogistica->empleado->nombreEmpleado);
+            if (!$modelusertraspaso) {
+                Yii::$app->session->setFlash('error', 'Usuario No Autorizado Para Traspaso');
+            } else {
+                Yii::$app->session->setFlash('success', $modelusertraspaso->empleadoLogistica->empleado->nombreEmpleado);
 
                 return $this->redirect(['/traspaso/index']);
             }
@@ -138,4 +141,52 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+
+
+
+    public function actionMuelle()
+    {
+        $traspaso = new Traspaso();
+
+        if (Yii::$app->request->isPost) {
+            $serie = Yii::$app->request->post('Traspaso')['serie'];
+            $consecutivo = Yii::$app->request->post('Traspaso')['consecutivo'];
+
+            return $this->redirect(['cambio-estado', 'id_serie' => $serie, 'id_consecutivo' => $consecutivo]);
+        }
+
+        return $this->render('muelle', [
+            'model' => $traspaso,
+        ]);
+    }
+
+    public function actionCambioEstado($id_serie, $id_consecutivo)
+    {
+
+        $traspaso = Traspaso::find()
+            ->select(['traspaso.*', 'td.codigo']) // Cambio de 'tipodocumento.codigo' a 'td.codigo'
+            ->innerJoin('bodegatipodocumento bt', 'bt.idBodega = traspaso.idBodegaOrigen')
+            ->innerJoin('tipodocumento td', 'td.id = bt.idTipoDocumento')
+            ->where(['traspaso.consecutivo' => $id_consecutivo])
+            ->andWhere(['td.codigo' => $id_serie])
+            ->andWhere(['traspaso.idEstado' => 1])
+            ->one();
+
+        if (!$traspaso) {
+
+            Yii::$app->session->setFlash('warning', 'No se encontró ningún traspaso con la serie y el consecutivo proporcionados en estado "sin enviar".');
+
+            return $this->redirect(['muelle']);
+
+        } else {
+            $traspaso->idEstado = 3;
+            $traspaso->save();
+            Yii::$app->session->setFlash('success', 'Estado de ' . $id_serie . ' '
+                . $id_consecutivo . '  cambiado a muelle correctamente.');
+            return $this->redirect(['muelle']);
+        }
+    }
+
+
 }
