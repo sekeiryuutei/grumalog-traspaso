@@ -2,8 +2,8 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'sqlsrv:Server=SRVAPP2\MNG;Database=HERPOSOFT2',
-    // 'dsn' => 'sqlsrv:Server=SISTEMAS5\SQLEXPRESS;Database=HERPOSOFT2',
+    'dsn' => 'sqlsrv:Server=SRVAPP2\MNG;Database=GRUMALOG',
+    // 'dsn' => 'sqlsrv:Server=SISTEMAS5\SQLEXPRESS;Database=GRUMALOG',
     'username' => 'sa',
     'password' => 'MasterKey..',
     'charset' => 'utf8',
