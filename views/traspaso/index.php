@@ -29,7 +29,7 @@ $this->registerCss('
     @media (max-width: 450px) {
         .btn-create {
             font-size: 13px;
-            width: 120px !important;
+            width: 130px !important;
         }
         #w0-filters th:first-of-type {
             display: none;
