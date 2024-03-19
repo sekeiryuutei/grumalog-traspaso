@@ -17,9 +17,7 @@ $this->registerCss('
 #w3-collapse {
     justify-content: flex-end !important;
   }
-  .navbar-expand-md .navbar-collapse {
-    display: flex !important;
-    flex-basis: auto;
+.navbar-collapse {
     justify-content: flex-end !important;
 }
   ');
@@ -52,17 +50,13 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         <?php
         NavBar::begin([
             'brandLabel' => Yii::$app->name,
-            // 'brandUrl' => Yii::$app->homeUrl,
             'brandUrl' => ['/traspaso/index'],
-            'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
+            'options' => ['class' => 'navbar-dark bg-dark fixed-top navbar-expand-sm']
         ]);
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav'],
             'items' => [
-                // ['label' => 'Home', 'url' => ['/site/index']],
-                // ['label' => 'About', 'url' => ['/site/about']],
-                // ['label' => 'Contact', 'url' => ['/site/contact']],
-                // ['label' => 'Traspaso', 'url' => ['/traspaso/index']],
+                ['label' => 'Muelle', 'url' => ['/site/muelle']],
                 Yii::$app->user->isGuest
                 ? ['label' => 'Iniciar Sesion', 'url' => ['/site/login']]
                 : '<li class="nav-item">'
@@ -81,9 +75,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 
     <main id="main" class="flex-shrink-0" role="main">
         <div class="container">
-            <?php if (!empty($this->params['breadcrumbs'])): ?>
+            <?php if (!empty ($this->params['breadcrumbs'])): ?>
                 <?=
-                    //  Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]);
                     Breadcrumbs::widget([
                         'homeLink' => [
                             'label' => 'Hogar',
@@ -102,7 +95,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         <div class="container">
             <div class="row text-muted">
                 <div class="col-md-6 text-center text-md-start">&copy;
-                    <?= Yii::$app->params['proyectoNombre'] ?? 'Herposoft20' ?>
+                    <?= Yii::$app->params['proyectoNombre'] ?? 'GRUMALOG' ?>
                     <?= date('Y') ?>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
