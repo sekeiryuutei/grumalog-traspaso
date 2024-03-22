@@ -94,7 +94,7 @@ abstract class Application extends Module
     /**
      * @var string the application name.
      */
-    public $name = 'Herposoft20-Trapasos';
+    public $name = 'Grumalog-Trapasos';
     /**
      * @var string the charset currently used for the application.
      */

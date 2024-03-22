@@ -9,20 +9,20 @@ $config = [
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
 
     'modules' => [
-		
-		'gridview' =>  [
-			'class' => '\kartik\grid\Module'
-			// enter optional module parameters below - only if you need to  
-			// use your own export download action or custom translation 
-			// message source
-			// 'downloadAction' => 'gridview/export/download',
-			// 'i18n' => []
-		]
-	],
+
+        'gridview' => [
+            'class' => '\kartik\grid\Module'
+            // enter optional module parameters below - only if you need to  
+            // use your own export download action or custom translation 
+            // message source
+            // 'downloadAction' => 'gridview/export/download',
+            // 'i18n' => []
+        ]
+    ],
 
     'components' => [
         'request' => [
@@ -55,14 +55,15 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
-        */
+
+        // 'urlManager' => [
+        //     'enablePrettyUrl' => true,
+        //     'showScriptName' => false,
+        //     'rules' => [
+        //         'traspasos' => 'traspaso/index'
+        //     ],
+        // ],
+
     ],
     'params' => $params,
 ];
