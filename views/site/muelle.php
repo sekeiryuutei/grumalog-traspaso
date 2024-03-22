@@ -27,7 +27,7 @@ if (Yii::$app->user->isGuest) {
 
     <div class="row">
         <div class="col-12 col-lg-6">
-            <?= $form->field($model, 'serie')->textInput(['id' => 'serie','required' => true]) ?>
+            <?= $form->field($model, 'serie')->textInput(['id' => 'serie','required' => true, 'autofocus' => true]) ?>
         </div>
 
         <div class="col-12 col-lg-6">
