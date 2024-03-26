@@ -3,7 +3,7 @@
         'name' => 'yiisoft/yii2-app-basic',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'd27ce273cdf6645f4d7e881f626e32430ffd6a40',
+        'reference' => 'ac01cb727c285c539ef40a771aefd912075e87cc',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1058,7 +1058,7 @@
         'yiisoft/yii2-app-basic' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'd27ce273cdf6645f4d7e881f626e32430ffd6a40',
+            'reference' => 'ac01cb727c285c539ef40a771aefd912075e87cc',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1108,6 +1108,15 @@
             'install_path' => __DIR__ . '/../yiisoft/yii2-gii',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'yiisoft/yii2-httpclient' => array(
+            'pretty_version' => '2.0.15',
+            'version' => '2.0.15.0',
+            'reference' => '5a8350e15f2db3555ba52830c9c701587c136e87',
+            'type' => 'yii2-extension',
+            'install_path' => __DIR__ . '/../yiisoft/yii2-httpclient',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'yiisoft/yii2-jui' => array(
             'pretty_version' => '2.0.7',

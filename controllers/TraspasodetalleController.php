@@ -135,39 +135,59 @@ class TraspasodetalleController extends Controller
                     ->andWhere(['idEstado' => 'ACTIVO'])
                     ->one();
                 if ($modelitem == null) {
+
                     Yii::$app->session->setFlash('error', 'No existe codigo de barras: ' . $model->codigoitem);
+
                 } else {
+
                     $model->idItem = $modelitem->id;
                     $modeldetalle = Traspasodetalle::find()->where([
                         'idTraspaso' => $idtraspaso,
                         'idItem' => $model->idItem
                     ])->one();
+
                     if ($modeldetalle == null) {
                         $modeldetalle = new Traspasodetalle();
                         $modeldetalle->idTraspaso = $model->idTraspaso;
                         $modeldetalle->idItem = $model->idItem;
                         $modeldetalle->cantidad = 0;
                     }
-                    $modeldetalle->codigoitem = $model->idItem;
-                    $modeldetalle->cantidad = $modeldetalle->cantidad + $model->cantidad;
-                    Yii::debug('Guardando el modelo detalle', __METHOD__);
-                    if ($modeldetalle->validate()) {
-                        Yii::debug('Modelo válido, guardando', __METHOD__);
-                        $modeldetalle->save();
 
-                        $modeltraspaso->idUltimoItem = $modeldetalle->idItem;
-                        $modeltraspaso->save();
+                    $inventario = $modeldetalle->getInventario($model->codigoitem, $model->traspaso->bodegaOrigen->codigo);
 
-                        Yii::$app->session->setFlash('success', 'Guardado exitosamente!');
-                        Yii::debug('Modelo guardado correctamente', __METHOD__);
+                    // $inventario = $modeldetalle->getInventario($model->codigoitem, '010');
+                    // var_dump($inventario);
+                    // var_dump($inventario > null . '    -   ');
+                    // var_dump($model->codigoitem . '  codigo de bodega  '. $model->traspaso->bodegaOrigen->codigo);
+                    // die();
+
+                    if ($inventario > 0) {
+                        $modeldetalle->codigoitem = $model->idItem;
+                        $modeldetalle->cantidad = $modeldetalle->cantidad + $model->cantidad;
+                        Yii::debug('Guardando el modelo detalle', __METHOD__);
+                        if ($modeldetalle->validate()) {
+                            Yii::debug('Modelo válido, guardando', __METHOD__);
+                            $modeldetalle->save();
+
+                            $modeltraspaso->idUltimoItem = $modeldetalle->idItem;
+                            $modeltraspaso->save();
+
+                            Yii::$app->session->setFlash('success', 'Guardado exitosamente!');
+                            Yii::debug('Modelo guardado correctamente', __METHOD__);
+                        } else {
+
+                            Yii::debug('El modelo no es válido. Verifica los datos.', __METHOD__);
+
+                            Yii::$app->session->setFlash('error', 'El modelo no es válido, verifica los datos.' . __METHOD__);
+
+                        }
                     } else {
-                        var_dump($modeldetalle->getErrors());
-                        die('<-- error');
-                        Yii::debug('El modelo no es válido. Verifica los datos.', __METHOD__);
 
-                        Yii::$app->session->setFlash('error', 'El modelo no es válido, verifica los datos.' . __METHOD__);
+                        Yii::$app->session->setFlash('error', 'Articulo sin existencia para traspaso: ' . $model->codigoitem);
+
                     }
                     return $this->redirect(['create', 'idtraspaso' => $idtraspaso]);
+
                 }
                 return $this->redirect(['create', 'idtraspaso' => $idtraspaso]);
             }

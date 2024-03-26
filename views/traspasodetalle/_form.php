@@ -219,9 +219,9 @@ $this->registerJs("
                     }
             ],
             [
-                'attribute' => 'idItem',
+                'attribute' => 'unidad',
                 'contentOptions' => ['data-cellvalue' => 'Unidad Orden'],
-                'label' => 'Unidad',
+                // 'label' => 'Unidad',
                 'value' => function ($model) {
                         if ($model->item->unidadOrden!=null) {
                             return $model->item->unidadOrden;
@@ -235,19 +235,8 @@ $this->registerJs("
 
             ],
             [
-                'attribute' => 'idItem',
-                'contentOptions' => ['data-cellvalue' => 'Unidad Empaque'],
-                'label' => 'Empaque',
-                'value' => function ($model) {
-                        if ($model->item->unidadEmpaque) {
-                            return $model->item->unidadEmpaque;
-                        }
-                        return 'UND';
-                    }
-            ],
-            [
-                'attribute' => 'idItem',
-                'label' => 'total',
+                'attribute' => 'totalum',
+                // 'label' => 'total',
                 'contentOptions' => ['data-cellvalue' => 'Cantidad Total'],
                 'value' => function ($model) {
                         if ($model->item->unidadEmpaque) {

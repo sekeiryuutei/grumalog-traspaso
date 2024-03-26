@@ -26,7 +26,7 @@ $this->registerCss('
     .btn-create {
         width: 300px;
     }
-    @media (max-width: 450px) {
+    @media (max-device-width: 162.6mm) {
         .btn-create {
             font-size: 13px;
             width: 130px !important;
@@ -237,10 +237,10 @@ $gridColumns = [
 <div class="traspaso-index">
 
     <div class="row">
-        <div class="col-lg-6 col-6 derecha">
+        <div class="col-lg-6 col-6 izquierda">
             <?= Html::a('Crear Traspaso', ['create'], ['class' => 'btn btn-success btn-lg btn-create']) ?>
         </div>
-        <div class="col-lg-6 col-6 izquierda">
+        <div class="col-lg-6 col-6 izquierda d-none">
             <?php echo ExportMenu::widget(
                 [
                     'dataProvider' => $dataProvider,
