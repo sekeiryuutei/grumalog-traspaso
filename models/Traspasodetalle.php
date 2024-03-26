@@ -104,6 +104,9 @@ class Traspasodetalle extends \yii\db\ActiveRecord
             'updated_at' => 'Fecha',
             'ultimo_codigo' => 'ultimo codigo',
             'cantidad_paquetes' => 'paquetes',
+            'unidad' => 'Unidad de medida',
+            'totalum'=> 'Um/total',
+            // 'talla' => 'Talla',
         ];
     }
 
@@ -154,5 +157,26 @@ class Traspasodetalle extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Traspaso::class, ['id' => 'idTraspaso']);
     }
+
+    public static function getInventario ($codigobarras, $codigobodega){
+
+        $existencia = 0;
+
+        if ($codigobarras){
+
+            $modelinventario = new InventariosWs();
+            $lista = $modelinventario->getAllInventariosSiesa($codigobarras);
+            foreach($lista as $bodega){
+
+                if (($bodega['Bodega'] == $codigobodega) && ($bodega['EAN'] == $codigobarras )){
+                    $existencia = $bodega['CantidadExistente'];
+                    break;
+                }
+            }
+        }
+
+        return $existencia;
+    }
+    
 
 }

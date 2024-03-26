@@ -6,6 +6,15 @@ return [
     'senderEmail' => 'noreply@example.com',
     'senderName' => 'Example.com mailer',
 
+    'endpoints' => [
+        'service' => [
+            'url' => 'https://connektaqa.siesacloud.com/api/v3/ejecutarconsulta',
+            'conniKey' => 'Connikey-grupomayorista-QJBYOFU3',
+            'conniToken' => 'QJBYOFU3RTFVNKMWRDFRNUEWSDJSNVQ2SJNJMLU3RZJAOESZVJDLMW',
+            'idCompania' => '8203',
+        ],
+    ],
+
     'proyectoNombre' => 'GRUMALOG traspaso',
     'tipodocumento_traspaso' => '2TB',
     'tipodocumento_crossdocking' => '2TA',
