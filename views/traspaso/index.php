@@ -237,10 +237,10 @@ $gridColumns = [
 <div class="traspaso-index">
 
     <div class="row">
-        <div class="col-lg-6 col-6 izquierda">
+        <div class="col-lg-6 col-6 derecha">
             <?= Html::a('Crear Traspaso', ['create'], ['class' => 'btn btn-success btn-lg btn-create']) ?>
         </div>
-        <div class="col-lg-6 col-6 izquierda d-none">
+        <div class="col-lg-6 col-6 izquierda">
             <?php echo ExportMenu::widget(
                 [
                     'dataProvider' => $dataProvider,

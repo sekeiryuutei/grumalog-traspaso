@@ -113,11 +113,12 @@ class Bodegas extends \yii\db\ActiveRecord
         $data = $query->asArray()->all();
 
         $listadata = ArrayHelper::map($data, 'id', function ($bodega) {
-            return $bodega['id'] . ' - ' . $bodega['nombre'] . ' (' . $bodega['codigo'] . ')';
+            return $bodega['codigo'] . ' - ' . $bodega['nombre'];
         });
 
         return $listadata;
     }
+
 
     /**
      * Gets query for [[idBodega]].
