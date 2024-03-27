@@ -91,23 +91,34 @@ class Bodegas extends \yii\db\ActiveRecord
     {
         $data = Bodegas::find()
             ->select(['id', 'nombre'])
-            ->orderBy('nombre')->asArray()->all();
-        $listadata = ArrayHelper::map($data, 'id', 'nombre');
+            ->orderBy('nombre')
+            ->asArray()
+            ->all();
+
+        $listadata = ArrayHelper::map($data, 'id', function ($bodega) {
+            return $bodega['id'] . ' - ' . $bodega['nombre'];
+        });
+
         return $listadata;
     }
+
     public static function getListaDataId($allowedCodes = [])
     {
-        $query = Bodegas::find()->select(['id', 'nombre'])->orderBy('nombre');
+        $query = Bodegas::find()->select(['id', 'nombre', 'codigo'])->orderBy('nombre');
 
-        if (!empty($allowedCodes)) {
+        if (!empty ($allowedCodes)) {
             $query->andWhere(['IN', 'codigo', $allowedCodes]);
         }
 
         $data = $query->asArray()->all();
-        $listadata = ArrayHelper::map($data, 'id', 'nombre');
+
+        $listadata = ArrayHelper::map($data, 'id', function ($bodega) {
+            return $bodega['id'] . ' - ' . $bodega['nombre'] . ' (' . $bodega['codigo'] . ')';
+        });
 
         return $listadata;
     }
+
     /**
      * Gets query for [[idBodega]].
      *

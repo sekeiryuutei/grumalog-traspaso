@@ -55,7 +55,7 @@ use app\models\Bodegas;
         </div>
 
         <div class="col-12 col-lg-4">
-            <?= $form->field($model, 'numeroCajas')->textInput(['maxlength' => true, 'id' => 'numero-cajas']) ?>
+            <?= $form->field($model, 'numeroCajas')->textInput(['maxlength' => true, 'id' => 'numero-cajas','type' => 'number',]) ?>
         </div>
     </div>
     <div class="form-group centrar">
