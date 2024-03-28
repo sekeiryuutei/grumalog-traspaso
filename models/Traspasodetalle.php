@@ -120,34 +120,6 @@ class Traspasodetalle extends \yii\db\ActiveRecord
         return $this->hasOne(Item::class, ['id' => 'idItem'])
             ->where(['idEstado' => 'ACTIVO']);
     }
-    public function getItems()
-    {
-        return $this->hasMany(Item::class, ['id' => 'idItem'])
-            ->where(['idEstado' => 'ACTIVO']);
-    }
-
-    public function getCodigoitem()
-    {
-        return $this->hasOne(Item::class, ['item' => 'codigoitem'])
-            ->where(['idEstado' => 'ACTIVO']);
-    }
-
-    public function getTraspasodetalle()
-    {
-        return $this->hasOne(Traspasodetalle::class, ['idTraspaso' => 'idTraspaso']);
-    }
-    public function getTraspasodetalles()
-    {
-        return $this->hasMany(Traspasodetalle::class, ['idTraspaso' => 'idTraspaso']);
-    }
-    public function getFindCount($idTraspaso)
-    {
-        return $this->find()->where(['idTraspaso' => $idTraspaso])->count();
-    }
-    public function getCantidadPaquetes()
-    {
-        return $this->getItems()->where(['unidadOrden' => null])->count();
-    }
     /**
      * Gets query for [[Traspaso]].
      *

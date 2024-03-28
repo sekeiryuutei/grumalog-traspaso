@@ -182,9 +182,7 @@ class TraspasoController extends Controller
                 Yii::$app->session->setFlash('error', 'Ups!, ocurrio un problema con : ' . $model);
             }
         }
-        // $model->delete();
-
-
+        
         return $this->redirect(['index']);
     }
 

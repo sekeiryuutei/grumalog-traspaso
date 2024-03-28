@@ -10,6 +10,7 @@ $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Traspasos dealle', 'url' => ['index', 'idtraspaso' => $model->idTraspaso ]];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
 ?>
 <div class="traspasodetalle-view">
 

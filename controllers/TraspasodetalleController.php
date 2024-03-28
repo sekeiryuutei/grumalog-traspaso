@@ -71,9 +71,6 @@ class TraspasodetalleController extends Controller
      */
     public function actionCreate($idtraspaso)
     {
-
-
-
         $modeltraspaso = Traspaso::findOne(['id' => $idtraspaso]);
 
         if ($modeltraspaso->idEstado != 0) {
@@ -83,7 +80,6 @@ class TraspasodetalleController extends Controller
         $ultimo_codigo = null;
 
         if ($modeltraspaso->idUltimoItem != null) {
-            // $modelitem = Item::findOne(['id' => $modeltraspaso->idUltimoItem]);
             $modelitem = Item::find()
                 ->where(['id' => $modeltraspaso->idUltimoItem])
                 ->andWhere(['idEstado' => 'ACTIVO'])
@@ -102,8 +98,6 @@ class TraspasodetalleController extends Controller
         $model = new Traspasodetalle();
         $model->idTraspaso = $idtraspaso;
         $model->cantidad = 1;
-        // Obtener la cantidad de elementos asociados al traspaso
-        // $count = Traspasodetalle::find()->where(['idTraspaso' => $idtraspaso])->count();
 
         $count = Traspasodetalle::find()
             ->alias('td')
@@ -129,11 +123,12 @@ class TraspasodetalleController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-                // $modelitem = Item::findOne(['codigoBarras' => $model->codigoitem]);
+
                 $modelitem = Item::find()
                     ->where(['codigoBarras' => $model->codigoitem])
                     ->andWhere(['idEstado' => 'ACTIVO'])
                     ->one();
+
                 if ($modelitem == null) {
 
                     Yii::$app->session->setFlash('error', 'No existe codigo de barras: ' . $model->codigoitem);
@@ -155,17 +150,15 @@ class TraspasodetalleController extends Controller
 
                     $inventario = $modeldetalle->getInventario($model->codigoitem, $model->traspaso->bodegaOrigen->codigo);
 
-                    // $inventario = $modeldetalle->getInventario($model->codigoitem, '010');
-                    // var_dump($inventario);
-                    // var_dump($inventario > null . '    -   ');
-                    // var_dump($model->codigoitem . '  codigo de bodega  '. $model->traspaso->bodegaOrigen->codigo);
-                    // die();
-
                     if ($inventario > 0) {
+
                         $modeldetalle->codigoitem = $model->idItem;
                         $modeldetalle->cantidad = $modeldetalle->cantidad + $model->cantidad;
+
                         Yii::debug('Guardando el modelo detalle', __METHOD__);
+
                         if ($modeldetalle->validate()) {
+
                             Yii::debug('Modelo válido, guardando', __METHOD__);
                             $modeldetalle->save();
 
@@ -174,6 +167,7 @@ class TraspasodetalleController extends Controller
 
                             Yii::$app->session->setFlash('success', 'Guardado exitosamente!');
                             Yii::debug('Modelo guardado correctamente', __METHOD__);
+
                         } else {
 
                             Yii::debug('El modelo no es válido. Verifica los datos.', __METHOD__);
@@ -186,6 +180,7 @@ class TraspasodetalleController extends Controller
                         Yii::$app->session->setFlash('error', 'Articulo sin existencia para traspaso: ' . $model->codigoitem . ' en bodega ' . $model->bodegaorigen);
 
                     }
+                    
                     return $this->redirect(['create', 'idtraspaso' => $idtraspaso]);
 
                 }
@@ -234,14 +229,11 @@ class TraspasodetalleController extends Controller
     public function actionEnd($idtraspaso)
     {
         $model = Traspaso::findOne(['id' => $idtraspaso]);
-
         $model->idEstado = 1;
         $model->save();
 
-        // return $this->redirect(['/traspaso/index']);
         $modeldetalles = $model->traspasodetalles;
 
-        //$model = Traspaso::find()->where(['id' => $idtraspaso])->one();
         $model = Traspaso::findOne(['id' => $idtraspaso]);
 
         return $this->render('view_recibo', [

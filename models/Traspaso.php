@@ -139,10 +139,6 @@ class Traspaso extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Estadotraspaso::class, ['id' => 'idEstado']);
     }
-    public function getIdestado()
-    {
-        return $this->hasOne(Estadotraspaso::class, ['id' => 'idEstado']);
-    }
     public function getUsuario()
     {
         return $this->hasOne(User::className(), ['id' => 'created_by']);
