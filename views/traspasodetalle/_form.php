@@ -12,6 +12,7 @@ use common\models;
 /** @var yii\widgets\ActiveForm $form */
 
 $this->registerCss('
+
     .mi-gridview {
         font-size: 11px; 
     }
@@ -56,9 +57,10 @@ $this->registerJs("
                 $('#btn_registrar').trigger('click');
             }
         });
-
 ");
+
 ?>
+
 <?= Alert::widget() ?>
 
 <div class="traspasodetalle-form">
@@ -68,20 +70,27 @@ $this->registerJs("
     <div class="d-flex flex-column align-items-baseline">
         <div class="d-flex flex-row align-items-baseline">
             <?php if ($model->traspaso && $model->traspaso->bodegaOrigen && $model->traspaso->bodegaOrigen->tipodocumento): ?>
+                
                 <h1 id="tipodocumento_traspaso">
                     <?= $model->traspaso->bodegaOrigen->tipodocumento->tipodocumento->codigo ?>-
                 </h1>
+
             <?php endif; ?>
+
             <h1 id="consecutivo">
                 <?= $model->traspaso->consecutivo ?>
             </h1>
+
         </div>
+
         <h2 style="margin-left:5px;">
             <?= Yii::$app->user->isGuest ? ' ' : Yii::$app->user->identity->username ?>
         </h2>
+
     </div>
 
     <div class="row">
+
         <div class="col-lg-4 col-sm-6 col-6">
             <?= $form->field($model, 'idTraspaso')->textInput(['disabled' => true]) ?>
         </div>
@@ -114,21 +123,11 @@ $this->registerJs("
         </div>
     </div>
 
-    <!--
-    <?= $form->field($model, 'cantidad')->textInput(['disabled' => true]) ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'id' => 'btn_registrar']) ?>
-        <?= Html::Button('Imprimir', ['class' => 'btn btn-info', 'id' => 'btn_Imprimir']) ?>
-    </div>
-        -->
-
     <div class="form-group centrar">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'id' => 'btn_registrar', 'style' => 'display: none']) ?>
         <?= Html::a('Imprimir', ['print', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-primary btn-lg btn-create', 'target' => '_blank', 'style' => 'display: none']) ?>
         <?= Html::a('Terminar', ['end', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-danger btn-lg btn-create mt-1']) ?>
     </div>
-
 
     <?php ActiveForm::end(); ?>
 
@@ -138,17 +137,15 @@ $this->registerJs("
 
 <div class="table-responsive">
     <?= GridView::widget([
-        'responsiveWrap' => false,
+        'responsiveWrap' => false,//para que no sea responsive
         'dataProvider' => $dataProvider,
         'summary' => 'Mostrando {begin} - {end} de {totalCount} resultados',
         'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => '-'],
         'options' => [
             'class' => 'mi-gridview gridview-responsive',
         ],
-        'tableOptions' => ['class' => 'table table-bordered table-striped'], // Aquí eliminamos la clase kv-table-wrap
-    
-        // 'filterModel' => $searchModel,
-        'columns' => [
+        'tableOptions' => ['class' => 'table table-bordered table-striped'],
+            'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
                 'class' => ActionColumn::className(),
@@ -165,7 +162,8 @@ $this->registerJs("
                                     'title' => 'Eliminar Registro',
                                     'data' => [
                                         'confirm' => 'Esta seguro de eliminar este registro con codigo de barras: '
-                                            . $model->item->codigoBarras . ' talla: ' . $model->item->talla->nombre
+                                            . $model->item->codigoBarras . ' talla: ' 
+                                            . trim($model->item->talla->nombre)
                                             . ', y cantidad ' . $model->cantidad,
                                         'method' => 'post',
                                     ]
@@ -182,7 +180,7 @@ $this->registerJs("
                         if ($model->item) {
                             return $model->item->codigoBarras;
                         }
-                        return '-';
+                        return 'No existe codigo de barras';
                     }
 
             ],
@@ -193,7 +191,7 @@ $this->registerJs("
                         if ($model->item) {
                             return $model->item->item;
                         }
-                        return '-';
+                        return 'No existe item';
                     }
             ],
             [
@@ -221,7 +219,6 @@ $this->registerJs("
             [
                 'attribute' => 'unidad',
                 'contentOptions' => ['data-cellvalue' => 'Unidad Orden'],
-                // 'label' => 'Unidad',
                 'value' => function ($model) {
                         if ($model->item->unidadOrden!=null) {
                             return $model->item->unidadOrden;
@@ -232,11 +229,9 @@ $this->registerJs("
             [
                 'attribute' => 'cantidad',
                 'contentOptions' => ['data-cellvalue' => 'Cantidad'],
-
             ],
             [
                 'attribute' => 'totalum',
-                // 'label' => 'total',
                 'contentOptions' => ['data-cellvalue' => 'Cantidad Total'],
                 'value' => function ($model) {
                         if ($model->item->unidadEmpaque) {
@@ -245,12 +240,8 @@ $this->registerJs("
                         return $model->cantidad;
                     }
             ],
-            /*[
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Traspasodetalle $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],*/
         ],
-    ]); ?>
+    ]); 
+    ?>
+    
 </div>

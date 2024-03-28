@@ -6,6 +6,7 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var app\models\search\TraspasodetalleSearch $model */
 /** @var yii\widgets\ActiveForm $form */
+
 ?>
 
 <div class="traspasodetalle-search">

@@ -6,6 +6,7 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var app\models\search\TraspasoSearch $model */
 /** @var yii\widgets\ActiveForm $form */
+
 ?>
 
 <div class="traspaso-search">
@@ -32,8 +33,10 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'created_by')?>
 
     <div class="form-group">
+
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary']) ?>
+        
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -39,9 +39,9 @@ class TraspasodetalleSearch extends Traspasodetalle
      */
     public function search($params, $idtraspaso = null)
     {
-        if ($idtraspaso != null){
+        if ($idtraspaso != null) {
             $query = Traspasodetalle::find()->where(['idTraspaso' => $idtraspaso]);
-        }else{
+        } else {
             $query = Traspasodetalle::find();
         }
 
@@ -54,8 +54,6 @@ class TraspasodetalleSearch extends Traspasodetalle
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 

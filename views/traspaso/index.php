@@ -1,7 +1,17 @@
 <?php
+use app\models\Bodegas;
 use app\models\Estadotraspaso;
+use kartik\export\ExportMenu;
+use kartik\grid\GridView;
+use yii\grid\ActionColumn;
+use yii\helpers\Html;
+
+/** @var yii\web\View $this */
+/** @var app\models\search\TraspasoSearch $searchModel */
+/** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->registerCss('
+
     .mi-gridview {
         font-size: 11px; /* Ajusta el tamaño de la fuente según sea necesario */
         /* Otros estilos CSS según sea necesario */
@@ -26,11 +36,14 @@ $this->registerCss('
     .btn-create {
         width: 300px;
     }
+
     @media (max-device-width: 162.6mm) {
+
         .btn-create {
             font-size: 13px;
             width: 130px !important;
         }
+
         #w0-filters th:first-of-type {
             display: none;
         }
@@ -50,26 +63,10 @@ $this->registerCss('
         td[data-col-seq="10"]{
             display: none;
         }
-    }
 
-    .centrar {
-        text-align: center;
     }
 
 ');
-
-use app\models\Traspaso;
-use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\grid\ActionColumn;
-use kartik\grid\GridView;
-use kartik\export\ExportMenu;
-use app\models\Bodegas;
-
-
-/** @var yii\web\View $this */
-/** @var app\models\search\TraspasoSearch $searchModel */
-/** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Lista de traspasos';
 $this->params['breadcrumbs'][] = $this->title;
@@ -235,12 +232,11 @@ $gridColumns = [
 
 ?>
 <div class="traspaso-index">
-
     <div class="row">
-        <div class="col-lg-6 col-6 izquierda">
+        <div class="col-lg-6 col-6 derecha">
             <?= Html::a('Crear Traspaso', ['create'], ['class' => 'btn btn-success btn-lg btn-create']) ?>
         </div>
-        <div class="col-lg-6 col-6 izquierda d-none">
+        <div class="col-lg-6 col-6 izquierda">
             <?php echo ExportMenu::widget(
                 [
                     'dataProvider' => $dataProvider,
@@ -268,7 +264,6 @@ $gridColumns = [
                             'extension' => 'xlsx',
                             'writer' => ExportMenu::FORMAT_EXCEL_X
                         ],
-
                     ]
                 ]
             );
@@ -292,31 +287,31 @@ $gridColumns = [
                 'attribute' => 'serie',
                 'contentOptions' => ['data-cellvalue' => 'serie'],
                 'value' => function ($model) {
-            return $model->tipodocumento ? $model->tipodocumento->codigo : null;
-        },
+                    return $model->tipodocumento ? $model->tipodocumento->codigo : 'Sin serie';
+                },
             ],
             [
                 'attribute' => 'consecutivo',
                 'contentOptions' => ['data-cellvalue' => 'consecutivo'],
                 'value' => function ($model) {
-            return $model->consecutivo;
-        },
+                    return $model->consecutivo;
+                },
             ],
             [
                 'attribute' => 'idBodegaOrigen',
-                'value' => function ($model) {
-            return $model->bodegaOrigen->nombre;
-        },
                 'filter' => Bodegas::getListaDataId(['207', '210']),
                 'contentOptions' => ['data-cellvalue' => 'idBodegaOrigen', 'class' => 'hidden-xs'],
+                'value' => function ($model) {
+                    return $model->bodegaOrigen->nombre;
+                },
             ],
             [
                 'attribute' => 'idBodegaDestino',
-                'value' => function ($model) {
-            return $model->bodegaDestino->nombre;
-        },
                 'filter' => Bodegas::getListaData(),
                 'contentOptions' => ['data-cellvalue' => 'idBodegaDestino', 'class' => 'hidden-xs'],
+                'value' => function ($model) {
+                    return $model->bodegaDestino->nombre;
+                },
             ],
             [
                 'attribute' => 'numeroCajas',
@@ -325,10 +320,10 @@ $gridColumns = [
             [
                 'attribute' => 'idEstado',
                 'filter' => Estadotraspaso::getListaData(),
-                'value' => function ($model) {
-            return $model->estado ? $model->estado->nombre : null;
-        },
                 'contentOptions' => ['data-cellvalue' => 'idEstado',],
+                'value' => function ($model) {
+                    return $model->estado ? $model->estado->nombre : null;
+                },
             ],
             [
                 'attribute' => 'updated_at',
@@ -339,39 +334,37 @@ $gridColumns = [
                 'attribute' => 'und_empaque',
                 'contentOptions' => ['data-cellvalue' => 'und_empaque',],
                 'value' => function ($model) {
-            $totalCantidadPaquetes = 0;
-            foreach ($model->traspasodetalles as $detalle) {
-                if ($detalle->item->unidadEmpaque != null) {
-                    $totalCantidadPaquetes += $detalle->cantidad;
+                $totalCantidadPaquetes = 0;
+                foreach ($model->traspasodetalles as $detalle) {
+                    if ($detalle->item->unidadEmpaque != null) {
+                        $totalCantidadPaquetes += $detalle->cantidad;
+                    }
                 }
-            }
-            return $totalCantidadPaquetes;
-        },
+                return $totalCantidadPaquetes;
+            },
             ],
             [
                 'attribute' => 'und_traspaso',
                 'contentOptions' => ['data-cellvalue' => 'und_traspaso',],
                 'value' => function ($model) {
-            $totalCantidadPaquetes = 0;
-            foreach ($model->traspasodetalles as $detalle) {
-                if ($detalle->item->unidadempaque != null) {
-                    $totalCantidadPaquetes += $detalle->cantidad * $detalle->item->unidadempaque->equivalencia;
-                } else {
-                    $totalCantidadPaquetes += $detalle->cantidad;
+                $totalCantidadPaquetes = 0;
+                foreach ($model->traspasodetalles as $detalle) {
+                    if ($detalle->item->unidadempaque != null) {
+                        $totalCantidadPaquetes += $detalle->cantidad * $detalle->item->unidadempaque->equivalencia;
+                    } else {
+                        $totalCantidadPaquetes += $detalle->cantidad;
+                    }
                 }
-            }
-            return $totalCantidadPaquetes;
-        },
-
+                return $totalCantidadPaquetes;
+            },
             ],
-
             [
                 'attribute' => 'created_by',
                 'label' => 'Usuario',
+                'contentOptions' => ['data-cellvalue' => 'Usuario'],
                 'value' => function ($model) {
-            return $model->usuario ? $model->usuario->username : ' ';
-        },
-                'contentOptions' => ['data-cellvalue' => 'Usuario',],
+                    return $model->usuario ? $model->usuario->username : 'Sin nombre de usuario';
+                },
             ],
             [
                 'class' => ActionColumn::className(),
@@ -380,7 +373,6 @@ $gridColumns = [
                 'template' => '{detalle} {update} {factura} {anular} ',
                 'contentOptions' => ['data-cellvalue' => 'Acciones',],
                 'buttons' => [
-
                     'detalle' => function ($url, $model) {
                 return Html::a(
                     '<i class="fa fa-list"></i>',
@@ -419,9 +411,10 @@ $gridColumns = [
                         'class' => 'btn btn-default',
                         'title' => 'Anular Registro',
                         'data' => [
-                            'confirm' => 'Esta seguro de anular este registro? ( Origen: ' . $model->bodegaOrigen->nombre . ', Destino: ' .
-                                $model->bodegaDestino->nombre . ', Numero de cajas: ' .
-                                $model->numeroCajas . ' )',
+                            'confirm' => 'Esta seguro de anular este registro? ( Origen: ' 
+                            . $model->bodegaOrigen->nombre  . ', Destino: ' 
+                            . $model->bodegaDestino->nombre . ', Numero de cajas: '
+                            . $model->numeroCajas . ' )',
                             'method' => 'post',
                         ]
                     ]
@@ -451,7 +444,7 @@ $gridColumns = [
 </div>
 
 <script>
-    // Redireccionar después de que se cargue la página
+    // Redireccionar después de que se cargue la página si no esta logeado
     window.onload = function () {
         var redirectUrl = '<?= $redirectUrl ?>';
         if (redirectUrl) {

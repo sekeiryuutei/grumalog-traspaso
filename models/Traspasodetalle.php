@@ -105,7 +105,7 @@ class Traspasodetalle extends \yii\db\ActiveRecord
             'ultimo_codigo' => 'ultimo codigo',
             'cantidad_paquetes' => 'paquetes',
             'unidad' => 'Unidad de medida',
-            'totalum'=> 'Um/total',
+            'totalum' => 'Um/total',
             // 'talla' => 'Talla',
         ];
     }
@@ -120,34 +120,6 @@ class Traspasodetalle extends \yii\db\ActiveRecord
         return $this->hasOne(Item::class, ['id' => 'idItem'])
             ->where(['idEstado' => 'ACTIVO']);
     }
-    public function getItems()
-    {
-        return $this->hasMany(Item::class, ['id' => 'idItem'])
-            ->where(['idEstado' => 'ACTIVO']);
-    }
-
-    public function getCodigoitem()
-    {
-        return $this->hasOne(Item::class, ['item' => 'codigoitem'])
-        ->where(['idEstado' => 'ACTIVO']);
-    }
-
-    public function getTraspasodetalle()
-    {
-        return $this->hasOne(Traspasodetalle::class, ['idTraspaso' => 'idTraspaso']);
-    }
-    public function getTraspasodetalles()
-    {
-        return $this->hasMany(Traspasodetalle::class, ['idTraspaso' => 'idTraspaso']);
-    }
-    public function getFindCount($idTraspaso)
-    {
-        return $this->find()->where(['idTraspaso' => $idTraspaso])->count();
-    }
-    public function getCantidadPaquetes()
-    {
-        return $this->getItems()->where(['unidadOrden' => null])->count();
-    }
     /**
      * Gets query for [[Traspaso]].
      *
@@ -158,25 +130,34 @@ class Traspasodetalle extends \yii\db\ActiveRecord
         return $this->hasOne(Traspaso::class, ['id' => 'idTraspaso']);
     }
 
-    public static function getInventario ($codigobarras, $codigobodega){
+    public static function getInventario($codigobarras, $codigobodega)
+    {
 
         $existencia = 0;
+        $existenciaBodega = 0;
 
-        if ($codigobarras){
+        if ($codigobarras) {
 
             $modelinventario = new InventariosWs();
             $lista = $modelinventario->getAllInventariosSiesa($codigobarras);
-            foreach($lista as $bodega){
+            foreach ($lista as $bodega) {
 
-                if (($bodega['Bodega'] == $codigobodega) && ($bodega['EAN'] == $codigobarras )){
-                    $existencia = $bodega['CantidadExistente'];
-                    break;
+                $existencia = $existencia + $bodega['CantidadExistente'];
+
+                if ($codigobodega != null) {
+                    if ($bodega['Bodega'] == $codigobodega) {
+                        $existenciaBodega = $existenciaBodega + $bodega['CantidadExistente'];
+                    }
                 }
             }
         }
 
+        if ($codigobodega != null) {
+            $existencia = $existenciaBodega;
+        }
+
         return $existencia;
     }
-    
+
 
 }

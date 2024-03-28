@@ -17,10 +17,12 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="traspasodetalle-index">
 
     <p>
-        <?= Html::a('Adicionar items al traspaso', ['create', 'idtraspaso' => Yii::$app->request->get('idtraspaso')], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Adicionar items al traspaso', [
+            'create',
+            'idtraspaso' =>
+                Yii::$app->request->get('idtraspaso')
+        ], ['class' => 'btn btn-success']) ?>
     </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]);    ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -35,11 +37,10 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Traspasodetalle $model, $key, $index, $column) {
-                        return Url::toRoute([$action, 'id' => $model->id, 'idtraspaso' => Yii::$app->request->get('idtraspaso')]);
-                    }
+                return Url::toRoute([$action, 'id' => $model->id, 'idtraspaso' => Yii::$app->request->get('idtraspaso')]);
+            }
             ],
         ],
     ]); ?>
-
 
 </div>
