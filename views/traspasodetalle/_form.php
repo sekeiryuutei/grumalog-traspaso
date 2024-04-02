@@ -61,7 +61,7 @@ $this->registerJs("
 
 ?>
 
-<?= Alert::widget() ?>
+
 
 <div class="traspasodetalle-form">
 
@@ -70,7 +70,7 @@ $this->registerJs("
     <div class="d-flex flex-column align-items-baseline">
         <div class="d-flex flex-row align-items-baseline">
             <?php if ($model->traspaso && $model->traspaso->bodegaOrigen && $model->traspaso->bodegaOrigen->tipodocumento): ?>
-                
+
                 <h1 id="tipodocumento_traspaso">
                     <?= $model->traspaso->bodegaOrigen->tipodocumento->tipodocumento->codigo ?>-
                 </h1>
@@ -96,12 +96,14 @@ $this->registerJs("
         </div>
 
         <div class="col-lg-4 col-sm-6 col-6">
-            <?= $form->field($model, 'bodegaorigen')->textInput(['disabled' => true]) ?>
+
+            <?= $form->field($model, 'bodegaorigen')->textInput(['disabled' => true, 'value' => $model->traspaso->bodegaOrigen->codigo . ' - ' . $model->bodegaorigen]) ?>
         </div>
 
         <div class="col-lg-4 col-sm-6 col-6">
-            <?= $form->field($model, 'bodegadestino')->textInput(['disabled' => true]) ?>
+            <?= $form->field($model, 'bodegadestino')->textInput(['disabled' => true, 'value' => $model->traspaso->bodegaDestino->codigo . ' - ' . $model->bodegadestino]) ?>
         </div>
+
 
         <div class="col-lg-4 col-sm-6 col-6">
             <?= $form->field($model, 'count')->textInput(['disabled' => true, 'value' => $count]) ?>
@@ -116,6 +118,8 @@ $this->registerJs("
         </div>
 
     </div>
+    
+    <?= Alert::widget() ?>
 
     <div class="row">
         <div class="col-lg-12">
@@ -145,7 +149,7 @@ $this->registerJs("
             'class' => 'mi-gridview gridview-responsive',
         ],
         'tableOptions' => ['class' => 'table table-bordered table-striped'],
-            'columns' => [
+        'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
                 'class' => ActionColumn::className(),
@@ -162,7 +166,7 @@ $this->registerJs("
                                     'title' => 'Eliminar Registro',
                                     'data' => [
                                         'confirm' => 'Esta seguro de eliminar este registro con codigo de barras: '
-                                            . $model->item->codigoBarras . ' talla: ' 
+                                            . $model->item->codigoBarras . ' talla: '
                                             . trim($model->item->talla->nombre)
                                             . ', y cantidad ' . $model->cantidad,
                                         'method' => 'post',
@@ -220,7 +224,7 @@ $this->registerJs("
                 'attribute' => 'unidad',
                 'contentOptions' => ['data-cellvalue' => 'Unidad Orden'],
                 'value' => function ($model) {
-                        if ($model->item->unidadOrden!=null) {
+                        if ($model->item->unidadOrden != null) {
                             return $model->item->unidadOrden;
                         }
                         return $model->item->unidadEmpaque;
@@ -241,7 +245,7 @@ $this->registerJs("
                     }
             ],
         ],
-    ]); 
+    ]);
     ?>
-    
+
 </div>

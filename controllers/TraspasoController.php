@@ -89,13 +89,26 @@ class TraspasoController extends Controller
         }
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-                $tipoDocumento = Tipodocumento::findOne(['id' => $model->bodegaOrigen->tipodocumento->idTipoDocumento]);
-                $model->idTipoDocumento = $tipoDocumento->id;
-                $model->consecutivo = $tipoDocumento->consecutivoProximo;
-                $model->serie = $tipoDocumento->codigo;
-                // Incrementar el próximo consecutivo en Tipodocumento
-                $tipoDocumento->consecutivoProximo += 1;
-                $tipoDocumento->save();
+
+
+                if ($model->bodegaOrigen && $model->bodegaOrigen->tipodocumento && $model->bodegaOrigen->tipodocumento->idTipoDocumento !== null){
+
+                    $tipoDocumento = Tipodocumento::findOne(['id' => $model->bodegaOrigen->tipodocumento->idTipoDocumento]);
+
+                    $model->idTipoDocumento = $tipoDocumento->id;
+                    $model->consecutivo = $tipoDocumento->consecutivoProximo;
+                    $model->serie = $tipoDocumento->codigo;
+
+                    // Incrementar el próximo consecutivo en Tipodocumento
+
+                    $tipoDocumento->consecutivoProximo += 1;
+                    $tipoDocumento->save();
+
+                } else {
+
+                    Yii::$app->session->setFlash('error', 'Revisar las relaciones de bodega: ' . $model->bodegaOrigen. ' con tipoDocumento ' . $model);
+
+                }
 
             }
             if ($model->load($this->request->post()) && $model->save()) {
@@ -182,7 +195,7 @@ class TraspasoController extends Controller
                 Yii::$app->session->setFlash('error', 'Ups!, ocurrio un problema con : ' . $model);
             }
         }
-        
+
         return $this->redirect(['index']);
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Bodegas;
+use app\models\Traspasouserbodega;
 use app\widgets\Alert;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -32,7 +33,7 @@ $this->registerCss('
     <div class="row">
         <div class="col-12 col-lg-4">
             <?= $form->field($model, 'idBodegaOrigen')->dropDownList(
-                Bodegas::getListaDataId(['207', '210']),
+                Traspasouserbodega::getListaData(),
                 [
                     'prompt' => ' Bodega Origen ... ',
                     'id' => 'id-bodega-origen',
