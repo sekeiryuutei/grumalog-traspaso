@@ -7,7 +7,6 @@ $this->registerCss('
 $this->registerJs("
 $(document).ready(
     function() {
-
     let tipodocumento = $('#tipodocumento_traspaso').text().trim();
     let consecutivo = $('#consecutivo').text().trim();
     generarCodigoBarras(tipodocumento,'barcodeTipodocumento');
@@ -29,22 +28,22 @@ $(document).ready(
 ?>
 
 <div class="d-flex flex-column align-items-baseline">
-    
+
     <h1>
         <?= Yii::$app->params['tituloTraspaso'] ?? '' ?>
     </h1>
-    
+
     <h6>
         <?= Yii::$app->params['grupo'] ?? '' ?>
     </h6>
-    
+
     <div class="d-flex flex-row">
         <h6>NIT: </h6>
         <h6>
             <?= Yii::$app->params['nit'] ?? '' ?>
         </h6>
     </div>
-    
+
     <div class="d-flex flex-row">
         <h6>
             <?= Yii::$app->params['direccion'] ?? '' ?>
@@ -68,7 +67,7 @@ $(document).ready(
             <div id="tipodocumento_traspaso">
                 <?=
                     $model->bodegaOrigen->tipodocumento->tipodocumento->codigo
-                ?>
+                    ?>
             </div>
         </h6>
 
@@ -90,11 +89,13 @@ $(document).ready(
 
     <h6>
         Origen:
+        <?= $model->bodegaOrigen->codigo ?>
         <?= $model->bodegaOrigen->nombre; ?>
     </h6>
 
     <h6>
         Destino:
+        <?= $model->bodegaDestino->codigo ?>
         <?= $model->bodegaDestino->nombre; ?>
     </h6>
 
@@ -153,11 +154,13 @@ echo '</table>';
 
 <h1>
     Origen:
+    <?= $model->bodegaOrigen->codigo ?>
     <?= $model->bodegaOrigen->nombre; ?>
 </h1>
 
 <h1>
     Destino:
+    <?= $model->bodegaDestino->codigo ?>
     <?= $model->bodegaDestino->nombre; ?>
 </h1>
 
@@ -173,75 +176,74 @@ echo '</table>';
 </div>
 
 <style>
+    .container {
+        margin: 0;
+        font-family: "Curry";
+        font-weight: 700;
+        font-size: 13.5px;
+    }
 
-.container{
-    margin:0;
-    font-family: "Curry";
-    font-weight: 700;
-    font-size:13.5px;
-}
+    th {
+        padding-right: 10px;
+    }
 
-th{
-    padding-right: 10px;
-}
-
-table {
-    border-collapse: separate;
-    font-size:10px;
-    width: 60%;
-}
-
-td {
-    white-space: normal; /* Permite saltos de línea */
-}
-
-h1{
-    font-size:25px;
-}
-
-h6{
-    font-size:13.5px;
-}
-
-hr{
-    margin:2px;
-}
-
-#tipodocumento_traspaso{
-    margin-left:2px;
-}
-
-#w3-collapse {
-    justify-content: flex-end;
-  }
-
-@media (max-width: 650px) {
     table {
         border-collapse: separate;
-        font-size:10px;
-        width: 100%;
+        font-size: 8px;
+        width: 60%;
     }
-}
 
-@media (max-width: 768px) {
+    td {
+        white-space: normal;
+        /* Permite saltos de línea */
+    }
 
-.imprimir-solo {
-    display: block !important;
-    margin-left: 10px;
-}
+    h1 {
+        font-size: 25px;
+    }
 
-.d-flex.justify-content-start {
-    justify-content: center !important;
-}
+    h6 {
+        font-size: 13.5px;
+    }
 
-}
+    hr {
+        margin: 2px;
+    }
 
-@media print {
-.imprimir-solo {
-    display: none !important;
-}
-}
+    #tipodocumento_traspaso {
+        margin-left: 2px;
+    }
 
+    #w3-collapse {
+        justify-content: flex-end;
+    }
+
+    @media (max-width: 650px) {
+        table {
+            border-collapse: separate;
+            font-size: 10px;
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 768px) {
+
+        .imprimir-solo {
+            display: block !important;
+            margin-left: 10px;
+        }
+
+        .d-flex.justify-content-start {
+            justify-content: center !important;
+        }
+
+    }
+
+    @media print {
+        .imprimir-solo {
+            display: none !important;
+        }
+    }
 </style>
 
 <script>

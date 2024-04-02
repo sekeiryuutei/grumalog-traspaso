@@ -8,7 +8,8 @@ return [
 
     'endpoints' => [
         'service' => [
-            'url' => 'https://connektaqa.siesacloud.com/api/v3/ejecutarconsulta',
+            //'url' => 'https://connektaqa.siesacloud.com/api/v3/ejecutarconsulta',
+            'url' => 'https://serviciosconnekta.siesacloud.com/api/v3/ejecutarconsulta',
             'conniKey' => 'Connikey-grupomayorista-QJBYOFU3',
             'conniToken' => 'QJBYOFU3RTFVNKMWRDFRNUEWSDJSNVQ2SJNJMLU3RZJAOESZVJDLMW',
             'idCompania' => '8203',
@@ -23,6 +24,6 @@ return [
     'nit' => '900.091.175',
     'direccion'=> 'Cr 32 14-25',
     'tel'=> '3229200',
-
+        
     'icon-framework' => \kartik\icons\Icon::FAS,  // Font Awesome Icon framework
 ];

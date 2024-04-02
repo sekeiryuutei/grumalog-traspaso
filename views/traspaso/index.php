@@ -5,6 +5,7 @@ use kartik\export\ExportMenu;
 use kartik\grid\GridView;
 use yii\grid\ActionColumn;
 use yii\helpers\Html;
+use app\models\Traspasouserbodega;
 
 /** @var yii\web\View $this */
 /** @var app\models\search\TraspasoSearch $searchModel */
@@ -107,7 +108,7 @@ $gridColumns = [
         'value' => function ($model) {
             return $model->bodegaOrigen->nombre;
         },
-        'filter' => Bodegas::getListaDataId(['207', '210']),
+        'filter' => Traspasouserbodega::getListaData(),
         'contentOptions' => ['data-cellvalue' => 'idBodegaOrigen'],
     ],
     [
@@ -299,7 +300,7 @@ $gridColumns = [
             ],
             [
                 'attribute' => 'idBodegaOrigen',
-                'filter' => Bodegas::getListaDataId(['207', '210']),
+                'filter' => Traspasouserbodega::getListaData(),
                 'contentOptions' => ['data-cellvalue' => 'idBodegaOrigen', 'class' => 'hidden-xs'],
                 'value' => function ($model) {
                     return $model->bodegaOrigen->nombre;

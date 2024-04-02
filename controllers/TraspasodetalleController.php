@@ -132,7 +132,7 @@ class TraspasodetalleController extends Controller
                 if ($modelitem == null) {
 
                     Yii::$app->session->setFlash('error', 'No existe codigo de barras: ' . $model->codigoitem);
-
+                    
                 } else {
 
                     $model->idItem = $modelitem->id;
@@ -178,7 +178,6 @@ class TraspasodetalleController extends Controller
                     } else {
 
                         Yii::$app->session->setFlash('error', 'Articulo sin existencia para traspaso: ' . $model->codigoitem . ' en bodega ' . $model->bodegaorigen);
-
                     }
                     
                     return $this->redirect(['create', 'idtraspaso' => $idtraspaso]);
