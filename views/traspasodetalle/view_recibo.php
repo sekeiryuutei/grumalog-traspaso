@@ -1,9 +1,5 @@
 <?php
 
-$this->registerCss('
-
-');
-
 $this->registerJs("
 $(document).ready(
     function() {
@@ -119,30 +115,33 @@ $unidadempaqueValor = 0;
 echo '<p></p>';
 echo '<h1>ITEMS</h1>';
 echo '<table border="0">';
-echo '<tr><th>REFER.</th><th>DESCRIP.</th><th>COLOR</th><th>TALLA</th><th>PAQ</th><th>UM</th><th>CANTIDAD</th><th>TOTAL</th></tr>';
+echo '<tr><th>REFER.</th><th>DESCRIP.</th><th>COLOR</th><th>TALLA</th><th>TIPO</th><th>CANT</th><th>TOTAL UM</th></tr>';
 
 foreach ($modeldetalles as $detalle) {
 
-    echo '<tr><td>' . $detalle->item->referencia . '</td><td>' . $detalle->item->descripcion
-        . '</td><td>' . $detalle->item->color->nombre . '</td><td>' . $detalle->item->talla->nombre
-        . '</td><td>' . ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->codigo : 0)
-        . '</td><td>' . ($detalle->item->unidadOrden ? $detalle->item->unidadOrden : 1)
+    echo '<tr><td>' . $detalle->item->item . '</td><td>'
+        . explode(' ', $detalle->item->categoria->nombre)[0] . ' ' . explode(' ', $detalle->item->descripcion)[0]
+        . '</td><td>' . $detalle->item->color->nombre
+        . '</td><td>' . $detalle->item->talla->nombre
+        . '</td><td>' . ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->codigo : $detalle->item->unidadOrden)
         . '</td><td>' . $detalle->cantidad . '</td><td>'
         . $detalle->cantidad * ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->equivalencia : 1)
         . '</td></tr>';
 
-    if ($detalle->item->unidadempaque != null) {
-        $totalPaquetes += $detalle->cantidad * $detalle->item->unidadempaque->equivalencia; // Acumulamos el valor de la columna "TOTAL" en cada iteración
-    }
+    $totalPaquetes += $detalle->cantidad;// Acumulamos el valor de la columna "TOTAL" en cada iteración
 
     $totalGeneral += $detalle->cantidad * ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->equivalencia : 1); // Acumulamos el valor de la columna "TOTAL" en cada iteración
 
 }
-
-echo '<tr><td colspan="4" style="text-align:right">Total Paquetes:</td><td colspan="2">' . $totalPaquetes . '</td>';
-echo '<td style="text-align:right;">Total General:</td><td colspan="3" >' . $totalGeneral . '</td></tr>';
+echo '
+    <tr style="border-width: 1px 0px 1px 0px; border-color: black; ">
+        <td colspan="5" style="text-align:left">
+            Total unidades:
+        </td>
+        <td colspan="1" style="text-align:left"> ' . $totalPaquetes . '</td>' .
+    '<td colspan="1" style="text-align:left">' . $totalGeneral . '</td>
+    </tr>';
 echo '</table>';
-
 ?>
 
 <svg id="barcodeTipodocumento"></svg>
@@ -188,8 +187,8 @@ echo '</table>';
     }
 
     table {
-        border-collapse: separate;
-        font-size: 8px;
+        /* border-collapse: separate; */
+        font-size: 11px;
         width: 60%;
     }
 
