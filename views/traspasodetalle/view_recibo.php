@@ -13,7 +13,7 @@ $(document).ready(
         $('#barcode').empty();
         // Generar el código de barras
         JsBarcode('#'+barcode, id, {
-            width: 4, height: 25,
+            width: 4, height: 50,
         });
     }
 
@@ -23,7 +23,7 @@ $(document).ready(
 
 ?>
 
-<div class="d-flex flex-column align-items-baseline">
+<div class="d-flex flex-column align-items-baseline" style="margin-top:-10px;">
 
     <h1>
         <?= Yii::$app->params['tituloTraspaso'] ?? '' ?>
@@ -111,22 +111,26 @@ $totalGeneral = 0;
 $totalPaquetes = 0;
 $unidadempaqueNombre = 0;
 $unidadempaqueValor = 0;
+$categoria = '';
+$descipcion = '';
 
-echo '<p></p>';
-echo '<h1>ITEMS</h1>';
 echo '<table border="0">';
-echo '<tr><th>REFER.</th><th>DESCRIP.</th><th>COLOR</th><th>TALLA</th><th>TIPO</th><th>CANT</th><th>TOTAL UM</th></tr>';
+echo '<tr><th>REFER.</th><th>COLOR</th><th class="text-center">TALLA</th><th class="text-center">TIPO</th><th class="text-center">CANT</th><th class="text-center">TOTAL/UM</th></tr>';
 
 foreach ($modeldetalles as $detalle) {
 
-    echo '<tr><td>' . $detalle->item->item . '</td><td>'
-        . explode(' ', $detalle->item->categoria->nombre)[0] . ' ' . explode(' ', $detalle->item->descripcion)[0]
-        . '</td><td>' . $detalle->item->color->nombre
-        . '</td><td>' . $detalle->item->talla->nombre
-        . '</td><td>' . ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->codigo : $detalle->item->unidadOrden)
-        . '</td><td>' . $detalle->cantidad . '</td><td>'
-        . $detalle->cantidad * ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->equivalencia : 1)
-        . '</td></tr>';
+    $categoria = explode(' ', $detalle->item->categoria->nombre)[0];
+    $descipcion = explode(' ', $detalle->item->descripcion)[0];
+
+    echo '<tr><td>' . $detalle->item->item . '</td>'
+        . '<td>' . $detalle->item->color->nombre
+        . '</td><td class="text-center">' . $detalle->item->talla->nombre
+        . '</td><td class="text-center">' . ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->codigo : $detalle->item->unidadOrden)
+        . '</td><td class="text-center">' . $detalle->cantidad
+        . '</td><td class="text-center">' . $detalle->cantidad
+        * ($detalle->item->unidadempaque ? $detalle->item->unidadempaque->equivalencia : 1)
+        . '</td></tr>'
+        . ' <tr> <td colspan="12">' . $categoria . ' ' . $descipcion . '</td></tr>';
 
     $totalPaquetes += $detalle->cantidad;// Acumulamos el valor de la columna "TOTAL" en cada iteración
 
@@ -134,12 +138,12 @@ foreach ($modeldetalles as $detalle) {
 
 }
 echo '
-    <tr style="border-width: 1px 0px 1px 0px; border-color: black; ">
-        <td colspan="5" style="text-align:left">
+    <tr class="print-border">
+        <td colspan="4" style="text-align:left">
             Total unidades:
         </td>
-        <td colspan="1" style="text-align:left"> ' . $totalPaquetes . '</td>' .
-    '<td colspan="1" style="text-align:left">' . $totalGeneral . '</td>
+        <td colspan="1" style="text-align:center;"> ' . $totalPaquetes . '</td>' .
+    '<td colspan="2" style="text-align:center;">' . $totalGeneral . '</td>
     </tr>';
 echo '</table>';
 ?>
@@ -163,10 +167,10 @@ echo '</table>';
     <?= $model->bodegaDestino->nombre; ?>
 </h1>
 
-<h6>
+<h1>
     Usuario:
     <?= Yii::$app->user->isGuest ? ' ' : Yii::$app->user->identity->username ?>
-</h6>
+</h1>
 
 <svg id="barcodeConsecutivo"></svg>
 
@@ -177,18 +181,34 @@ echo '</table>';
 <style>
     .container {
         margin: 0;
-        font-family: "Curry";
-        font-weight: 700;
-        font-size: 13.5px;
+        padding-left: 5px !important;
+        font-family: "Helvetica";
+        /* font-weight: 700; */
+        font-size: 16px;
+    }
+
+    .print-border {
+        border-width: 1px 0px 1px 0px;
+        border-color: black;
+    }
+
+    th,
+    td {
+        padding-right: 8px;
+        font-family: "Helvetica";
     }
 
     th {
-        padding-right: 10px;
+        font-size: 17px;
+    }
+
+    td {
+        font-size: 16px;
     }
 
     table {
         /* border-collapse: separate; */
-        font-size: 11px;
+        font-size: 16px;
         width: 60%;
     }
 
@@ -198,11 +218,13 @@ echo '</table>';
     }
 
     h1 {
-        font-size: 25px;
+        font-family: "Helvetica";
+        font-size: 29px;
     }
 
     h6 {
-        font-size: 13.5px;
+        font-family: "Helvetica";
+        font-size: 15px;
     }
 
     hr {
@@ -217,16 +239,12 @@ echo '</table>';
         justify-content: flex-end;
     }
 
-    @media (max-width: 650px) {
+    @media (max-device-width: 162.6mm) {
         table {
             border-collapse: separate;
             font-size: 10px;
             width: 100%;
         }
-    }
-
-    @media (max-width: 768px) {
-
         .imprimir-solo {
             display: block !important;
             margin-left: 10px;
