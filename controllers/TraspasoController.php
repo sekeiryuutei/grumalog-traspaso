@@ -40,6 +40,10 @@ class TraspasoController extends Controller
      */
     public function actionIndex()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login']);
+        }
+
         $searchModel = new TraspasoSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -58,6 +62,10 @@ class TraspasoController extends Controller
      */
     public function actionView($id)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login']);
+        }
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -65,6 +73,10 @@ class TraspasoController extends Controller
 
     public function actionDetalle($id)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login']);
+        }
+
         $model = $this->findModel($id);
 
         if ($model->idEstado != 0) {
@@ -82,6 +94,11 @@ class TraspasoController extends Controller
      */
     public function actionCreate()
     {
+
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login']);
+        }
+
         $model = new Traspaso();
         $model->idEstado = 0;
         if ($model->idEstado != 0) {
@@ -91,7 +108,7 @@ class TraspasoController extends Controller
             if ($model->load($this->request->post())) {
 
 
-                if ($model->bodegaOrigen && $model->bodegaOrigen->tipodocumento && $model->bodegaOrigen->tipodocumento->idTipoDocumento !== null){
+                if ($model->bodegaOrigen && $model->bodegaOrigen->tipodocumento && $model->bodegaOrigen->tipodocumento->idTipoDocumento !== null) {
 
                     $tipoDocumento = Tipodocumento::findOne(['id' => $model->bodegaOrigen->tipodocumento->idTipoDocumento]);
 
@@ -106,7 +123,7 @@ class TraspasoController extends Controller
 
                 } else {
 
-                    Yii::$app->session->setFlash('error', 'Revisar las relaciones de bodega: ' . $model->bodegaOrigen. ' con tipoDocumento ' . $model);
+                    Yii::$app->session->setFlash('error', 'Revisar las relaciones de bodega: ' . $model->bodegaOrigen . ' con tipoDocumento ' . $model);
 
                 }
 
@@ -132,6 +149,10 @@ class TraspasoController extends Controller
      */
     public function actionUpdate($id)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login']);
+        }
+        
         $model = $this->findModel($id);
 
         if ($model->idEstado != 0) {

@@ -177,7 +177,7 @@ class TraspasodetalleController extends Controller
                         }
                     } else {
 
-                        Yii::$app->session->setFlash('error', 'Articulo sin existencia para traspaso: ' . $model->codigoitem . ' en bodega ' . $model->bodegaorigen);
+                        Yii::$app->session->setFlash('error', 'Articulo sin existencia para traspaso: ' . $model->codigoitem . ' en bodega ' . $model->bodegaorigen . ' inv ' . $inventario);
                     }
                     
                     return $this->redirect(['create', 'idtraspaso' => $idtraspaso]);
