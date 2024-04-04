@@ -96,7 +96,6 @@ $this->registerJs("
         </div>
 
         <div class="col-lg-4 col-sm-6 col-6">
-
             <?= $form->field($model, 'bodegaorigen')->textInput(['disabled' => true, 'value' => $model->traspaso->bodegaOrigen->codigo . ' - ' . $model->bodegaorigen]) ?>
         </div>
 
@@ -104,21 +103,22 @@ $this->registerJs("
             <?= $form->field($model, 'bodegadestino')->textInput(['disabled' => true, 'value' => $model->traspaso->bodegaDestino->codigo . ' - ' . $model->bodegadestino]) ?>
         </div>
 
+        <?php if ($count): ?>
+            <div class="col-lg-4 col-sm-6 col-6">
+                <?= $form->field($model, 'count')->textInput(['disabled' => true, 'value' => $count]) ?>
+            </div>
 
-        <div class="col-lg-4 col-sm-6 col-6">
-            <?= $form->field($model, 'count')->textInput(['disabled' => true, 'value' => $count]) ?>
-        </div>
+            <div class="col-lg-4 col-sm-6 col-6">
+                <?= $form->field($model, 'ultimo_codigo')->textInput(['disabled' => true, 'value' => $ultimo_codigo]) ?>
+            </div>
 
-        <div class="col-lg-4 col-sm-6 col-6">
-            <?= $form->field($model, 'ultimo_codigo')->textInput(['disabled' => true, 'value' => $ultimo_codigo]) ?>
-        </div>
-
-        <div class="col-lg-4 col-sm-6 col-6">
-            <?= $form->field($model, 'cantidad_paquetes')->textInput(['disabled' => true, 'value' => $cantidad_paquetes]) ?>
-        </div>
+            <div class="col-lg-4 col-sm-6 col-6">
+                <?= $form->field($model, 'cantidad_paquetes')->textInput(['disabled' => true, 'value' => $cantidad_paquetes]) ?>
+            </div>
+        <?php endif; ?>
 
     </div>
-    
+
     <?= Alert::widget() ?>
 
     <div class="row">
@@ -130,7 +130,11 @@ $this->registerJs("
     <div class="form-group centrar">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'id' => 'btn_registrar', 'style' => 'display: none']) ?>
         <?= Html::a('Imprimir', ['print', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-primary btn-lg btn-create', 'target' => '_blank', 'style' => 'display: none']) ?>
-        <?= Html::a('Terminar', ['end', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-danger btn-lg btn-create mt-1']) ?>
+
+        <?php if ($count): ?>
+            <?= Html::a('Terminar', ['end', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-danger btn-lg btn-create mt-1']) ?>
+        <?php endif; ?>
+
     </div>
 
     <?php ActiveForm::end(); ?>
