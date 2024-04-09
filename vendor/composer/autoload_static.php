@@ -16,8 +16,8 @@ class ComposerStaticInit772e2e451822aead045fa7a783d56c3e
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
-        '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
+        '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         'e3b2795a8a512b6083af088fb53afe6c' => __DIR__ . '/..' . '/codeception/codeception/functions.php',
@@ -40,6 +40,10 @@ class ComposerStaticInit772e2e451822aead045fa7a783d56c3e
             'yii\\composer\\' => 13,
             'yii\\bootstrap5\\' => 15,
             'yii\\' => 4,
+        ),
+        'x' => 
+        array (
+            'xstreamka\\mobiledetect\\' => 23,
         ),
         'v' => 
         array (
@@ -67,6 +71,10 @@ class ComposerStaticInit772e2e451822aead045fa7a783d56c3e
             'kartik\\dialog\\' => 14,
             'kartik\\bs5dropdown\\' => 19,
             'kartik\\base\\' => 12,
+        ),
+        'd' => 
+        array (
+            'diecoding\\barcode\\generator\\' => 28,
         ),
         'c' => 
         array (
@@ -117,6 +125,7 @@ class ComposerStaticInit772e2e451822aead045fa7a783d56c3e
             'Mpdf\\PsrLogAwareTrait\\' => 22,
             'Mpdf\\PsrHttpMessageShim\\' => 24,
             'Mpdf\\' => 5,
+            'Mike42\\' => 7,
             'Matrix\\' => 7,
             'Masterminds\\' => 12,
         ),
@@ -183,6 +192,10 @@ class ComposerStaticInit772e2e451822aead045fa7a783d56c3e
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2',
         ),
+        'xstreamka\\mobiledetect\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/xstreamka/yii2-mobile-detect/src',
+        ),
         'voku\\helper\\' => 
         array (
             0 => __DIR__ . '/..' . '/voku/anti-xss/src/voku/helper',
@@ -243,6 +256,10 @@ class ComposerStaticInit772e2e451822aead045fa7a783d56c3e
         'kartik\\base\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-krajee-base/src',
+        ),
+        'diecoding\\barcode\\generator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/diecoding/yii2-barcode-generator/src',
         ),
         'cebe\\markdown\\' => 
         array (
@@ -384,6 +401,10 @@ class ComposerStaticInit772e2e451822aead045fa7a783d56c3e
         'Mpdf\\' => 
         array (
             0 => __DIR__ . '/..' . '/mpdf/mpdf/src',
+        ),
+        'Mike42\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mike42/escpos-php/src/Mike42',
         ),
         'Matrix\\' => 
         array (

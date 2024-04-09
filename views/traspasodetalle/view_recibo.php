@@ -1,29 +1,93 @@
 <?php
-
-$this->registerJs("
-$(document).ready(
-    function() {
-    let tipodocumento = $('#tipodocumento_traspaso').text().trim();
-    let consecutivo = $('#consecutivo').text().trim();
-    generarCodigoBarras(tipodocumento,'barcodeTipodocumento');
-    generarCodigoBarras(consecutivo,'barcodeConsecutivo');
-
-    function generarCodigoBarras(id,barcode) {
-        // Eliminar el código de barras anterior
-        $('#barcode').empty();
-        // Generar el código de barras
-        JsBarcode('#'+barcode, id, {
-            width: 4, height: 50,
-        });
-    }
-
-});
-
-");
+use diecoding\barcode\generator\Barcode;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 ?>
+<style>
+    body {
+        margin-left: 10px !important;
+    }
 
-<div class="d-flex flex-column align-items-baseline" style="margin-top:-10px;">
+    .container {
+        margin: 0;
+        padding-left: 10px !important;
+        font-family: "Helvetica";
+        font-size: 16px;
+    }
+
+    .print-border {
+        border-width: 1px 0px 1px 0px;
+        border-color: black;
+    }
+
+    th,
+    td {
+        padding-right: 8px;
+        font-family: "Helvetica";
+    }
+
+    th {
+        font-size: 17px;
+    }
+
+    td {
+        font-size: 16px;
+    }
+
+    table {
+        /* border-collapse: separate; */
+        font-size: 16px;
+        width: 60%;
+    }
+
+    td {
+        white-space: normal;
+        /* Permite saltos de línea */
+    }
+
+    h1 {
+        font-family: "Helvetica";
+        font-size: 29px;
+    }
+
+    h6 {
+        font-family: "Helvetica";
+        font-size: 15px;
+    }
+
+    hr {
+        margin: 2px;
+    }
+
+    #tipodocumento_traspaso {
+        margin-left: 10px;
+    }
+
+    #w3-collapse {
+        justify-content: flex-end;
+    }
+
+    @media (max-device-width: 162.6mm) {
+        table {
+            border-collapse: separate;
+            font-size: 10px;
+            width: 100%;
+        }
+
+        .imprimir-solo {
+            display: block !important;
+            margin-left: 10px;
+        }
+
+        .d-flex.justify-content-start {
+            justify-content: center !important;
+        }
+
+    }
+</style>
+
+<div class="d-flex flex-column align-items-baseline" style="margin-top:100px;">
 
     <h1>
         <?= Yii::$app->params['tituloTraspaso'] ?? '' ?>
@@ -61,9 +125,7 @@ $(document).ready(
         <h6 class="d-flex flex-row" style="margin-right:50px;">
             Serie:
             <div id="tipodocumento_traspaso">
-                <?=
-                    $model->bodegaOrigen->tipodocumento->tipodocumento->codigo
-                    ?>
+                <?= $model->bodegaOrigen->tipodocumento->tipodocumento->codigo ?>
             </div>
         </h6>
 
@@ -74,7 +136,16 @@ $(document).ready(
             </div>
         </h6>
 
-        <h6 style="margin-left:50px">&#160Caja: PKM</h6>
+        <h6 style="margin-left:20px; margin-right:20px; ">&#160Caja:
+            <?= $isMobile ? 'PKM' : 'PC'; ?>
+        </h6>
+
+        <h6 style="margin-left:50px; display: contents;">Traspaso:
+            <div id="traspaso-id">
+                <?= $model->id ?>
+            </div>
+        </h6>
+
 
     </div>
 
@@ -97,7 +168,7 @@ $(document).ready(
 
     <h6>
         Usuario:
-        <?= Yii::$app->user->isGuest ? ' ' : Yii::$app->user->identity->username ?>
+        <?= $model->usuario->username ?>
     </h6>
 
 </div>
@@ -148,7 +219,11 @@ echo '
 echo '</table>';
 ?>
 
-<svg id="barcodeTipodocumento"></svg>
+<?= Barcode::widget([
+    'value' => $model->bodegaOrigen->tipodocumento->tipodocumento->codigo,
+]);
+
+?>
 
 <h1>
     Num.Cajas:
@@ -169,107 +244,62 @@ echo '</table>';
 
 <h1>
     Usuario:
-    <?= Yii::$app->user->isGuest ? ' ' : Yii::$app->user->identity->username ?>
+    <?= $model->usuario->username ?>
 </h1>
 
-<svg id="barcodeConsecutivo"></svg>
+<?= Barcode::widget([
+    'value' => $model->consecutivo,
+]);
+?>
 
-<div class="d-flex justify-content-start">
-    <button class="btn btn-lg btn-primary imprimir-solo" onclick="imprimir()">Confirmar!</button>
+<div class="col-6">
+    <?php $form = ActiveForm::begin(['action' => ['traspasodetalle/impresion',], 'method' => 'post']); ?>
+
+    <?= $form->field($model, 'impresora')->dropDownList(
+        $impresoras,
+        [
+            'prompt' => 'Selecciona una impresora...',
+            'id' => 'id-impresora',
+            'required' => true
+        ]
+    ) ?>
+
+    <div class="form-group text-center">
+        <?= Html::button('impresion', ['class' => 'btn btn-success btn-lg btn-create', 'id' => 'btn-imprimir']) ?>
+    </div>
 </div>
 
-<style>
-    .container {
-        margin: 0;
-        padding-left: 5px !important;
-        font-family: "Helvetica";
-        /* font-weight: 700; */
-        font-size: 16px;
-    }
+<?php
+// Agregar script de JavaScript para ejecutar la acción de impresión al hacer clic en el botón "Imprimir"
+$this->registerJs("
+    // Cuando se haga clic en el botón 'Imprimir'
+    $('#btn-imprimir').click(function() {
+        // Obtener el valor seleccionado de la impresora
+        var impresoraSeleccionada = $('#id-impresora').val();
+        var idTraspaso = $('#traspaso-id').text(); // Obtener el ID del traspaso desde el contenido del elemento
 
-    .print-border {
-        border-width: 1px 0px 1px 0px;
-        border-color: black;
-    }
-
-    th,
-    td {
-        padding-right: 8px;
-        font-family: "Helvetica";
-    }
-
-    th {
-        font-size: 17px;
-    }
-
-    td {
-        font-size: 16px;
-    }
-
-    table {
-        /* border-collapse: separate; */
-        font-size: 16px;
-        width: 60%;
-    }
-
-    td {
-        white-space: normal;
-        /* Permite saltos de línea */
-    }
-
-    h1 {
-        font-family: "Helvetica";
-        font-size: 29px;
-    }
-
-    h6 {
-        font-family: "Helvetica";
-        font-size: 15px;
-    }
-
-    hr {
-        margin: 2px;
-    }
-
-    #tipodocumento_traspaso {
-        margin-left: 2px;
-    }
-
-    #w3-collapse {
-        justify-content: flex-end;
-    }
-
-    @media (max-device-width: 162.6mm) {
-        table {
-            border-collapse: separate;
-            font-size: 10px;
-            width: 100%;
+        // Verificar si se ha seleccionado una impresora
+        if (impresoraSeleccionada) {
+            // Ejecutar la acción de impresión
+            $.ajax({
+                url: '" . Yii::$app->urlManager->createUrl(['/traspasodetalle/impresion']) . "',
+                method: 'POST',
+                data: {
+                    impresoraSeleccionada: impresoraSeleccionada,
+                    idTraspaso: idTraspaso,
+                },
+                success: function(response) {
+                    console.log('Impresión ejecutada correctamente');
+                },
+                error: function(xhr, status, error) {
+                    // Manejar errores (opcional)
+                    console.error('Error al ejecutar la impresión: ' + error);
+                }
+            });
+        } else {
+            // Si no se ha seleccionado una impresora, mostrar un mensaje de error (opcional)
+            alert('Por favor, selecciona una impresora antes de imprimir.');
         }
-        .imprimir-solo {
-            display: block !important;
-            margin-left: 10px;
-        }
-
-        .d-flex.justify-content-start {
-            justify-content: center !important;
-        }
-
-    }
-
-    @media print {
-        .imprimir-solo {
-            display: none !important;
-        }
-    }
-</style>
-
-<script>
-    function imprimir() {
-        // Ocultar el botón de imprimir antes de imprimir
-        var botonImprimir = document.querySelector('.imprimir-solo');
-        botonImprimir.style.display = 'none';
-
-        // Mandar a imprimir
-        window.print();
-    }
-</script>
+    });
+");
+?>

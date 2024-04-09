@@ -24,7 +24,10 @@
         "kartik-v/yii2-mpdf": "dev-master",
         "kartik-v/yii2-export": "dev-master",
         "kartik-v/yii2-bootstrap5-dropdown": "@dev",
-        "yiisoft/yii2-httpclient": "^2.0"
+        "yiisoft/yii2-httpclient": "^2.0",
+        "mike42/escpos-php": "^2.2",
+        "diecoding/yii2-barcode-generator": "1.0",
+        "xstreamka/yii2-mobile-detect": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

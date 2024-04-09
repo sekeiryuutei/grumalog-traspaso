@@ -31,6 +31,8 @@ class Traspaso extends \yii\db\ActiveRecord
     public $serie;
     public $und_empaque;
     public $und_traspaso;
+    public $impresora;
+
     /**
      * {@inheritdoc}
      */
@@ -98,6 +100,7 @@ class Traspaso extends \yii\db\ActiveRecord
             'horaInicio' => 'hora inicio',
             'fechaUltimoRegistro' => 'Fecha ultimo registro',
             'horaUltimoRegistro' => 'Hora ultimo registro',
+            'impresora' => 'impresora',
 
         ];
     }
