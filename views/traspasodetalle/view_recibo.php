@@ -129,18 +129,19 @@ use yii\widgets\ActiveForm;
             </div>
         </h6>
 
-        <h6 class="d-flex flex-row" style="margin-right:5px;">
+        <h6 class="d-flex flex-row">
             NUMERO:
             <div id="consecutivo">
                 <?= $model->consecutivo ?>
             </div>
         </h6>
 
-        <h6 style="margin-left:20px; margin-right:20px; ">&#160Caja:
+        <h6 style="margin-left:20px; margin-right:20px; width: max-content;">
+            &#160Caja:
             <?= $isMobile ? 'PKM' : 'PC'; ?>
         </h6>
 
-        <h6 style="margin-left:50px; display: contents;">Traspaso:
+        <h6 style="display: flex; display:none">Traspaso:
             <div id="traspaso-id">
                 <?= $model->id ?>
             </div>

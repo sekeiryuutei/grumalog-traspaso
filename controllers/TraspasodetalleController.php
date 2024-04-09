@@ -289,6 +289,7 @@ class TraspasodetalleController extends Controller
             $numero_serie = $model->consecutivo;
             $categoria = '';
             $descipcion = '';
+            $isMobile =  $isMobile ? 'PKM' : 'PC' ;
             //primera parte de la factura
             $printer->selectPrintMode(Printer::MODE_DOUBLE_HEIGHT | Printer::MODE_DOUBLE_WIDTH);
             $printer->text(Yii::$app->params['tituloTraspaso'] . "\n \n");
@@ -299,7 +300,7 @@ class TraspasodetalleController extends Controller
             $printer->text("NIT: " . Yii::$app->params['nit'] . " \n");
             $printer->text("Direccion: " . Yii::$app->params['direccion'] . ' ' . "TEL: " . Yii::$app->params['tel'] . "\n");
             $printer->text("__________________________________________\n");
-            $printer->text("SERIE:" . $serie . "   NUMERO:" . $numero_serie . "   CAJA:" . $isMobile ? 'PKM' : 'PC' . "\n");
+            $printer->text("SERIE: " . $serie . "   NUMERO: " . $numero_serie . "   CAJA:" . $isMobile . "\n");
             $printer->text("FECHA:" . Yii::$app->formatter->asDatetime($model->updated_at, 'php:d-m-Y H:i:s') . "\n");
             $printer->text("ORIGEN:" . trim($model->bodegaOrigen->codigo) . ' ' . $model->bodegaOrigen->nombre . "\n");
             $printer->text("DESTINO:" . trim($model->bodegaDestino->codigo) . ' ' . $model->bodegaDestino->nombre . "\n");
