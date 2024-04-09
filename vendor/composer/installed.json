@@ -875,6 +875,62 @@
             "install-path": "../components/flag-icon-css"
         },
         {
+            "name": "diecoding/yii2-barcode-generator",
+            "version": "v1.0.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sugeng-sulistiyawan/yii2-barcode-generator.git",
+                "reference": "3a273cd145c291371a4d4168988c686bc88c407f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sugeng-sulistiyawan/yii2-barcode-generator/zipball/3a273cd145c291371a4d4168988c686bc88c407f",
+                "reference": "3a273cd145c291371a4d4168988c686bc88c407f",
+                "shasum": ""
+            },
+            "require": {
+                "npm-asset/jsbarcode": "~3.11",
+                "php": ">=7.4.0",
+                "yiisoft/yii2": "~2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~9.5.0"
+            },
+            "time": "2023-04-10T17:27:12+00:00",
+            "type": "yii2-extension",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "diecoding\\barcode\\generator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sugeng Sulistiyawan",
+                    "email": "sugeng.sulistiyawan@gmail.com"
+                }
+            ],
+            "description": "The JavaScript Barcode Generator for Yii2",
+            "keywords": [
+                "barcode",
+                "barcode-generator",
+                "javascript",
+                "javascript-plugin",
+                "widget",
+                "yii2"
+            ],
+            "support": {
+                "issues": "https://github.com/sugeng-sulistiyawan/yii2-barcode-generator/issues",
+                "source": "https://github.com/sugeng-sulistiyawan/yii2-barcode-generator"
+            },
+            "install-path": "../diecoding/yii2-barcode-generator"
+        },
+        {
             "name": "doctrine/instantiator",
             "version": "2.0.0",
             "version_normalized": "2.0.0.0",
@@ -2374,6 +2430,68 @@
             "install-path": "../masterminds/html5"
         },
         {
+            "name": "mike42/escpos-php",
+            "version": "v2.2",
+            "version_normalized": "2.2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mike42/escpos-php.git",
+                "reference": "e5496cf819b048b11877117bd14a9cea4fb17c03"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mike42/escpos-php/zipball/e5496cf819b048b11877117bd14a9cea4fb17c03",
+                "reference": "e5496cf819b048b11877117bd14a9cea4fb17c03",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^5.3",
+                "phpunit/phpunit": "^4.8",
+                "squizlabs/php_codesniffer": "^3.2"
+            },
+            "suggest": {
+                "ext-gd": "Used for image printing if present.",
+                "ext-imagick": "Will be used for image printing if present. Required for PDF printing or use of custom fonts.",
+                "guzzlehttp/guzzle": "Allows the use of the ApiConnector to send print jobs over HTTP."
+            },
+            "time": "2019-10-05T05:59:00+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Mike42\\": "src/Mike42"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Billington",
+                    "email": "michael.billington@gmail.com"
+                }
+            ],
+            "description": "PHP receipt printer library for use with ESC/POS-compatible thermal and impact printers",
+            "homepage": "https://github.com/mike42/escpos-php",
+            "keywords": [
+                "ESC-POS",
+                "driver",
+                "escpos",
+                "print",
+                "receipt"
+            ],
+            "support": {
+                "issues": "https://github.com/mike42/escpos-php/issues",
+                "source": "https://github.com/mike42/escpos-php/tree/v2.2"
+            },
+            "install-path": "../mike42/escpos-php"
+        },
+        {
             "name": "mpdf/mpdf",
             "version": "v8.2.3",
             "version_normalized": "8.2.3.0",
@@ -2743,6 +2861,21 @@
                 "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.2"
             },
             "install-path": "../nikic/php-parser"
+        },
+        {
+            "name": "npm-asset/jsbarcode",
+            "version": "3.11.6",
+            "version_normalized": "3.11.6.0",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/jsbarcode/-/jsbarcode-3.11.6.tgz"
+            },
+            "type": "npm-asset",
+            "installation-source": "dist",
+            "license": [
+                "MIT"
+            ],
+            "install-path": "../npm-asset/jsbarcode"
         },
         {
             "name": "paragonie/random_compat",
@@ -7213,6 +7346,62 @@
                 }
             ],
             "install-path": "../voku/portable-utf8"
+        },
+        {
+            "name": "xstreamka/yii2-mobile-detect",
+            "version": "v1.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/xstreamka/yii2-mobile-detect.git",
+                "reference": "5303b07d210b9cc52b404864a93b32322dc739ca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/xstreamka/yii2-mobile-detect/zipball/5303b07d210b9cc52b404864a93b32322dc739ca",
+                "reference": "5303b07d210b9cc52b404864a93b32322dc739ca",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "~2.0.0"
+            },
+            "time": "2020-11-02T15:01:10+00:00",
+            "type": "yii2-extension",
+            "extra": {
+                "bootstrap": "xstreamka\\mobiledetect\\Bootstrap"
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "xstreamka\\mobiledetect\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "XStream",
+                    "email": "xstreamka@gmail.com",
+                    "homepage": "https://github.com/xstreamka/yii2-mobile-detect",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Mobile_Detect class for Yii2 with the ability to add new devices.",
+            "keywords": [
+                "Mobile_Detect",
+                "detect",
+                "device",
+                "extension",
+                "mobile detect",
+                "yii2"
+            ],
+            "support": {
+                "issues": "https://github.com/xstreamka/yii2-mobile-detect/issues",
+                "source": "https://github.com/xstreamka/yii2-mobile-detect"
+            },
+            "install-path": "../xstreamka/yii2-mobile-detect"
         },
         {
             "name": "yiisoft/yii2",

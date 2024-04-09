@@ -28,6 +28,7 @@ class Traspasodetalle extends \yii\db\ActiveRecord
     public $count;
     public $ultimo_codigo;
     public $cantidad_paquetes;
+
     /**
      * {@inheritdoc}
      */
@@ -106,7 +107,6 @@ class Traspasodetalle extends \yii\db\ActiveRecord
             'cantidad_paquetes' => 'paquetes',
             'unidad' => 'Unidad de medida',
             'totalum' => 'Um/total',
-            // 'talla' => 'Talla',
         ];
     }
 

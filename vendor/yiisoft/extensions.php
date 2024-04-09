@@ -175,4 +175,23 @@ return array (
       '@yii/httpclient' => $vendorDir . '/yiisoft/yii2-httpclient/src',
     ),
   ),
+  'diecoding/yii2-barcode-generator' => 
+  array (
+    'name' => 'diecoding/yii2-barcode-generator',
+    'version' => '1.0.0.0',
+    'alias' => 
+    array (
+      '@diecoding/barcode/generator' => $vendorDir . '/diecoding/yii2-barcode-generator/src',
+    ),
+  ),
+  'xstreamka/yii2-mobile-detect' => 
+  array (
+    'name' => 'xstreamka/yii2-mobile-detect',
+    'version' => '1.0.0.0',
+    'alias' => 
+    array (
+      '@xstreamka/mobiledetect' => $vendorDir . '/xstreamka/yii2-mobile-detect/src',
+    ),
+    'bootstrap' => 'xstreamka\\mobiledetect\\Bootstrap',
+  ),
 );

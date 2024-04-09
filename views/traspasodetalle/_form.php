@@ -84,7 +84,7 @@ $this->registerJs("
         </div>
 
         <h2 style="margin-left:5px;">
-            <?= Yii::$app->user->isGuest ? ' ' : Yii::$app->user->identity->username ?>
+            <?= $model->usuario->username ?>
         </h2>
 
     </div>
@@ -128,7 +128,7 @@ $this->registerJs("
     </div>
 
     <div class="form-group centrar">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'id' => 'btn_registrar', 'style' => 'display: none']) ?>
+        <!-- <?= Html::submitButton('Save', ['class' => 'btn btn-success', 'id' => 'btn_registrar', 'style' => 'display: none']) ?> -->
         <?= Html::a('Imprimir', ['print', 'idtraspaso' => $model->idTraspaso], ['class' => 'btn btn-primary btn-lg btn-create', 'target' => '_blank', 'style' => 'display: none']) ?>
 
         <?php if ($count): ?>
