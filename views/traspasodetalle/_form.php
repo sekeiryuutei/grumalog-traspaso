@@ -84,7 +84,7 @@ $this->registerJs("
         </div>
 
         <h2 style="margin-left:5px;">
-            <?= $model->usuario->username ?>
+            <?= $model->traspaso->usuario->username ?>
         </h2>
 
     </div>
